@@ -1,0 +1,2516 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Cake Pastelería Creativa</title>
+<meta name="description" content="Tortas, postres y mesas dulces por encargo en Corrientes. Cake, café y pastelería creativa. Córdoba 417.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================================
+   CAKE · Catálogo + panel de administración
+   Paleta: Cream #F3E9DC · Caramel #C08552 · Coffee #895737 · Brownie #5E3023
+   =========================================================== */
+:root{
+  --ground:#F3E9DC; --surface:#FFFBF4; --surface-2:#E9DAC5;
+  --ink:#3A1C12; --ink-soft:#7A4B30; --ink-faint:#9C7452;
+  --accent:#895737; --accent-ink:#FFFBF4; --accent-soft:#E9DAC5;
+  --caramel:#C08552; --brownie:#5E3023;
+  --line:#DCC7AC; --line-strong:#C2A47F;
+  --draw:#C08552; --wa:#1F7A3D; --promo:#A34426;
+  --shadow:0 1px 2px rgba(58,28,18,.06), 0 12px 32px -18px rgba(58,28,18,.40);
+  --radius:18px;
+}
+/* La página va siempre con los colores de la marca, sin modo oscuro
+   automático: la crema y el marrón son parte de la identidad. */
+:root{ color-scheme: light; }
+
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{background:var(--ground); color:var(--ink);
+  -webkit-text-size-adjust:100%; text-size-adjust:100%;
+  font-family:'Karla', ui-sans-serif, system-ui, sans-serif; font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+.wrap{max-width:1140px; margin:0 auto; padding-inline:16px; padding-block:0;}
+h1,h2,h3{font-family:'Fraunces', Georgia, serif; margin:0; text-wrap:balance; font-weight:600;}
+a{color:inherit;} img{max-width:100%; display:block;}
+/* Safari en iPhone le pone su propio azul a los botones si no se lo aclarás */
+button{font:inherit; cursor:pointer; color:inherit; -webkit-appearance:none; appearance:none;}
+a{-webkit-text-decoration-skip:objects;}
+:focus-visible{outline:2.5px solid var(--accent); outline-offset:2px; border-radius:6px;}
+.tnum{font-variant-numeric:tabular-nums;}
+s{text-decoration-thickness:1.5px;}
+[hidden]{display:none !important;}
+.hint{font-size:13px; color:var(--ink-faint); margin:0;}
+
+/* fondo ilustrado */
+#bg{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+#bg svg{position:absolute; color:var(--draw); opacity:.17;}
+#bg .b1{width:150px; top:1%;  left:-38px;}  #bg .b2{width:108px; top:12%; right:-26px;}
+#bg .b3{width:126px; top:24%; left:-30px;}  #bg .b4{width:98px;  top:36%; right:-20px;}
+#bg .b5{width:138px; top:48%; left:-34px;}  #bg .b6{width:102px; top:60%; right:-22px;}
+#bg .b7{width:122px; top:72%; left:-30px;}  #bg .b8{width:100px; top:84%; right:-22px;}
+#bg .b9{width:132px; top:94%; left:-32px;}
+#bg .b10{width:88px;  top:6%;  right:8%;  opacity:.10; display:none;}
+#bg .b11{width:104px; top:20%; left:7%;   opacity:.10; display:none;}
+#bg .b12{width:82px;  top:33%; right:10%; opacity:.10; display:none;}
+#bg .b13{width:112px; top:46%; left:6%;   opacity:.10; display:none;}
+#bg .b14{width:86px;  top:58%; right:7%;  opacity:.10; display:none;}
+#bg .b15{width:100px; top:70%; left:9%;   opacity:.10; display:none;}
+#bg .b16{width:92px;  top:82%; right:9%;  opacity:.10; display:none;}
+#bg .b17{width:108px; top:92%; left:7%;   opacity:.10; display:none;}
+@media (min-width:900px){
+  #bg .b10,#bg .b11,#bg .b12,#bg .b13,#bg .b14,#bg .b15,#bg .b16,#bg .b17{display:block;}
+  #bg .b1{width:190px;} #bg .b3{width:168px;} #bg .b5{width:180px;} #bg .b7{width:160px;}
+  #bg .b9{width:172px;} #bg .b2{width:145px;} #bg .b4{width:132px;} #bg .b6{width:138px;}
+  #bg .b8{width:134px;} }
+#veil{position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(120% 70% at 50% 0%, transparent 42%, var(--ground) 100%);}
+#app{position:relative; z-index:2;}
+
+/* encabezado */
+header.top{background:color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line); position:sticky; top:env(safe-area-inset-top,0px); z-index:30;}
+.top-in{display:flex; align-items:center; gap:10px; padding-block:10px;
+  transition:padding-block .22s ease;}
+
+/* al bajar, el encabezado se achica y devuelve pantalla */
+body.compacto .top-in{padding-block:5px;}
+body.compacto .logo-slot{width:36px; height:36px;}
+body.compacto .brand .nm{font-size:21px;}
+body.compacto .brand .sub{opacity:0; max-height:0; margin-top:0;}
+.logo-slot{transition:width .22s ease, height .22s ease;}
+.brand .nm{transition:font-size .22s ease;}
+.brand .sub{transition:opacity .18s ease, max-height .22s ease, margin-top .22s ease;
+  max-height:16px; overflow:hidden;}
+@media (min-width:900px){
+  body.compacto .logo-slot{width:44px; height:44px;}
+  body.compacto .brand .nm{font-size:23px;}
+}
+
+/* confeti */
+#confeti{position:fixed; inset:0; z-index:95; pointer-events:none;}
+
+/* ---------- hoja para exportar a PDF ---------- */
+#imprimible{display:none;}
+body.imprimiendo #app, body.imprimiendo #bg, body.imprimiendo #veil{display:none !important;}
+body.imprimiendo #imprimible{display:block; max-width:840px; margin:0 auto; padding:26px;
+  background-repeat:repeat; background-size:300px 300px; background-position:center top;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+.pdf-h{text-align:center; padding-bottom:16px; border-bottom:2.5px solid var(--line-strong);}
+.pdf-m{font-family:'Fraunces',serif; font-size:54px; font-weight:600; line-height:1; color:var(--brownie);}
+.pdf-s{font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--ink-soft);
+  font-weight:700; margin-top:8px;}
+.pdf-t{font-family:'Fraunces',serif; font-size:36px; font-weight:600; margin:24px 0 3px; color:var(--ink);}
+.pdf-n{font-size:15px; color:var(--ink-soft); margin:0 0 18px; font-style:italic;}
+.pdf-grid{display:grid; gap:14px;}
+.pdf-i{display:flex; gap:18px; border:1.5px solid var(--line); border-radius:14px;
+  padding:16px; break-inside:avoid; page-break-inside:avoid; background:var(--surface);}
+.pdf-i img{width:160px; height:160px; object-fit:cover; border-radius:11px; flex:none;}
+.pdf-sf{width:160px; height:160px; border-radius:11px; flex:none; background:var(--surface-2);}
+.pdf-b{flex:1; min-width:0;}
+.pdf-nm{font-family:'Fraunces',serif; font-size:26px; font-weight:600; line-height:1.14;}
+.pdf-p{display:inline-block; font-size:13px; font-weight:700; background:var(--accent-soft);
+  color:var(--accent); border-radius:999px; padding:4px 12px; margin-top:7px;}
+.pdf-d{font-size:15px; color:var(--ink-soft); margin-top:7px; line-height:1.45;}
+.pdf-l{margin:8px 0 0; padding-left:18px; font-size:14px; color:var(--ink-soft); line-height:1.55;
+  columns:2; column-gap:18px;}
+.pdf-pr{margin-top:11px; font-size:26px; font-weight:700; color:var(--accent); letter-spacing:-.02em;}
+.pdf-pr small{font-size:13px; color:var(--ink-faint); font-weight:700; letter-spacing:.07em;
+  text-transform:uppercase; margin-right:5px;}
+
+/* pie completo, como el de la página */
+.pdf-info{margin-top:26px; border:1.5px solid var(--line); border-radius:16px; padding:20px 22px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:22px; break-inside:avoid;
+  page-break-inside:avoid; background:var(--surface);}
+.pdf-info h4{font-family:'Karla',sans-serif; font-size:11px; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--accent); font-weight:700; margin:0 0 9px;}
+.pdf-info ul{margin:0; padding-left:16px; font-size:13.5px; color:var(--ink-soft); line-height:1.7;}
+.pdf-info p{margin:0; font-size:13.5px; color:var(--ink-soft); line-height:1.5;}
+.pdf-plan{margin-top:12px; border-left:3px solid var(--caramel); padding-left:11px;}
+.pdf-plan b{display:block; font-family:'Fraunces',serif; font-size:17px; color:var(--ink);}
+.pdf-plan span{display:block; font-size:12.5px; color:var(--ink-soft); line-height:1.45; margin-top:3px;}
+.pdf-f{margin-top:22px; padding-top:18px; border-top:1.5px solid var(--line);
+  text-align:center; color:var(--ink-soft); line-height:1.7; break-inside:avoid;}
+.pdf-f .fm{font-family:'Fraunces',serif; font-size:34px; font-weight:600; color:var(--brownie); line-height:1;}
+.pdf-f .fs{font-size:10px; letter-spacing:.3em; text-transform:uppercase; font-weight:700; margin:7px 0 12px;}
+.pdf-f .fd{font-size:14px; color:var(--ink); font-weight:700;}
+.pdf-f .fh{font-size:13.5px;}
+.pdf-f .fi{font-size:14px; margin-top:8px; color:var(--accent); font-weight:700;}
+
+/* botones de exportar */
+.cat-top{display:flex; align-items:center; gap:8px; width:100%;}
+.cat-top .cat-head{flex:1; min-width:0;}
+.pdfbtn{flex:none; border:1.5px solid var(--line-strong); background:var(--surface);
+  color:var(--ink-faint); border-radius:999px; padding:6px 11px; font-size:11.5px;
+  font-weight:700; letter-spacing:.06em; display:inline-flex; align-items:center; gap:5px;}
+.pdfbtn:hover{border-color:var(--accent); color:var(--accent);}
+.pdfbtn svg{width:13px; height:13px;}
+.addrow .pdfbtn{flex:0 0 auto; min-height:36px; padding:6px 12px;}
+
+@media print{
+  @page{ size:A4; margin:12mm; }
+  body{background:#fff;}
+  #app, #bg, #veil, .cta-fixed, .cartbar{display:none !important;}
+  #imprimible{display:block !important; max-width:none; padding:0;}
+  .pdf-i{background:#fff;}
+}
+.logo-slot{width:64px; height:64px; flex:none; border-radius:50%; border:1.5px solid var(--line-strong);
+  background:var(--surface); display:grid; place-items:center; overflow:hidden; position:relative;
+  font-family:'Fraunces',serif; font-size:31px; font-weight:600; color:var(--accent); line-height:1;}
+/* el logo es una imagen ancha: la agrandamos y la centramos en la palabra Cake */
+.logo-slot img{position:absolute; left:50%; top:50%; width:226%; height:auto; max-width:none;
+  transform:translate(-46.6%,-45.6%); display:block;}
+.brand{display:flex; flex-direction:column; margin-right:auto; min-width:0;}
+.brand .nm{font-family:'Fraunces',serif; font-size:30px; font-weight:600; line-height:1; letter-spacing:-.01em;}
+.brand .sub{font-size:9.5px; letter-spacing:.28em; text-transform:uppercase; color:var(--ink-soft);
+  font-weight:700; margin-top:5px;}
+/* el botón de WhatsApp del encabezado solo en pantallas grandes:
+   abajo ya está la barra fija, y repetirlo confunde */
+header.top .top-wa{display:none;}
+@media (min-width:900px){ .top-wa{display:inline-flex;} .brand .nm{font-size:33px;} .brand .sub{font-size:10.5px;} }
+
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:7px; border:none;
+  border-radius:999px; padding:11px 19px; font-weight:700; font-size:14.5px; text-decoration:none;
+  background:var(--accent); color:var(--accent-ink); transition:transform .14s, filter .14s; min-height:44px;}
+.btn:active{transform:scale(.97);}
+.btn.wa{background:var(--wa); color:#fff;}
+.btn.sm{padding:8px 15px; font-size:13.5px; min-height:0;}
+.btn.ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line-strong); font-weight:600;}
+.btn.danger{background:var(--promo); color:#fff;}
+.btn svg{width:17px; height:17px; flex:none;}
+
+/* botón redondo de administración */
+/* el candado no se ve: se entra agregando #admin al final de la dirección */
+.adm-btn{display:none;}
+body.modoadmin .adm-btn{flex:none; width:38px; height:38px; border-radius:50%;
+  border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink-faint);
+  display:grid; place-items:center; transition:background .15s, color .15s, border-color .15s;}
+.adm-btn svg{width:16px; height:16px;}
+.adm-btn:hover{border-color:var(--accent); color:var(--accent);}
+.adm-btn.on{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+/* anuncios */
+.anuncios{border-bottom:1px solid var(--line); background:var(--accent-soft);}
+.anuncio{display:flex; align-items:center; justify-content:center; gap:9px;
+  padding:9px 16px; font-size:13.5px; color:var(--ink); text-align:center;}
+.anuncio .dot{flex:none; width:6px; height:6px; border-radius:50%; background:var(--accent);}
+.anuncio .ax{flex:none; background:none; border:none; color:var(--ink-faint); font-size:12px; font-weight:700;
+  text-decoration:underline; text-underline-offset:2px;}
+
+/* hero */
+.hero{padding-block:24px 4px; text-align:center;}
+.hero .eyebrow{font-size:10px; letter-spacing:.22em; text-transform:uppercase; font-weight:700;
+  color:var(--ink-faint); margin-bottom:11px;}
+.hero h1{font-size:clamp(27px,6.6vw,40px); line-height:1.1;}
+.hero h1 em{font-style:italic; color:var(--accent);}
+.hero p.lead{max-width:46ch; margin:12px auto 0; color:var(--ink-soft); font-size:16.5px;}
+.hero .meta{margin-top:14px; font-size:13.5px; color:var(--ink-soft); display:flex; gap:7px; justify-content:center; flex-wrap:wrap;}
+
+/* promos */
+.promos{display:grid; gap:11px; margin-block:22px;}
+@media (min-width:760px){ .promos{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));} }
+.promo{background:var(--brownie); border:none; border-radius:var(--radius);
+  padding:18px 20px; display:flex; gap:16px; align-items:center;
+  box-shadow:0 10px 30px -14px rgba(94,48,35,.75);}
+.promo.off{opacity:.5;}
+.promo .pbadge{flex:none; background:var(--caramel); color:var(--brownie); border-radius:13px; padding:12px 14px;
+  font-family:'Fraunces',serif; font-size:23px; font-weight:700; line-height:1; text-align:center; letter-spacing:-.02em;}
+.promo .pt{font-family:'Fraunces',serif; font-size:19px; font-weight:600; line-height:1.2; color:#F7EFE4;}
+.promo .pd{font-size:13.5px; color:rgba(247,239,228,.80); line-height:1.4; margin-top:3px;}
+.promo .pu{font-size:11px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--caramel); margin-top:7px;}
+.promoadmin{display:flex; gap:6px; margin-left:auto; flex:none;}
+.promoadmin button{background:rgba(247,239,228,.12); border:1.5px solid rgba(247,239,228,.3);
+  color:#F7EFE4; border-radius:9px; padding:6px 11px; font-size:12px; font-weight:600;}
+
+/* buscador */
+.search{position:relative; margin-bottom:22px;}
+.search input{width:100%; font:inherit; font-size:15px; padding:12px 16px 12px 40px; border-radius:999px;
+  border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink); min-height:46px;
+  text-overflow:ellipsis;}
+/* el lugar para la ✕ solo se reserva cuando hay algo escrito */
+.search.conx input{padding-right:42px;}
+.search .si{position:absolute; left:14px; top:50%; transform:translateY(-50%); width:17px; height:17px; color:var(--ink-faint);}
+.search .sx{position:absolute; right:8px; top:50%; transform:translateY(-50%); width:30px; height:30px;
+  border-radius:50%; border:none; background:var(--surface-2); color:var(--ink-soft); font-size:14px; line-height:1;}
+
+/* pasos / barra lateral */
+.layout{display:block; margin-block:6px 30px;}
+@media (min-width:900px){
+  .layout{display:grid; grid-template-columns:238px minmax(0,1fr); gap:32px; align-items:start;}
+}
+.side{display:none;}
+@media (min-width:900px){
+  .side{display:block; position:sticky; top:calc(88px + env(safe-area-inset-top,0px));
+    max-height:calc(100vh - 110px); overflow-y:auto; overscroll-behavior:contain;
+    padding-right:6px; scrollbar-width:thin;}
+  .side::-webkit-scrollbar{width:7px;}
+  .side::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:99px;}
+  .side::-webkit-scrollbar-track{background:transparent;}
+}
+.steps{display:block; margin-block:4px 22px;}
+@media (min-width:900px){ .steps{display:none;} }
+.sblock{margin-bottom:24px;}
+.sblock > h3{font-size:12.5px; letter-spacing:.04em; color:var(--ink);
+  font-family:'Karla',sans-serif; font-weight:700; margin-bottom:10px;
+  display:flex; align-items:center; gap:8px;}
+.sblock > h3 .step{flex:none; width:21px; height:21px; border-radius:50%; background:var(--accent);
+  color:var(--accent-ink); font-size:11.5px; display:grid; place-items:center; font-weight:700;}
+.chips{display:flex; gap:7px; flex-wrap:wrap;}
+.chip{border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink-soft);
+  border-radius:999px; padding:8px 14px; font-size:14px; font-weight:600;
+  transition:transform .14s, background .14s, color .14s, border-color .14s; min-height:40px;}
+.chip:active{transform:scale(.95);}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.cgroup{margin-bottom:12px;}
+.glabel{display:block; font-size:11px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-faint); font-weight:700; margin-bottom:6px;}
+
+/* secciones */
+section.cat{margin-bottom:34px;}
+.cat-head{display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%;
+  background:none; border:none; padding:0; text-align:left; cursor:pointer; color:var(--ink);}
+.cat-head h2{font-size:26px; letter-spacing:-.015em; color:var(--ink);}
+.cat-head .note{font-size:13px; color:var(--ink-soft);}
+.cat-head .cnt{margin-left:auto; font-size:13px; color:var(--ink-faint); font-weight:700;}
+.cat-head .chev{flex:none; width:26px; height:26px; border-radius:50%; background:var(--accent-soft);
+  display:grid; place-items:center; transition:transform .2s;}
+.cat-head .chev svg{width:14px; height:14px; color:var(--accent);}
+.cat-head[aria-expanded="false"] .chev{transform:rotate(-90deg);}
+.rule{height:2px; background:var(--line); margin:11px 0 20px;}
+.cat-head[aria-expanded="false"] + .rule{margin-bottom:0;}
+.grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;}
+@media (min-width:620px){ .grid{grid-template-columns:repeat(auto-fill,minmax(224px,1fr)); gap:15px;} }
+
+/* en celular entran dos tarjetas por fila, así que todo adentro achica */
+@media (max-width:619px){
+  .card .body{padding:11px 12px 0; gap:5px;}
+  .card .nm{font-size:16px; line-height:1.15;}
+  .card .ds{font-size:11.5px; line-height:1.35;}
+  .card .porc{font-size:10.5px; padding:3px 8px;}
+  .prices{padding-top:9px;}
+  .prow .pl{font-size:10px; letter-spacing:.05em;}
+  .prow .pv{font-size:18px; gap:5px;}
+  .prow .pv s{font-size:11.5px;}
+  .prow.sec .pv{font-size:14px;}
+  .prow.sec .pv s{font-size:11px;}
+  .card .act{padding:10px 12px 12px;}
+  .addrow{flex-wrap:wrap; gap:5px;}
+  .addrow .btn{font-size:12px; padding:8px 7px; min-height:36px; flex:1 1 100%;}
+  .addrow .qt{width:100%; justify-content:space-between;}
+  .incl{grid-template-columns:1fr; font-size:11px; gap:1px;}
+  .relldet > summary{font-size:11.5px;}
+  .relldet .rb, .relldet ul{font-size:11.5px;}
+  .offtag{font-size:10px; padding:4px 8px;}
+  .phcount{font-size:10px; padding:3px 8px;}
+}
+
+/* ajustes generales de celular */
+@media (max-width:619px){
+  html, body{overflow-x:hidden;}
+  .wrap{padding-inline:14px;}
+  .hero{padding-block:16px 2px;}
+  .hero h1{font-size:clamp(23px,6.8vw,34px);}
+  .hero p.lead{font-size:14.5px; margin-top:9px;}
+  .promo{padding:14px 15px; gap:12px; border-radius:16px;}
+  .cat-head h2{font-size:21px;}
+  .cat-head .note{font-size:12px;}
+  .info{padding:18px 16px; gap:20px; margin-block:22px;}
+  .igrid{gap:9px;}
+  footer.foot .fb{font-size:25px;}
+  .lead, .hint{font-size:13.5px;}
+  /* que la barra fija de WhatsApp no tape el final */
+  .spacer{height:78px;}
+}
+
+/* filtros plegables en celular */
+.filtros{border:1.5px solid var(--line-strong); border-radius:16px; background:var(--surface);
+  margin-top:10px; overflow:hidden;}
+.filtros > summary{list-style:none; cursor:pointer; padding:13px 16px;
+  display:flex; align-items:center; gap:10px; font-size:15px; font-weight:700; color:var(--ink);}
+.filtros > summary::-webkit-details-marker{display:none;}
+.filtros > summary .st{margin-left:auto; font-weight:600; font-size:12.5px; color:var(--ink-faint);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52%;}
+.filtros > summary::after{content:''; flex:none; width:8px; height:8px; margin-left:2px;
+  border-right:2.2px solid var(--accent); border-bottom:2.2px solid var(--accent);
+  transform:rotate(45deg) translate(-2px,-2px); transition:transform .2s;}
+.filtros[open] > summary::after{transform:rotate(225deg) translate(-1px,-1px);}
+.filtros .fbody{padding:2px 16px 14px; border-top:1px solid var(--line);}
+.filtros .sblock:last-child{margin-bottom:4px;}
+
+/* tarjeta */
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  overflow:hidden; display:flex; flex-direction:column; box-shadow:var(--shadow); position:relative;}
+.card.off{opacity:.45;}
+.card .ph{aspect-ratio:1/1; background:var(--surface-2); position:relative; overflow:hidden;}
+.card .ph.clic{cursor:zoom-in;}
+.card .ph img{width:100%; height:100%; object-fit:contain; position:relative; z-index:1;}
+.card .ph .mark{position:absolute; inset:0; display:grid; place-items:center; color:var(--line-strong);}
+.card .ph .mark svg{width:54px;}
+.offtag{position:absolute; top:10px; left:10px; z-index:3; background:var(--promo); color:#fff;
+  font-size:12px; font-weight:700; padding:5px 11px; border-radius:999px; letter-spacing:.02em;
+  box-shadow:0 4px 12px -4px rgba(0,0,0,.4);}
+.phcount{position:absolute; right:9px; bottom:9px; z-index:3; background:rgba(58,28,18,.78); color:#F7EFE4;
+  font-size:11.5px; font-weight:700; padding:5px 10px; border-radius:999px; pointer-events:none;}
+.card .body{padding:14px 16px 0; display:flex; flex-direction:column; gap:7px; flex:1;}
+.card .nm{font-family:'Fraunces',serif; font-size:20px; font-weight:600; line-height:1.18; color:var(--ink);}
+.card .ds{font-size:13.5px; color:var(--ink-soft); line-height:1.45;}
+.porc{align-self:flex-start; background:var(--accent); color:var(--accent-ink);
+  font-size:12px; font-weight:700; padding:5px 12px; border-radius:999px; letter-spacing:.01em;}
+.incl{display:grid; grid-template-columns:repeat(auto-fill,minmax(116px,1fr)); gap:3px 13px; padding:0; margin:4px 0;}
+.incl li{font-size:12.5px; color:var(--ink-soft); list-style:none;}
+.incl li b{color:var(--ink); font-weight:700;}
+.prices{margin-top:auto; padding-top:11px; display:flex; flex-direction:column; gap:3px;}
+.prow{display:flex; align-items:baseline; justify-content:space-between; gap:10px;}
+.prow .pl{font-size:12px; color:var(--ink-soft); font-weight:700; letter-spacing:.07em; text-transform:uppercase;}
+.prow .pv{font-size:23px; font-weight:700; letter-spacing:-.015em; display:flex; align-items:baseline; gap:7px; color:var(--ink);}
+.prow .pv s{font-size:14px; font-weight:600; color:var(--ink-faint);}
+.prow .pv .now{color:var(--promo);}
+.prow.sec .pv{font-size:17px; color:var(--ink-soft);}
+.prow.sec .pv s{font-size:13px;}
+.card .act{padding:13px 16px 16px;}
+.addrow{display:flex; gap:6px; align-items:stretch;}
+.addrow .btn{flex:1; min-width:0; padding:9px 10px; font-size:13px; min-height:40px;
+  white-space:nowrap; gap:5px;}
+.addrow .btn svg{width:15px; height:15px;}
+.addrow .btn.add{background:transparent; color:var(--accent); border:1.5px solid var(--accent);
+  font-weight:700; flex:0 1 auto; padding:9px 13px;}
+.addrow .btn.add:hover{background:var(--accent); color:var(--accent-ink);}
+.addrow .qt{display:flex; align-items:center; gap:2px; background:var(--accent);
+  border-radius:999px; padding:3px; flex:0 0 auto;}
+.addrow .qt button{width:28px; height:28px; border:none; border-radius:50%; background:transparent;
+  color:var(--accent-ink); font-size:17px; font-weight:700; line-height:1; cursor:pointer;
+  display:grid; place-items:center;}
+.addrow .qt button:hover{background:rgba(255,255,255,.2);}
+.addrow .qt b{min-width:20px; text-align:center; color:var(--accent-ink); font-size:15px;}
+
+/* ---------- carrito ---------- */
+.cartbar{position:fixed; left:0; right:0; bottom:0; z-index:60; background:var(--brownie); color:#F7EFE4;
+  padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));
+  box-shadow:0 -6px 24px rgba(42,21,16,.24);}
+.cartbar .in{max-width:1180px; margin:0 auto; padding-inline:18px;
+  display:flex; gap:12px; align-items:center;}
+.cartbar .qn{flex:1; min-width:0;}
+.cartbar .qn b{display:block; font-size:14.5px;}
+.cartbar .qn span{font-size:12.5px; opacity:.85;}
+.cartbar .btn{background:var(--caramel); color:var(--brownie); padding:11px 19px; font-size:14.5px;
+  transition:transform .13s;}
+.cartbar .btn:active{transform:scale(.95);}
+.cartbar.entra{animation:barraSube .34s cubic-bezier(.2,.8,.3,1) both;}
+.cartbar.late .qn b{animation:latido .36s ease;}
+@keyframes barraSube{from{transform:translateY(100%);} to{transform:none;}}
+@keyframes latido{0%,100%{transform:scale(1);} 30%{transform:scale(1.1);}}
+
+.lineas{max-height:38vh; overflow-y:auto;}
+.ln{display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid var(--line);}
+.ln:last-child{border-bottom:none;}
+.ln .nb{flex:1; min-width:0; font-size:15px; font-weight:700; line-height:1.25;}
+.ln .nb small{display:block; font-weight:400; font-size:12.5px; color:var(--ink-faint);}
+.ln .qt{display:flex; align-items:center; gap:3px; border:1.5px solid var(--line-strong);
+  border-radius:999px; padding:2px;}
+.ln .qt button{width:24px; height:24px; border:none; border-radius:50%; background:transparent;
+  color:var(--accent); font-size:16px; font-weight:700; line-height:1; cursor:pointer;}
+.ln .qt b{min-width:18px; text-align:center; font-size:14px;}
+.ln .sb{width:84px; text-align:right; font-weight:700; font-size:14.5px;}
+.ln .rm{width:26px; height:26px; border:none; background:none; color:var(--ink-faint);
+  font-size:16px; line-height:1; border-radius:50%; flex:none; cursor:pointer;}
+.ln .rm:hover{background:var(--surface-2); color:var(--promo);}
+.total{display:flex; align-items:baseline; justify-content:space-between; margin-top:14px;
+  padding-top:13px; border-top:2px solid var(--line-strong);}
+.total span{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:700;}
+.total b{font-family:'Fraunces',serif; font-size:27px; font-weight:600;}
+.rarezas .inspi-head h2{color:var(--brownie);}
+.rarezas .icard{border-color:var(--caramel);}
+.avisosena{background:var(--accent-soft); border-radius:12px; padding:11px 14px; margin-top:13px;
+  font-size:13px; color:var(--ink-soft); line-height:1.4;}
+/* el detalle del pedido, compacto para que entre en una pantalla */
+dialog.pedido{max-height:92vh;}
+dialog.pedido .dlg-h{position:relative; padding-bottom:6px;}
+dialog.pedido .dlg-h h3{padding-right:40px;}
+.cerrarx{position:absolute; right:0; top:-2px; width:34px; height:34px; border-radius:50%;
+  border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink-soft);
+  font-size:16px; line-height:1; display:grid; place-items:center; cursor:pointer;}
+.cerrarx:hover{border-color:var(--accent); color:var(--accent);}
+dialog.pedido .dlg-b{padding-top:6px; padding-bottom:10px;}
+dialog.pedido .fld{margin-bottom:9px;}
+dialog.pedido .fld span{font-size:9.5px; margin-bottom:3px;}
+dialog.pedido .fld input, dialog.pedido .fld textarea{padding:8px 11px; font-size:14px; border-radius:9px;}
+dialog.pedido .fld textarea{min-height:42px;}
+/* La lista de productos tiene su propia barrita: así los datos del pedido
+   —fecha, pago, aclaraciones— quedan siempre a la vista sin scrollear. */
+dialog.pedido[open]{display:flex; flex-direction:column;}
+dialog.pedido .dlg-b{flex:1 1 auto; min-height:0; max-height:none; overflow-y:auto;}
+dialog.pedido .lineas{max-height:min(32vh, 240px); overflow-y:auto; overscroll-behavior:contain;
+  padding-right:7px; scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
+dialog.pedido .lineas::-webkit-scrollbar{width:7px;}
+dialog.pedido .lineas::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:99px;}
+dialog.pedido .lineas::-webkit-scrollbar-track{background:transparent;}
+dialog.pedido .ln{padding:7px 0;}
+dialog.pedido .ln .nb{font-size:14px;}
+dialog.pedido .ln .nb small{font-size:11.5px;}
+dialog.pedido .total{margin-top:9px; padding-top:8px;}
+dialog.pedido .total b{font-size:22px;}
+dialog.pedido .avisosena{margin-top:8px; padding:8px 11px; font-size:11.5px; line-height:1.35;}
+dialog.pedido .segm{gap:6px;}
+dialog.pedido .segm button{flex:1 1 0; min-width:92px; padding:8px 5px; font-size:12.5px;}
+dialog.pedido .dlg-f{padding-top:10px;}
+dialog.pedido .btn.wa{padding:12px 18px;}
+
+.segm{display:flex; gap:7px; flex-wrap:wrap;}
+.segm button{flex:1 1 44%; min-width:96px; border:1.5px solid var(--line-strong);
+  background:var(--ground); color:var(--ink); border-radius:11px; padding:10px 6px;
+  font-size:13.5px; font-weight:700; cursor:pointer; white-space:nowrap;
+  transition:background .16s, color .16s, border-color .16s, transform .12s;}
+.segm button:active{transform:scale(.96);}
+.segm button.on{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+/* la tortita que vuela al carrito */
+.volador{position:fixed; z-index:90; pointer-events:none;
+  filter:drop-shadow(0 8px 16px rgba(58,28,18,.3)); color:var(--accent);}
+.volador svg{width:100%; height:100%; display:block;}
+
+.relldet{border-top:1px solid var(--line); padding-top:9px; margin-top:2px;}
+.relldet > summary{list-style:none; cursor:pointer; font-size:12.5px; font-weight:700;
+  color:var(--accent); display:flex; align-items:center; gap:6px;}
+.relldet > summary::-webkit-details-marker{display:none;}
+.relldet > summary::after{content:''; width:7px; height:7px; border-right:2px solid currentColor;
+  border-bottom:2px solid currentColor; transform:rotate(45deg) translate(-2px,-2px); transition:transform .2s;}
+.relldet[open] > summary::after{transform:rotate(225deg) translate(-1px,-1px);}
+.relldet .rb{font-size:12.5px; color:var(--ink-soft); margin:8px 0 5px; line-height:1.4;}
+.relldet ul{margin:0 0 9px; padding-left:15px; font-size:12.5px; color:var(--ink-soft); line-height:1.6;}
+.relldet ul:last-child{margin-bottom:0;}
+.relldet .gr{font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+  color:var(--accent); margin:0 0 4px;}
+
+/* controles de admin en la tarjeta */
+.cardadmin{display:flex; gap:5px; padding:0 16px 14px; flex-wrap:wrap; align-items:center;}
+.cardadmin button{background:transparent; border:1.5px solid var(--line-strong); color:var(--ink-soft);
+  border-radius:9px; padding:6px 10px; font-size:12px; font-weight:600; min-height:34px;}
+.cardadmin button:hover{border-color:var(--accent); color:var(--accent);}
+.cardadmin .mv{width:34px; padding:0; font-size:14px;}
+.cardadmin .del{margin-left:auto; border-color:transparent; color:var(--promo);}
+
+/* visor de fotos */
+dialog{border:none; padding:0; background:var(--surface); color:var(--ink);
+  box-shadow:0 24px 60px -20px rgba(0,0,0,.45); max-width:540px; width:calc(100% - 24px); border-radius:20px;}
+dialog::backdrop{background:rgba(40,22,12,.62);}
+dialog.lb{position:fixed; inset:0; margin:auto; padding:0; border:none;
+  width:min(880px,94vw); max-width:94vw; height:max-content; max-height:92vh;
+  border-radius:18px; overflow:hidden;}
+dialog.lb img{width:100%; max-height:74vh; object-fit:contain; background:var(--surface-2); display:block;}
+/* respaldo para navegadores viejos de celular que no abren <dialog> */
+dialog.lb.lb-plano{position:fixed; z-index:120; left:50%; top:50%;
+  transform:translate(-50%,-50%); margin:0; border:none;
+  box-shadow:0 20px 60px rgba(42,21,16,.5);}
+@media (max-width:619px){
+  dialog.lb{width:94vw;}
+  dialog.lb img{max-height:68vh;}
+  .lbt{font-size:16px;}
+  .lbn{width:38px; height:38px; font-size:19px;}
+  .lbbar{padding:11px 13px calc(13px + env(safe-area-inset-bottom,0px)); gap:8px;}
+}
+.lbbar{display:flex; align-items:center; gap:10px; padding:13px 16px calc(15px + env(safe-area-inset-bottom,0px));}
+.lbt{flex:1; min-width:0; font-family:'Fraunces',serif; font-size:19px; font-weight:600; line-height:1.2;}
+.lbc{font-size:13px; color:var(--ink-faint); font-weight:700; white-space:nowrap;}
+.lbn{flex:none; width:42px; height:42px; border-radius:50%; border:1.5px solid var(--line-strong);
+  background:var(--surface); color:var(--ink); font-size:21px; line-height:1;}
+.lbx{position:absolute; top:10px; right:10px; z-index:4; width:38px; height:38px; border-radius:50%;
+  border:none; background:rgba(58,28,18,.75); color:#F7EFE4; font-size:16px; line-height:1;}
+
+/* formularios */
+.dlg-h{padding:18px 20px 0; display:flex; align-items:baseline; gap:10px;}
+.dlg-h h3{font-size:20px; flex:1;}
+.dlg-b{padding:14px 20px 20px; display:flex; flex-direction:column; gap:13px; max-height:66vh; overflow-y:auto;}
+.dlg-f{padding:13px 20px calc(16px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--line); display:flex; gap:9px;}
+.dlg-f .btn{flex:1;}
+.fld{display:flex; flex-direction:column; gap:5px;}
+.fld > span{font-size:11px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-faint); font-weight:700;}
+.fld input, .fld textarea, .fld select{font:inherit; font-size:16px; padding:11px 12px; border-radius:11px;
+  border:1.5px solid var(--line-strong); background:var(--ground); color:var(--ink); width:100%;}
+.fld textarea{resize:vertical; min-height:64px;}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.checks{display:flex; flex-wrap:wrap; gap:7px;}
+.checks label{display:inline-flex; align-items:center; gap:6px; font-size:13.5px;
+  border:1.5px solid var(--line-strong); border-radius:999px; padding:8px 13px; cursor:pointer;}
+.checks input{accent-color:var(--accent);}
+.err{font-size:13px; color:var(--promo); font-weight:600; margin:0;}
+
+/* editor de fotos */
+.fotolist{display:flex; flex-direction:column; gap:8px;}
+.fotorow{display:flex; align-items:center; gap:10px; padding:8px; border:1.5px solid var(--line);
+  border-radius:12px; background:var(--ground);}
+.fotorow img{width:54px; height:54px; object-fit:cover; border-radius:8px; flex:none; background:var(--surface-2);}
+.fotorow .fp{flex:1; min-width:0; font-size:12px; color:var(--ink-soft); word-break:break-all; line-height:1.35;}
+.fotorow .fb2{display:flex; gap:4px; flex:none;}
+.fotorow button{width:32px; height:32px; border-radius:8px; border:1.5px solid var(--line-strong);
+  background:transparent; color:var(--ink-soft); font-size:13px; line-height:1;}
+.fotorow button.dl{color:var(--promo); border-color:transparent;}
+
+/* barra de administración */
+.adminbar{position:fixed; left:0; right:0; bottom:0; z-index:60; background:var(--ink); color:var(--ground);
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));
+  display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+.adminbar .lbl{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:700; opacity:.6; width:100%;}
+.adminbar button{background:transparent; border:1.5px solid rgba(255,255,255,.26); color:inherit;
+  border-radius:999px; padding:8px 14px; font-size:13px; font-weight:600; min-height:40px;}
+.adminbar button.pri{background:var(--caramel); border-color:var(--caramel); color:var(--brownie); font-weight:700;}
+.adminbar button.pri[disabled]{opacity:.45;}
+.adminbar .sp{margin-left:auto; font-size:11.5px; opacity:.6;}
+body.admin .spacer{height:150px;}
+
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:96px; z-index:90;
+  background:var(--ink); color:var(--ground); padding:11px 20px; border-radius:999px;
+  font-size:14px; font-weight:600; box-shadow:var(--shadow); max-width:90vw; text-align:center;}
+
+/* inspiración */
+.inspi{margin-block:38px 30px;}
+.inspi-head{text-align:center; max-width:52ch; margin:0 auto 20px;}
+.inspi-head h2{font-size:clamp(23px,5.2vw,30px); line-height:1.15;}
+.inspi-head p{margin:9px 0 0; font-size:15px; color:var(--ink-soft);}
+.igrid{display:grid; grid-template-columns:repeat(2,1fr); gap:11px;}
+@media (min-width:660px){ .igrid{grid-template-columns:repeat(3,1fr); gap:14px;} }
+@media (min-width:980px){ .igrid{grid-template-columns:repeat(4,1fr);} }
+.icard{position:relative; border-radius:14px; overflow:hidden; background:var(--surface-2);
+  aspect-ratio:3/4; display:block; border:1px solid var(--line);}
+.icard img{width:100%; height:100%; object-fit:cover;}
+.icard .cap{position:absolute; left:0; right:0; bottom:0; padding:22px 12px 11px;
+  background:linear-gradient(to top, rgba(58,28,18,.88), rgba(58,28,18,0));
+  color:#F7EFE4; font-size:13px; font-weight:700; line-height:1.25;}
+.icard .want{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(58,28,18,.62); opacity:0; transition:opacity .18s; text-decoration:none;}
+.icard .want span{background:var(--wa); color:#fff; font-size:13px; font-weight:700; padding:9px 15px; border-radius:999px;}
+.icard:hover .want, .icard:focus-within .want{opacity:1;}
+@media (hover:none){ .icard .want{opacity:1; background:transparent; align-items:flex-end;
+  justify-content:flex-end; padding:9px;} .icard .want span{font-size:11.5px; padding:7px 12px;} }
+.icard.empty{border:2px dashed var(--line-strong); background:transparent;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;}
+.icard.empty svg{width:44px; color:var(--line-strong);}
+.icard.empty span{font-size:11.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase;}
+
+/* info + plan */
+.info{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:22px; margin-block:28px; display:grid; gap:24px; box-shadow:var(--shadow);}
+@media (min-width:760px){ .info{grid-template-columns:repeat(3,1fr); padding:26px 28px;} }
+.info h3{font-size:12.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--accent);
+  margin-bottom:11px; font-family:'Karla',sans-serif; font-weight:700;}
+.info ul{margin:0; padding-left:17px; font-size:14.5px; color:var(--ink-soft);}
+.info li{margin-bottom:6px;}
+.info .cafep{margin:0 0 13px; font-size:14.5px; color:var(--ink-soft); line-height:1.5;}
+.planbox{margin-top:17px; padding:2px 0 2px 15px; border-left:3px solid var(--caramel);}
+.planbox .pk{display:block; font-family:'Fraunces',serif; font-size:20px; font-weight:600;
+  color:var(--ink); line-height:1.15; margin-bottom:5px;}
+.planbox .ptx{font-size:13.5px; line-height:1.5; color:var(--ink-soft);}
+
+/* pie */
+footer.foot{border-top:1px solid var(--line); padding-block:30px; text-align:center; color:var(--ink-soft); font-size:14px;}
+footer.foot .fb{font-family:'Fraunces',serif; font-size:30px; color:var(--ink); font-weight:600; line-height:1;}
+footer.foot .fs{font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:var(--ink-soft); font-weight:700; margin-top:7px;}
+footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;}
+.iglink{display:inline-flex; align-items:center; gap:7px; text-decoration:none; font-size:14px; font-weight:700;
+  color:var(--accent); border:1.5px solid var(--line-strong); border-radius:999px; padding:8px 15px;}
+.iglink:hover{background:var(--accent-soft); border-color:var(--accent);}
+.iglink svg{width:16px; height:16px;}
+.maplink{display:inline-flex; align-items:center; gap:6px; color:var(--accent); font-weight:700;
+  text-decoration:underline; text-underline-offset:3px; text-decoration-color:var(--line-strong);}
+.maplink svg{width:15px; height:15px; flex:none;}
+.spacer{height:96px;}
+
+/* barra fija de contacto */
+.cta-fixed{position:fixed; left:0; right:0; bottom:0; z-index:45;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(to top, var(--ground) 62%, transparent); display:flex; justify-content:center;}
+@media (min-width:900px){ .cta-fixed.only-mobile{display:none;} }
+.cta-fixed .btn{width:100%; max-width:440px; box-shadow:0 8px 24px -8px rgba(31,122,61,.55);}
+
+/* animación */
+@keyframes drift{0%,100%{transform:translate3d(0,0,0) rotate(var(--rot,0deg));}
+  50%{transform:translate3d(0,-16px,0) rotate(calc(var(--rot,0deg) + 3deg));}}
+@keyframes rise{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;}}
+@keyframes breathe{0%,100%{box-shadow:0 8px 24px -8px rgba(31,122,61,.45);}
+  50%{box-shadow:0 10px 30px -6px rgba(31,122,61,.7);}}
+@keyframes pop{from{opacity:0; transform:scale(.96);} to{opacity:1; transform:none;}}
+@media (prefers-reduced-motion: no-preference){
+  #bg .b1{--rot:-8deg; animation:drift 19s ease-in-out infinite;}
+  #bg .b2{--rot:12deg; animation:drift 23s ease-in-out -4s infinite;}
+  #bg .b3{--rot:6deg;  animation:drift 26s ease-in-out -9s infinite;}
+  #bg .b4{--rot:-10deg;animation:drift 21s ease-in-out -2s infinite;}
+  #bg .b5{--rot:9deg;  animation:drift 28s ease-in-out -13s infinite;}
+  #bg .b6{animation:drift 24s ease-in-out -6s infinite;}
+  #bg .b7{animation:drift 30s ease-in-out -16s infinite;}
+  #bg .b8{animation:drift 22s ease-in-out -11s infinite;}
+  #bg .b9{animation:drift 27s ease-in-out -3s infinite;}
+  #bg .b10{animation:drift 25s ease-in-out -18s infinite;}
+  #bg .b11{animation:drift 31s ease-in-out -7s infinite;}
+  #bg .b12{animation:drift 23s ease-in-out -14s infinite;}
+  #bg .b13{animation:drift 29s ease-in-out -5s infinite;}
+  #bg .b14{animation:drift 26s ease-in-out -20s infinite;}
+  #bg .b15{animation:drift 32s ease-in-out -9s infinite;}
+  #bg .b16{animation:drift 24s ease-in-out -16s infinite;}
+  #bg .b17{animation:drift 28s ease-in-out -12s infinite;}
+  .anim-hero{animation:rise .6s cubic-bezier(.2,.7,.3,1) both;}
+  .promo{animation:pop .5s cubic-bezier(.2,.7,.3,1) .1s both;}
+  /* las tarjetas entran escalonadas solo cuando cambia la vista, no en cada clic */
+  .grid.anim .card{animation:rise .5s cubic-bezier(.2,.7,.3,1) both;}
+  .cta-fixed .btn{animation:breathe 4.5s ease-in-out infinite;}
+  .cat-head h2, .rule{animation:rise .45s cubic-bezier(.2,.7,.3,1) both;}
+  dialog[open]{animation:entra .26s cubic-bezier(.2,.8,.3,1) both;}
+  dialog[open]::backdrop{animation:pop .26s ease both;}
+}
+@keyframes entra{from{opacity:0; transform:scale(.95) translateY(12px);} to{opacity:1; transform:none;}}
+
+/* respuesta al tacto y al mouse */
+.card{transition:transform .16s ease, box-shadow .22s ease, border-color .22s ease;}
+.card:active{transform:scale(.982);}
+.card .ph img{transition:transform .55s cubic-bezier(.2,.7,.3,1);}
+@media (hover:hover){
+  .card:hover{transform:translateY(-3px); box-shadow:0 10px 26px rgba(58,28,18,.14);}
+  .card:hover .ph img{transform:scale(1.07);}
+}
+.card .act .btn{transition:transform .13s, filter .16s;}
+.card .act .btn:active{transform:scale(.95);}
+.cat-head{transition:opacity .15s;}
+.cat-head:active{opacity:.6;}
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{animation:none !important; transition:none !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- Catálogo de arranque. Si Firebase responde, manda lo que esté en la base. -->
+<script type="application/json" id="app-state">
+{
+  "brand":{"name":"Cake","sub":"Café y pastelería creativa","logo":"fotos/LOGO.jpeg",
+    "tagline":"Elegí para cuántas personas, mirá las opciones y escribinos. Reservás con el 50%.",
+    "whatsapp":"5493794009517","address":"Córdoba 417, Corrientes","hours":"Lun a Sáb · 7:30–13:30 · 17–20:30",
+    "instagram":"cakealpaso","instagram2":"caketentaciones"},
+  "settings":{"sena":"Seña del 50% para tomar el pedido","anticipacion":"72 horas de anticipación",
+    "bizcochuelo":"Bizcochuelo de vainilla incluido. Chocolate con costo extra.",
+    "coberturas":[],
+    "rellenos":["Crema de chocotorta","Crema moka","Crema y frutas de estación","Dulce de leche con trozos de chocolate","Dulce de leche con Oreos","Dulce de leche con merenguitos"],
+    "pagos":["Efectivo","Transferencia","Tarjeta de crédito"],
+    "planNombre":"Plan Cake",
+    "planDesc":"Pagalo en cuotas sin tarjeta, desde el mes que lo pedís hasta el mes de tu evento. Armamos el plan que se adapte a vos.",
+    "cafeTitulo":"¿Conocés nuestro café?",
+    "cafeTexto":"Desayunos, meriendas, dulce y salado, todos los días en Córdoba 417.",
+    "menuUrl":""},
+  "anuncios":[],
+  "inspiracion":[
+    {"id":"i1","foto":"fotos/inspiracion%201.jpeg","titulo":"","activo":true},
+    {"id":"i2","foto":"fotos/inspiracion%202.jpeg","titulo":"","activo":true},
+    {"id":"i3","foto":"fotos/inspiracion%203.jpeg","titulo":"","activo":true},
+    {"id":"i4","foto":"fotos/inspiracion%204.jpeg","titulo":"","activo":true},
+    {"id":"i5","foto":"fotos/inspiracion%205.jpeg","titulo":"","activo":true},
+    {"id":"i6","foto":"fotos/inspiracion%206.jpeg","titulo":"","activo":true},
+    {"id":"i7","foto":"fotos/inspiracion%207.jpeg","titulo":"","activo":true},
+    {"id":"i8","foto":"fotos/inspiracion%208.jpeg","titulo":"","activo":true},
+    {"id":"i9","foto":"fotos/inspiracion%209.jpeg","titulo":"","activo":true},
+    {"id":"i10","foto":"fotos/inspiracion%2010.jpeg","titulo":"","activo":true},
+    {"id":"i11","foto":"fotos/inspiracion%2011.jpeg","titulo":"","activo":true},
+    {"id":"i12","foto":"fotos/inspiracion%2012.jpeg","titulo":"","activo":true}
+  ],
+  "rarezas":[],
+  "promos":[
+    {"id":"pr1","badge":"10% OFF","titulo":"Tortas clásicas con 10% de descuento","desc":"Todas las tortas con cobertura de crema, por tiempo limitado.","pct":10,"cats":["crema"],"hasta":"2026-09-30","activo":true}
+  ],
+  "groups":[
+    {"id":"tortas","name":"Una torta"},
+    {"id":"mesa","name":"Para la mesa dulce"},
+    {"id":"empresas","name":"Para tu empresa"},
+    {"id":"combos","name":"Combos"},
+    {"id":"evento","name":"Un evento"}
+  ],
+  "categories":[
+    {"id":"crema","name":"Tortas clásicas","short":"Clásicas","group":"tortas","note":"Cobertura de crema"},
+    {"id":"ganache","name":"Tortas personalizadas","short":"Personalizadas","group":"tortas","note":"Ganacheadas y forradas · 3 capas de relleno y 4 cortes de bizcochuelo"},
+    {"id":"pisos","name":"Tortas de dos pisos","short":"Dos pisos","group":"tortas","note":"Para quince, casamientos y festejos grandes"},
+    {"id":"tortaspostres","name":"Tortas postres","short":"Tortas postres","group":"tortas","note":""},
+    {"id":"docena","name":"Por docena","short":"Por docena","group":"mesa","note":"100% personalizados con pasta para forrar tortas, láminas comestibles y chocolates"},
+    {"id":"bomboneria","name":"Bombonería","short":"Bombonería","group":"mesa","note":"Bombones artesanales en caja, con tarjeta para dedicar"},
+    {"id":"mesas","name":"Combos de mesa dulce","short":"Combos","group":"mesa","note":"Sin torta · 100% personalizadas con pasta, lámina comestible y chocolate"},
+    {"id":"postres","name":"Postres","short":"Postres","group":"mesa","note":""},
+    {"id":"empresas","name":"Cake corporativo","short":"Empresas","group":"empresas","note":"Desayunos, coffee breaks y regalos para oficinas"},
+    {"id":"combos","name":"Combos","short":"Clásicos y premium","group":"combos","note":"Torta y mesa dulce en un solo pedido · O mini postres sin torta"},
+    {"id":"combosevento","name":"Combos por evento","short":"Por evento","group":"combos","note":"Armados para quince, comunión, confirmación, bautismo y casamiento"}
+  ],
+  "events":[
+    {"id":"infantil","name":"Cumpleaños infantil","desc":"Mandanos la foto del personaje","tag":"","activo":false},
+    {"id":"quince","name":"15 años","desc":"Combo completo, en cuotas","tag":"Precio especial","activo":true},
+    {"id":"comunion","name":"Comunión y bautismo","desc":"Torta y mesa dulce","tag":"","activo":true},
+    {"id":"cumple","name":"Cumpleaños","desc":"Desde 2 hasta 45 porciones","tag":"","activo":false},
+    {"id":"evento","name":"Casamientos","desc":"Torta de bodas y mesa dulce","tag":"","activo":true}
+  ],
+  "products":[
+    {"id":"p1","cat":"crema","name":"Mini cake","desc":"10 cm · 1 capa de relleno · 2 cortes de bizcochuelo","pmin":2,"pmax":3,"price":20000,"plabel":"","p2label":"","eventos":["cumple"],"fotos":["fotos/Mini%20cake%20(2).jpeg","fotos/Mini%20cake.jpeg"],"activo":true},
+    {"id":"p2","cat":"crema","name":"Torta chica","desc":"15 cm · 2 capas de relleno · 3 cortes de bizcochuelo","pmin":8,"pmax":10,"price":61000,"plabel":"","p2label":"","eventos":["cumple","infantil"],"photo":"fotos/Torta%20chica%20crema.jpeg","activo":true},
+    {"id":"p3","cat":"crema","name":"Torta mediana","desc":"16 cm · 3 capas de relleno · 4 cortes de bizcochuelo","pmin":15,"pmax":20,"price":80000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"fotos/Torta%20mediana%20crema.jpeg","activo":true},
+    {"id":"p4","cat":"crema","name":"Torta grande","desc":"21 cm · 3 capas de relleno · 4 cortes de bizcochuelo","pmin":25,"pmax":30,"price":110000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion","evento"],"photo":"fotos/Torta%20grande%20crema.jpeg","activo":true},
+    {"id":"p5","cat":"ganache","name":"Torta chica","desc":"16 cm de diámetro","pmin":15,"pmax":20,"price":110000,"plabel":"","p2label":"","eventos":["infantil","cumple"],"photo":"fotos/Torta%20chica%20personalizada.jpeg","activo":true},
+    {"id":"p6","cat":"ganache","name":"Torta mediana","desc":"21 cm de diámetro","pmin":25,"pmax":30,"price":140000,"plabel":"","p2label":"","eventos":["infantil","cumple","quince"],"photo":"fotos/Torta%20mediana%20personalizada.jpeg","activo":true},
+    {"id":"p7","cat":"ganache","name":"Torta grande","desc":"25 cm de diámetro","pmin":40,"pmax":45,"price":200000,"plabel":"","p2label":"","eventos":["infantil","quince","comunion","evento"],"photo":"fotos/Torta%20grande%20personalizada.jpeg","activo":true},
+    {"id":"ps1","cat":"pisos","name":"Torta de dos pisos","desc":"Dos tortas apiladas, ganacheadas o forradas. El diseño, los colores y la decoración se definen con vos.","pmin":40,"pmax":60,"price":0,"plabel":"","p2label":"","eventos":["quince","evento","comunion"],"photo":"fotos/Torta%20de%20dos%20pisos.jpeg","activo":true},
+    {"id":"c1","cat":"postres","name":"Chocotorta","desc":"Capas de galletitas de chocolate con relleno de crema de chocotorta: dulce de leche y crema chantilly. Se personaliza con el nombre y la edad en chocolate, y chocolatines de colores a elección.","pmin":15,"pmax":25,"price":46000,"plabel":"15 porciones","price2":63000,"p2label":"25 porciones","eventos":["cumple","infantil"],"photo":"fotos/Chocotorta.jpeg","activo":true},
+    {"id":"d1","cat":"postres","name":"Cheesecake New York con frutos rojos","desc":"Base de galletitas, cheesecake cremoso y cobertura de frutos rojos.","price":40000,"plabel":"20 cm","price2":55000,"p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/Cheesecake%20NY.jpeg","activo":true},
+    {"id":"d10","cat":"postres","name":"Cheesecake New York de pistacho","desc":"Base de galletitas, cheesecake cremoso con pasta de pistachos y topping de pasta de pistachos Lucianos con pistachos triturados.","pmin":10,"pmax":12,"price":60000,"plabel":"20 cm","p2label":"","eventos":["cumple","evento"],"activo":true},
+    {"id":"d2","cat":"postres","name":"Lemon pie","desc":"Base de masa, crema de limón y merengue.","price":35000,"plabel":"20 cm","price2":46000,"p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/Lemon%20pie.jpeg","fotos/Lemon%20pie%20(2).jpeg"],"activo":true},
+    {"id":"d3","cat":"postres","name":"Rogel","desc":"Capas finas de masa con dulce de leche y merengue.","price":46000,"plabel":"20 cm","price2":63000,"p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/Rogel.jpeg","fotos/Rogel%202.jpeg"],"activo":true},
+    {"id":"d6","cat":"postres","name":"Havannet","desc":"Base de masa, relleno de dulce de leche y cobertura de chocolate blanco o negro.","price":46000,"plabel":"20 cm","price2":58000,"p2label":"26 cm","eventos":["cumple"],"photo":"fotos/Havannet.jpeg","activo":true},
+    {"id":"d7","cat":"postres","name":"Coco y dulce de leche","desc":"Base de masa rellena de dulce de leche, con cobertura de craquelado de coco.","price":35000,"plabel":"20 cm","price2":46000,"p2label":"26 cm","eventos":["cumple"],"fotos":["fotos/Coco%20y%20dulce%20de%20leche.jpeg","fotos/Coco%20y%20dulce%20de%20leche%202.jpeg"],"activo":true},
+    {"id":"d8","cat":"postres","name":"Brownie","desc":"Base de brownie con capa de dulce de leche y crema, decorado con frutas o chocolate en rama.","price":45000,"plabel":"20 cm","price2":60000,"p2label":"26 cm","eventos":["cumple"],"photo":"fotos/Brownie.jpeg","activo":true},
+
+    {"id":"d9","cat":"postres","name":"Tarta frutal","desc":"Base de masa, relleno de dulce de leche, crema chantilly y frutas a elección.","price":46000,"plabel":"20 cm","price2":58000,"p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/Frutales.jpeg","fotos/Frutales%20(2).jpeg","fotos/Frutales%20(3).jpeg","fotos/Frutales%204.jpeg"],"activo":true},
+    {"id":"tp1","cat":"tortaspostres","name":"Red velvet","desc":"Bizcochuelo red velvet suave y húmedo, relleno con frosting de queso crema.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/red%20velvet.jpeg","activo":true},
+    {"id":"tp2","cat":"tortaspostres","name":"Matilda","desc":"Bizcochuelo de chocolate, cubierto con ganache de chocolate semiamargo y dulce de leche, crema Bariloche.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/WhatsApp%20Image%202026-09-18%20at%202.25.14%20PM%20(1).jpeg","activo":true},
+    {"id":"tp3","cat":"tortaspostres","name":"Chajá","desc":"Bizcochuelo de vainilla, dulce de leche, crema, merengues y durazno.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/WhatsApp%20Image%202026-09-18%20at%202.25.17%20PM%20(1).jpeg","fotos/WhatsApp%20Image%202026-09-18%20at%202.16.13%20PM%20(1).jpeg"],"activo":true},
+    {"id":"tp4","cat":"tortaspostres","name":"Mousse de chocolate","desc":"Bizcochuelo de chocolate con mousse de chocolate.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/Mousse%20de%20chocolate.jpeg","activo":true},
+    {"id":"tp5","cat":"tortaspostres","name":"Milhojas","desc":"Capas de hojaldre rellenas con dulce de leche.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/milojas.jpeg","activo":true},
+    {"id":"dz9","cat":"docena","name":"Donitas","desc":"","price":40250,"plabel":"Docena","price2":20125,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz6","cat":"docena","name":"Cakepops","desc":"","price":46000,"plabel":"Docena","price2":23000,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz7","cat":"docena","name":"Oreos","desc":"","price":46000,"plabel":"Docena","price2":23000,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz8","cat":"docena","name":"Chocolinas","desc":"","price":46000,"plabel":"Docena","price2":23000,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz1","cat":"docena","name":"Cupcakes","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz2","cat":"docena","name":"Galletas","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz10","cat":"docena","name":"Galletas 3D","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz3","cat":"docena","name":"Paletas","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz4","cat":"docena","name":"Alfajores personalizados","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz5","cat":"docena","name":"Icepops","desc":"","price":66700,"plabel":"Docena","price2":33350,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"md1","cat":"mesas","name":"Combo mesa dulce chica","desc":"Sin torta. Personalizada con pasta, lámina comestible y chocolate.","pmin":8,"pmax":12,"price":75000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"","activo":true,"incluye":["Oreos · 3 u","Galletas · 3 u","Cupcakes · 3 u","Donas · 3 u"]},
+    {"id":"md2","cat":"mesas","name":"Combo mesa dulce mediana","desc":"Sin torta. Personalizada con pasta, lámina comestible y chocolate.","pmin":12,"pmax":18,"price":104000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"","activo":true,"incluye":["Galletas · 6 u","Donas · 6 u","Cupcakes · 3 u","Oreos · 3 u"]},
+    {"id":"md3","cat":"mesas","name":"Combo mesa dulce grande","desc":"Sin torta. Personalizada con pasta, lámina comestible y chocolate.","pmin":25,"pmax":35,"price":219000,"plabel":"","p2label":"","eventos":["cumple","infantil","quince","comunion","evento"],"photo":"","activo":true,"incluye":["Cupcakes · 6 u","Galletas · 6 u","Oreos · 6 u","Paletas · 6 u","Donas · 12 u","Mini maicena · 24 u"]},
+    {"id":"bb1","cat":"bomboneria","name":"Bombonería","desc":"Bombones artesanales en caja. Incluye tarjeta para dedicar.","price":15000,"plabel":"Caja chica","price2":30000,"p2label":"Caja grande","eventos":[],"activo":true},
+    {"id":"m2","cat":"empresas","name":"Desayunos empresariales","desc":"Para oficinas, capacitaciones y coffee breaks. Armamos la propuesta según la cantidad de personas.","price":0,"plabel":"","p2label":"","eventos":[],"photo":"fotos/desayunos%20empresariales.jpeg","activo":true},
+    {"id":"m3","cat":"empresas","name":"Presentes empresariales","desc":"Para clientes, proveedores y el equipo. Cajas y regalos personalizados con el logo de tu empresa.","price":0,"plabel":"","p2label":"","eventos":[],"activo":true},
+    {"id":"m4","cat":"empresas","name":"Box empresariales dulces","desc":"Caja armada para regalar, lista para entregar. Se personaliza con el logo de tu empresa y una tarjeta con tu mensaje.","price":0,"plabel":"","p2label":"","eventos":[],"activo":true},
+    {"id":"m5","cat":"empresas","name":"Box empresariales salados","desc":"La versión salada, para desayunos de trabajo y reuniones. También se personaliza con el logo y la tarjeta.","price":0,"plabel":"","p2label":"","eventos":[],"activo":true},
+    {"id":"k1","cat":"combosevento","name":"Combo 15 años","desc":"Torta y mesa dulce completa. También en cuotas.","pmin":40,"pmax":45,"price":420000,"plabel":"","p2label":"","eventos":["quince"],"photo":"fotos/Combo%2015.jpeg","activo":true,"incluye":["Torta · 45 porciones","Cupcakes · 12 u","Galletas · 12 u","Paletas · 12 u","Oreos · 12 u","Donas · 12 u","Mini maicena · 24 u"]},
+    {"id":"k2","cat":"combosevento","name":"Combo comunión, confirmación y bautismo","desc":"Torta y mesa dulce para 30 personas.","pmin":30,"pmax":30,"price":200000,"plabel":"","p2label":"","eventos":["comunion"],"fotos":["fotos/combo%20comunion.jpeg","fotos/combo%20comunion%20(2).jpeg","fotos/combo%20comunion%20(3).jpeg"],"activo":true,"incluye":["Torta · 30 porciones","Galletas · 12 u","Cupcakes · 6 u","Donas · 12 u"]},
+    {"id":"k3","cat":"combos","name":"Combo chico","desc":"Torta y mesa dulce.","pmin":20,"pmax":20,"price":224000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"","activo":true,"incluye":["Torta · 20 porciones","Cupcakes · 6 u","Galletas · 6 u","Paletas · 6 u","Donas · 6 u"]},
+    {"id":"k4","cat":"combos","name":"Combo mediano","desc":"Torta y mesa dulce.","pmin":30,"pmax":30,"price":259000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"","activo":true,"incluye":["Torta · 30 porciones","Cupcakes · 6 u","Paletas · 6 u","Galletas · 6 u","Donas · 6 u","Oreos · 6 u","Mini maicena · 12 u"]},
+    {"id":"k5","cat":"combos","name":"Combo grande","desc":"Torta y mesa dulce.","pmin":45,"pmax":45,"price":448000,"plabel":"","p2label":"","eventos":["cumple","infantil","quince","comunion","evento"],"photo":"","activo":true,"incluye":["Torta · 45 porciones","Cupcakes · 12 u","Galletas · 12 u","Paletas · 12 u","Oreos · 12 u","Donas · 12 u","Mini maicena · 24 u"]},
+    {"id":"k6","cat":"combos","name":"Combo premium · 50 unidades","desc":"Mini postres en porción individual. Sin torta.","pmin":25,"pmax":50,"price":200000,"plabel":"","p2label":"","eventos":["quince","comunion","evento","cumple"],"activo":true,"incluye":["Mini pastelería · 50 u","Mini maicena · 24 u de regalo"],"elegir":5,"opciones":["Mini rogel","Mini brownie con dulce de leche, crema y merengue","Shots","Tartitas frutales","Mini chocotorta","Mini cheesecake","Mini havannet","Mini ricota","Mini coco"]},
+    {"id":"k7","cat":"combosevento","name":"Combo casamiento","desc":"Torta de bodas y mesa dulce. Se arma con vos según la cantidad de invitados y la paleta del casamiento.","price":0,"plabel":"","p2label":"","eventos":["evento"],"activo":true}
+  ]
+}
+</script>
+
+<div id="bg" aria-hidden="true"></div>
+<div id="veil" aria-hidden="true"></div>
+<div id="app"><div id="root"></div></div>
+<div id="imprimible" aria-hidden="true"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===========================================================
+     CONFIGURACIÓN DE FIREBASE
+     Pegá acá la Web API Key: Firebase → ⚙ Configuración del proyecto
+     → pestaña General → "Clave de API web".
+     =========================================================== */
+  var FB_API_KEY = "PEGAR_ACA_LA_API_KEY";
+  var DB_BASE    = "https://cake-c9bfd-default-rtdb.firebaseio.com";
+  var DB_NODE    = "/catalogo.json";
+
+  /* Mientras esté en false, la página usa SOLO el catálogo que está más abajo
+     en este archivo y no le hace caso a Firebase. Ponelo en true cuando la
+     base ya tenga los datos al día y quieras editar desde el panel. */
+  var USAR_BASE  = false;
+
+  /* ---------- estado ---------- */
+  function normalize(d){
+    d = d || {};
+    d.brand = d.brand || {}; d.settings = d.settings || {};
+    d.settings.rellenos = d.settings.rellenos || [];
+    d.settings.coberturas = d.settings.coberturas || [];
+    d.settings.pagos = d.settings.pagos || [];
+    d.anuncios = (d.anuncios || []).filter(Boolean);
+    d.inspiracion = (d.inspiracion || []).filter(Boolean);
+    d.rarezas = (d.rarezas || []).filter(Boolean);
+    d.promos = (d.promos || []).filter(Boolean);
+    d.groups = (d.groups || []).filter(Boolean);
+    d.categories = (d.categories || []).filter(Boolean);
+    d.events = (d.events || []).filter(Boolean);
+    d.products = (d.products || []).filter(Boolean);
+    return d;
+  }
+  var state = normalize(JSON.parse(document.getElementById('app-state').textContent));
+  var root  = document.getElementById('root');
+  var filt  = { people:null, cat:null, event:null, q:'' };
+  var closed = {};
+  var admin = { token:null, email:null, dirty:false };
+  try{
+    var sv = sessionStorage.getItem('cake-adm');
+    if(sv){ var o = JSON.parse(sv); admin.token = o.t; admin.email = o.e; }
+  }catch(e){}
+
+  /* ---------- iconos ---------- */
+  var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+  var WAICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 5-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.2.7-1.2 1.3-2 1.4-.5.1-1.2.1-3.8-.9-3.2-1.3-5.2-4.6-5.4-4.8-.2-.2-1.3-1.7-1.3-3.3S6.2 6.3 6.5 6c.3-.3.6-.4.8-.4h.6c.2 0 .5 0 .7.5l1 2.4c.1.2 0 .4-.1.6l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.4 1.8 2.2 1.3 1.1 2.3 1.5 2.6 1.6.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l2.2 1.1c.3.1.5.2.6.4.1.2.1.8-.1 1.4Z"/></svg>';
+  var IGICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5.2"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>';
+  var PINICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>';
+  var LOCKICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>';
+  var SEARCHICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>';
+
+  var ART = {
+    cupcake:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M30 56h40l-5 30a4 4 0 0 1-4 3H39a4 4 0 0 1-4-3Z"/><path d="M40 59v28M50 59v29M60 59v28"/><path d="M30 56c-4 0-7-3-7-7s3-7 7-7c0-6 5-11 11-11 2-4 6-6 10-5 3-3 8-3 11 0 5-1 9 3 9 8 4 1 6 5 5 9-1 5-5 8-9 8"/><path d="M50 26v-7M50 19c-2-1-3-3-2-5 2-1 4 0 4 2 0-2 2-3 4-2 1 2 0 4-2 5Z"/></svg>',
+    porcion:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 76 50 30l32 46Z"/><path d="M28 62h44M23 69h54"/><path d="M50 30c-3-2-4-5-3-8 3-1 6 1 6 4 1-3 4-4 6-2 1 3-2 6-6 6Z"/></svg>',
+    pisos:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 86h68a3 3 0 0 0 3-3V68H13v15a3 3 0 0 0 3 3Z"/><path d="M13 68c4-4 7 3 11-1s7 3 11-1 7 3 11-1 7 3 11-1 7 3 11-1 7 3 11-1"/><path d="M26 68V52h48v16"/><path d="M26 52c3-4 6 2 9-1s6 2 9-1 6 2 9-1 6 2 9-1 6 2 9-1"/><path d="M36 52V38h28v14"/><path d="M36 38c2.5-3 5 1.5 7.5-1s5 1.5 7.5-1 5 1.5 7.5-1"/><path d="M50 38V28M50 28c-3-1-5-3-4-6 2-1 5 1 5 3 1-2 3-3 5-2 1 2-1 5-4 5Z"/></svg>',
+    monito:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'
+      /* pie de torta */
+      + '<ellipse cx="50" cy="93" rx="16" ry="2.8"/>'
+      + '<path d="M46.5 90.5c1.2-3 1.2-5.5 1.2-7.5M53.5 90.5c-1.2-3-1.2-5.5-1.2-7.5"/>'
+      + '<ellipse cx="50" cy="83" rx="32" ry="4.6"/>'
+      /* cuerpo */
+      + '<path d="M21 82V53M79 82V53"/>'
+      + '<ellipse cx="50" cy="53" rx="29" ry="6"/>'
+      /* merengue arriba y abajo */
+      + '<path d="M21 57.5q3.6 6 7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0"/>'
+      + '<path d="M21 77.5q3.6 6 7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0"/>'
+      /* moño */
+      + '<circle cx="50" cy="40" r="3.1"/>'
+      + '<path d="M47.4 38.3c-7.5-8.4-16-5.2-13.8 1.1 1.6 4.6 9 4.1 13.8-1.1Z"/>'
+      + '<path d="M52.6 38.3c7.5-8.4 16-5.2 13.8 1.1-1.6 4.6-9 4.1-13.8-1.1Z"/>'
+      + '<path d="M47.8 43c-1.4 5.5-2.3 10-3.2 15.5M52.2 43c1.4 5.5 2.3 10 3.2 15.5"/>'
+      /* corazones */
+      + '<path d="M32 64c-1.3-2-4.4-.9-4.4 1.6 0 2.5 4.4 5 4.4 5s4.4-2.5 4.4-5c0-2.5-3.1-3.6-4.4-1.6Z"/>'
+      + '<path d="M68 64c-1.3-2-4.4-.9-4.4 1.6 0 2.5 4.4 5 4.4 5s4.4-2.5 4.4-5c0-2.5-3.1-3.6-4.4-1.6Z"/>'
+      + '<path d="M50 67c-1.3-2-4.4-.9-4.4 1.6 0 2.5 4.4 5 4.4 5s4.4-2.5 4.4-5c0-2.5-3.1-3.6-4.4-1.6Z"/>'
+      + '</svg>'
+  };
+  (function(){
+    var el = document.getElementById('bg');
+    [['b1','monito'],['b2','cupcake'],['b3','monito'],['b4','porcion'],['b5','monito'],
+     ['b6','cupcake'],['b7','monito'],['b8','porcion'],['b9','monito'],
+     ['b10','cupcake'],['b11','monito'],['b12','porcion'],['b13','monito'],
+     ['b14','cupcake'],['b15','monito'],['b16','pisos'],['b17','monito']]
+      .forEach(function(s){ el.insertAdjacentHTML('beforeend', ART[s[1]].replace('<svg ','<svg class="' + s[0] + '" ')); });
+  })();
+
+  /* ---------- utilidades ---------- */
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function money(n){ return '$' + Number(n||0).toLocaleString('es-AR'); }
+  function uid(){ return 'x' + Math.random().toString(36).slice(2,8) + Date.now().toString(36).slice(-3); }
+  function today(){ var d=new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+  /* Todas las listas de «qué incluye» se muestran en el mismo orden,
+     sin importar cómo estén cargadas. Lo que no esté acá va al final. */
+  var ORDEN_INCL = ['torta','mini pastelería','mini pasteleria','cupcakes','galletas',
+                    'oreos','paletas','donas','mini maicena','minimaicena'];
+  function ordenIncluye(lista){
+    return lista.slice().map(function(x, i){
+      var et = String(x).split('·')[0].trim().toLowerCase();
+      var k = ORDEN_INCL.indexOf(et);
+      return { x:x, k:(k < 0 ? 900 + i : k) };
+    }).sort(function(a, b){ return a.k - b.k; })
+      .map(function(o){ return o.x; });
+  }
+
+  function porcTxt(p){ if(!p.pmin) return '';
+    if(p.pmax && p.pmax!==p.pmin) return p.pmin + ' a ' + p.pmax + ' porciones';
+    return p.pmin + (p.pmin===1?' porción':' porciones'); }
+  function fmtDate(d){ if(!d) return ''; var a=d.split('-'); return a[2] + '/' + a[1]; }
+  function photosOf(p){ if(p.fotos && p.fotos.length) return p.fotos; return p.photo ? [p.photo] : []; }
+  function findById(id){ for(var i=0;i<state.products.length;i++) if(state.products[i].id===id) return state.products[i]; return null; }
+  function idxById(id){ for(var i=0;i<state.products.length;i++) if(state.products[i].id===id) return i; return -1; }
+  function toast(m, ms){ var t=document.createElement('div'); t.className='toast'; t.textContent=m;
+    document.body.appendChild(t); setTimeout(function(){ t.remove(); }, ms||2800); }
+  function norm(s){ return String(s||'').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,''); }
+  function touch(){ admin.dirty = true; }
+
+  /* ---------- promos ---------- */
+  function livePromos(){ var t = today();
+    return state.promos.filter(function(p){ return p.activo && (!p.hasta || p.hasta >= t); }); }
+  function promoFor(prod){ var ps = livePromos();
+    for(var i=0;i<ps.length;i++){ if((ps[i].cats||[]).indexOf(prod.cat) > -1) return ps[i]; } return null; }
+  function withOff(v, pr){ return pr ? Math.round(v*(1-pr.pct/100)/100)*100 : v; }
+
+  /* ---------- enlaces ---------- */
+  function waBase(){ return 'https://wa.me/' + state.brand.whatsapp; }
+  function mapsLink(){ return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(state.brand.address); }
+  function addrLink(cls){ return '<a class="' + cls + '" target="_blank" rel="noopener" href="' + esc(mapsLink()) + '">'
+      + PINICON + esc(state.brand.address) + '</a>'; }
+  function igLinks(){
+    var b = state.brand, out = [];
+    [b.instagram, b.instagram2].forEach(function(u){
+      if(!u) return;
+      var h = String(u).replace(/^@/,'').trim();
+      out.push('<a class="iglink" target="_blank" rel="noopener" href="https://instagram.com/' + esc(h) + '">'
+        + IGICON + '@' + esc(h) + '</a>');
+    });
+    return out.join('');
+  }
+  /* ===========================================================
+     CARRITO
+     =========================================================== */
+  var carrito = {};   /* { "idProducto|variante": cantidad } */
+  var tocado = null, barraVisible = false, totalMostrado = 0;
+
+  try{ carrito = JSON.parse(localStorage.getItem('cake-carrito') || '{}') || {}; }catch(e){ carrito = {}; }
+  function guardarCarrito(){ try{ localStorage.setItem('cake-carrito', JSON.stringify(carrito)); }catch(e){} }
+
+  function unitario(p, v){
+    var base = (v === 1 ? p.price2 : p.price) || 0;
+    return withOff(base, promoFor(p));
+  }
+  function etiquetaVar(p, v){
+    return (v === 1 ? (p.p2label || 'Grande') : (p.plabel || porcTxt(p) || ''));
+  }
+  function lineasCarrito(){
+    var out = [];
+    Object.keys(carrito).forEach(function(k){
+      var a = k.split('|'), p = findById(a[0]), v = Number(a[1]) || 0, q = carrito[k];
+      if(p && q > 0 && (v === 1 ? p.price2 : p.price)){
+        out.push({ k:k, p:p, v:v, q:q, unit:unitario(p, v), sub:unitario(p, v) * q });
+      }
+    });
+    return out;
+  }
+  function cantCarrito(){ return lineasCarrito().reduce(function(a,l){ return a + l.q; }, 0); }
+  function totalCarrito(){ return lineasCarrito().reduce(function(a,l){ return a + l.sub; }, 0); }
+  function sumarCarrito(k, d){
+    var q = (carrito[k] || 0) + d;
+    if(q <= 0) delete carrito[k]; else carrito[k] = q;
+    guardarCarrito();
+  }
+  function enCarrito(p){
+    var n = 0;
+    Object.keys(carrito).forEach(function(k){ if(k.split('|')[0] === p.id) n += carrito[k]; });
+    return n;
+  }
+
+  function textoPedidoCarrito(d){
+    d = d || {};
+    var s = state.settings;
+    var m = 'Hola! Te hago un pedido desde el catálogo:\n\n';
+    lineasCarrito().forEach(function(l){
+      var et = etiquetaVar(l.p, l.v);
+      m += '• ' + l.q + ' × ' + l.p.name + (et ? ' (' + et + ')' : '') + ' — ' + money(l.sub) + '\n';
+    });
+    m += '\nTotal estimado: ' + money(totalCarrito()) + '\n';
+    if(d.fecha) m += '\nFecha del evento: ' + fmtDate(d.fecha);
+    if(d.pago)  m += '\nMedio de pago: ' + d.pago;
+    if(d.nota)  m += '\n\nAclaraciones: ' + d.nota;
+    m += '\n\n(' + s.sena + ' · ' + s.anticipacion + ')';
+    return m;
+  }
+
+  function waLink(p){
+    var pr = promoFor(p);
+    var m = 'Hola! Te escribo desde el catálogo. Me interesa: ' + p.name;
+    var pt = porcTxt(p); if(pt) m += ' (' + pt + ')';
+    if(pr) m += '. Vi que está con ' + pr.badge;
+    m += '. ¿Me pasás disponibilidad y presupuesto?';
+    return waBase() + '?text=' + encodeURIComponent(m);
+  }
+
+  /* ---------- filtros ---------- */
+  function visible(p){
+    if(!p.activo && !admin.token) return false;
+    if(filt.q){
+      var q = norm(filt.q);
+      if(norm(p.name).indexOf(q) === -1 && norm(p.desc).indexOf(q) === -1) return false;
+      return true;                       /* el buscador ignora los demás filtros */
+    }
+    if(filt.cat && p.cat !== filt.cat) return false;
+    if(filt.event && (p.eventos||[]).indexOf(filt.event) === -1) return false;
+    if(filt.people != null){
+      var lo=p.pmin||0, hi=Math.max(p.pmax||0,p.pmin||0);
+      if(!(filt.people>=lo && filt.people<=hi)) return false;
+    }
+    return true;
+  }
+  var PEOPLE=[{l:'10',v:10},{l:'20',v:20},{l:'30',v:30},{l:'45',v:45}];
+
+  /* ===========================================================
+     RENDER
+     =========================================================== */
+  /* se prende al cargar y al cambiar de filtro; se apaga después de dibujar */
+  var animEntrada = true;
+  var filtrosAbiertos = false;   /* el plegable de filtros en celular */
+  var irAResultados   = false;   /* después de tocar un filtro, bajar a los resultados */
+  var claseGrid = function(){ return 'grid' + (animEntrada ? ' anim' : ''); };
+
+  function render(){
+    var b=state.brand, s=state.settings;
+    var shown = state.products.filter(visible);
+    var isAdm = !!admin.token;
+    var h='';
+
+    h += '<header class="top"><div class="wrap top-in">'
+      + '<div class="brand"><span class="nm">' + esc(b.name) + '</span>'
+      + '<span class="sub">' + esc(b.sub) + '</span></div>'
+      + '<a class="btn wa sm top-wa" target="_blank" rel="noopener" href="' + esc(waBase()) + '">' + WAICON + 'Contactanos</a>'
+      + '<button class="adm-btn' + (isAdm?' on':'') + '" data-adm title="'
+      + (isAdm ? 'Sesión de administración iniciada' : 'Administración') + '" aria-label="Administración">'
+      + LOCKICON + '</button>'
+      + '</div></header>';
+
+    /* anuncios */
+    var an = state.anuncios.filter(function(a){ return a.activo || isAdm; });
+    if(an.length){
+      h += '<div class="anuncios">';
+      an.forEach(function(a){
+        h += '<div class="anuncio"' + (a.activo?'':' style="opacity:.5"') + '><span class="dot"></span>'
+          + '<span>' + esc(a.texto) + '</span>'
+          + (isAdm ? '<button class="ax" data-anedit="' + esc(a.id) + '">editar</button>' : '') + '</div>';
+      });
+      h += '</div>';
+    }
+
+    h += '<div class="wrap">';
+    h += '<div class="hero anim-hero">'
+      + '<div class="eyebrow">Tortas y mesas dulces por encargo</div>'
+      /* Para cambiar el título, editá la línea de abajo. */
+      + '<h1>Diez años acompañando <em>momentos importantes</em></h1>'
+      + '<p class="lead">' + esc(b.tagline) + '</p></div>';
+
+    var lp = isAdm ? state.promos : livePromos();
+    if(lp.length){
+      h += '<div class="promos">';
+      lp.forEach(function(pr){
+        var vivo = pr.activo && (!pr.hasta || pr.hasta >= today());
+        h += '<div class="promo' + (vivo?'':' off') + '"><div class="pbadge">' + esc(pr.badge) + '</div>'
+          + '<div style="flex:1;min-width:0"><div class="pt">' + esc(pr.titulo) + '</div>'
+          + (pr.desc ? '<div class="pd">' + esc(pr.desc) + '</div>' : '')
+          + (pr.hasta ? '<div class="pu">Hasta el ' + esc(fmtDate(pr.hasta)) + (vivo?'':' · vencida') + '</div>' : '')
+          + '</div>'
+          + (isAdm ? '<div class="promoadmin"><button data-pedit="' + esc(pr.id) + '">Editar</button>'
+              + '<button data-pdel="' + esc(pr.id) + '">Borrar</button></div>' : '')
+          + '</div>';
+      });
+      h += '</div>';
+    }
+
+    h += '<div class="steps">' + sideHTML(true) + '</div>';
+    h += '<div class="layout"><aside class="side">' + sideHTML(false) + '</aside><div class="content">';
+
+    if(filt.q){
+      h += '<section class="cat"><button class="cat-head" data-sec="busqueda" aria-expanded="true">'
+        + '<h2>Resultados</h2><span class="note">buscando “' + esc(filt.q) + '”</span>'
+        + '<span class="cnt tnum">' + shown.length + '</span></button><div class="rule"></div>'
+        + '<div class="' + claseGrid() + '">';
+      shown.forEach(function(p,i){ h += cardHTML(p, Math.min(i,9)); });
+      h += '</div></section>';
+      if(!shown.length) h += '<p class="hint">No encontramos nada con ese nombre.</p>';
+    } else {
+      var n=0;
+      state.categories.forEach(function(c){
+        var items = shown.filter(function(p){ return p.cat===c.id; });
+        if(!items.length) return;
+        h += secHTML(c, items, n); n += items.length;
+      });
+      if(!shown.length){
+        h += '<section class="cat"><p class="hint">No hay opciones para ese filtro. Probá con otra cantidad, o escribinos y lo armamos a medida.</p></section>';
+      }
+    }
+    h += '</div></div>';
+
+    if(!filt.q){ h += inspiHTML(); h += rarezasHTML(); }
+
+    h += '<div class="info">'
+      + '<div><h3>Cómo encargar</h3><ul><li>' + esc(s.anticipacion) + '</li><li>' + esc(s.sena) + '</li>'
+      + '<li>Contactanos para más asesoramiento</li></ul></div>'
+      + '<div><h3>Formas de pago</h3><ul>'
+      + (s.pagos||[]).map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('')
+      + '</ul>'
+      + (s.planNombre ? '<div class="planbox"><div class="pk">' + esc(s.planNombre) + '</div>'
+          + '<div class="ptx">' + esc(s.planDesc||'') + '</div></div>' : '')
+      + '</div>'
+      + '<div><h3>' + esc(s.cafeTitulo || '¿Conocés nuestro café?') + '</h3>'
+      + '<p class="cafep">' + esc(s.cafeTexto||'') + '</p>'
+      + (s.menuUrl
+          ? '<a class="btn sm" href="' + esc(s.menuUrl) + '">Ver el menú del café →</a>'
+          : (isAdm ? '<p class="hint">Falta cargar el link del menú en <b>Datos</b>.</p>'
+                   : '<p class="hint">Menú disponible en el local.</p>'))
+      + '</div>'
+      + '</div>';
+    h += '</div>';
+
+    h += '<footer class="foot"><div class="wrap"><div class="fb">' + esc(b.name) + '</div>'
+      + '<div class="fs">' + esc(b.sub) + '</div>'
+      + '<div style="margin-top:16px">' + addrLink('maplink') + '</div><div style="margin-top:6px">' + esc(b.hours) + '</div>'
+      + '<div class="iglinks">' + igLinks() + '</div></div></footer>';
+    h += '<div class="spacer"></div>';
+
+    if(isAdm){
+      h += '<div class="adminbar"><span class="lbl">Administración · ' + esc(admin.email||'') + '</span>'
+        + '<button data-act="newp">+ Producto</button>'
+        + '<button data-act="promo">+ Promo</button>'
+        + '<button data-act="anuncio">+ Anuncio</button>'
+        + '<button data-act="datos">Datos</button>'
+        + '<button data-act="salir">Salir</button>'
+        + '<span class="sp">' + (admin.dirty ? 'Cambios sin guardar' : 'Todo guardado') + '</span>'
+        + '<button class="pri" data-act="guardar"' + (admin.dirty?'':' disabled') + '>Guardar</button></div>';
+    } else {
+      var nq = cantCarrito();
+      if(nq > 0){
+        h += '<div class="cartbar' + (barraVisible ? (tocado ? ' late' : '') : ' entra') + '">'
+          + '<div class="in"><div class="qn">'
+          + '<b>' + nq + (nq === 1 ? ' producto' : ' productos') + '</b>'
+          + '<span>Total estimado ' + money(totalCarrito()) + '</span></div>'
+          + '<button class="btn" data-verpedido>Ver el pedido</button></div></div>';
+      } else {
+        h += '<div class="cta-fixed only-mobile"><a class="btn wa" target="_blank" rel="noopener" href="' + esc(waBase()) + '">'
+          + WAICON + 'Asesoramiento y pedidos personalizados</a></div>';
+      }
+    }
+
+    var sy = window.scrollY;
+    root.innerHTML = h;
+    document.body.classList.toggle('admin', isAdm);
+    wire();
+    if(irAResultados){
+      /* al tocar un filtro, llevamos la vista al principio de los resultados */
+      irAResultados = false;
+      var sec = root.querySelector('section.cat');
+      var y = sec ? (sec.getBoundingClientRect().top + window.scrollY - 86) : 0;
+      try{ window.scrollTo({ top:Math.max(0, y), behavior:'smooth' }); }
+      catch(e){ window.scrollTo(0, Math.max(0, y)); }
+    } else if(sy){
+      window.scrollTo(0, sy);        /* no saltar al principio al editar o abrir una foto */
+    }
+    animEntrada = false;             /* la entrada escalonada corre una sola vez */
+    tocado = null;
+    barraVisible = (!isAdm && cantCarrito() > 0);
+    animarTotal();
+  }
+
+  /* --- el total contando --- */
+  function animarTotal(){
+    var el = document.querySelector('.cartbar .qn span');
+    var hasta = totalCarrito();
+    if(!el){ totalMostrado = hasta; return; }
+    var desde = totalMostrado;
+    if(desde === hasta || sinMovimiento){
+      el.textContent = 'Total estimado ' + money(hasta);
+      totalMostrado = hasta; return;
+    }
+    var t0 = performance.now(), dur = 520;
+    (function paso(t){
+      var k = Math.min(1, (t - t0) / dur);
+      var e = 1 - Math.pow(1 - k, 3);
+      var v = Math.round((desde + (hasta - desde) * e) / 100) * 100;
+      el.textContent = 'Total estimado ' + money(k < 1 ? v : hasta);
+      if(k < 1) requestAnimationFrame(paso); else totalMostrado = hasta;
+    })(t0);
+  }
+
+  /* --- la tortita volando al carrito --- */
+  function volarTortita(card){
+    if(!card || sinMovimiento) return;
+    var ph = card.querySelector('.ph') || card;
+    var r = ph.getBoundingClientRect();
+    if(!r.width) return;
+
+    var ancho = Math.min(r.width * .6, 80), alto = ancho;
+    var x0 = r.left + r.width / 2 - ancho / 2;
+    var y0 = r.top  + r.height / 2 - alto / 2;
+
+    var el = document.createElement('div');
+    el.className = 'volador';
+    el.innerHTML = ART.monito;
+    el.style.left = x0 + 'px'; el.style.top = y0 + 'px';
+    el.style.width = ancho + 'px'; el.style.height = alto + 'px';
+    document.body.appendChild(el);
+
+    requestAnimationFrame(function(){
+      var dest = document.querySelector('.cartbar .btn');
+      var dr = dest ? dest.getBoundingClientRect()
+                    : { left: window.innerWidth - 100, top: window.innerHeight - 56, width:70, height:42 };
+      var dx = (dr.left + dr.width / 2)  - (x0 + ancho / 2);
+      var dy = (dr.top  + dr.height / 2) - (y0 + alto / 2);
+      var fin = function(){ if(el.parentNode) el.remove(); };
+      if(!el.animate){ fin(); return; }
+      el.animate([
+        { transform:'translate(0,0) scale(.5) rotate(-6deg)', opacity:0 },
+        { transform:'translate(' + (dx * .12) + 'px,' + (dy * .05 - 26) + 'px) scale(1.06) rotate(4deg)',
+          opacity:1, offset:.22 },
+        { transform:'translate(' + (dx * .5) + 'px,' + (dy * .4 - 58) + 'px) scale(.78) rotate(-5deg)',
+          opacity:1, offset:.58 },
+        { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.16) rotate(8deg)', opacity:0 }
+      ], { duration:780, easing:'cubic-bezier(.36,.06,.3,1)' }).onfinish = fin;
+      setTimeout(fin, 1200);
+    });
+  }
+
+  /* --- agregar, eligiendo el tamaño cuando hay dos --- */
+  function agregar(p, card){
+    if(!p || !p.price) return;
+    var meter = function(v){
+      tocado = p.id;
+      sumarCarrito(p.id + '|' + v, 1);
+      render();
+      volarTortita(card);
+      if(navigator.vibrate) try{ navigator.vibrate(12); }catch(x){}
+    };
+    if(!p.price2){ meter(0); return; }
+
+    var pr = promoFor(p);
+    var op = [[0, etiquetaVar(p,0), p.price], [1, etiquetaVar(p,1), p.price2]];
+    var d = dialog('¿Cuál llevás?',
+      '<p class="hint">' + esc(p.name) + '</p><div class="chips" style="margin-top:12px">'
+      + op.map(function(o){
+          return '<button class="chip" data-v="' + o[0] + '" style="flex:1;justify-content:center">'
+            + esc(o[1]) + ' · ' + money(withOff(o[2], pr)) + '</button>'; }).join('')
+      + '</div>',
+      function(){ return true; }, 'Cerrar');
+    d.querySelectorAll('[data-v]').forEach(function(bt){
+      bt.onclick = function(){ d.close(); d.remove(); meter(Number(bt.getAttribute('data-v'))); };
+    });
+  }
+
+  /* --- el detalle del pedido --- */
+  function dlgPedidoCarrito(prev){
+    prev = prev || {};
+    var ls = lineasCarrito();
+    if(!ls.length) return;
+    var s = state.settings;
+    var PAGOS = (s.pagos || []).concat(s.planNombre ? [s.planNombre] : []);
+
+    var d = document.createElement('dialog');
+    d.className = 'pedido';
+    d.innerHTML = '<div class="dlg-h"><h3>Tu pedido</h3>'
+      + '<button class="cerrarx" data-cerrar aria-label="Cerrar">✕</button></div><div class="dlg-b">'
+      + '<div class="lineas">' + ls.map(function(l){
+          var et = etiquetaVar(l.p, l.v);
+          return '<div class="ln"><div class="nb">' + esc(l.p.name)
+            + (et ? '<small>' + esc(et) + '</small>' : '') + '</div>'
+            + '<div class="qt"><button data-m="' + esc(l.k) + '">−</button><b>' + l.q + '</b>'
+            + '<button data-p="' + esc(l.k) + '">+</button></div>'
+            + '<div class="sb tnum">' + money(l.sub) + '</div>'
+            + '<button class="rm" data-x="' + esc(l.k) + '" aria-label="Sacar">✕</button></div>';
+        }).join('') + '</div>'
+      + '<div class="total"><span>Total estimado</span><b class="tnum">' + money(totalCarrito()) + '</b></div>'
+      + '<div class="avisosena">' + esc(s.sena) + ' · ' + esc(s.anticipacion) + '</div>'
+      + '<label class="fld" style="margin-top:14px"><span>¿Para qué fecha es?</span>'
+      + '<input type="date" id="c-f" value="' + esc(prev.fecha || '') + '"></label>'
+      + '<div class="fld"><span>Medio de pago</span><div class="segm pagos">'
+      + PAGOS.map(function(x){
+          return '<button type="button" data-pago="' + esc(x) + '"'
+            + ((prev.pago || PAGOS[0]) === x ? ' class="on"' : '') + '>' + esc(x) + '</button>'; }).join('')
+      + '</div></div>'
+      + '<label class="fld"><span>Aclaraciones (opcional)</span>'
+      + '<textarea id="c-n" placeholder="Nombre y edad en la torta, colores, personaje…">'
+      + esc(prev.nota || '') + '</textarea></label>'
+      + '</div>'
+      + '<div class="dlg-f"><button class="btn wa" data-enviar style="width:100%">'
+      + WAICON + 'Enviar pedido por WhatsApp</button></div>';
+
+    document.body.appendChild(d);
+    var leer = function(){
+      var pg = d.querySelector('.segm.pagos button.on');
+      return { fecha:d.querySelector('#c-f').value,
+               pago: pg ? pg.getAttribute('data-pago') : '',
+               nota:d.querySelector('#c-n').value.trim() };
+    };
+    d.querySelectorAll('[data-pago]').forEach(function(bt){
+      bt.onclick = function(){
+        d.querySelectorAll('[data-pago]').forEach(function(o){ o.classList.remove('on'); });
+        bt.classList.add('on');
+      };
+    });
+    var recargar = function(){
+      var v = leer(); d.close(); d.remove();
+      render();
+      if(cantCarrito() > 0) dlgPedidoCarrito(v);
+    };
+
+    d.querySelector('[data-cerrar]').onclick = function(){ d.close(); d.remove(); };
+    d.querySelector('[data-enviar]').onclick = function(){
+      window.open(waBase() + '?text=' + encodeURIComponent(textoPedidoCarrito(leer())), '_blank', 'noopener');
+      confeti();
+    };
+    d.querySelectorAll('[data-p]').forEach(function(bt){
+      bt.onclick = function(){ sumarCarrito(bt.getAttribute('data-p'), 1); recargar(); }; });
+    d.querySelectorAll('[data-m]').forEach(function(bt){
+      bt.onclick = function(){ sumarCarrito(bt.getAttribute('data-m'), -1); recargar(); }; });
+    d.querySelectorAll('[data-x]').forEach(function(bt){
+      bt.onclick = function(){ delete carrito[bt.getAttribute('data-x')]; guardarCarrito(); recargar(); }; });
+    d.addEventListener('close', function(){ d.remove(); });
+    d.showModal();
+  }
+
+  function sideHTML(movil){
+    var buscador = '<div class="search' + (filt.q ? ' conx' : '') + '">'
+      + SEARCHICON.replace('<svg ','<svg class="si" ')
+      + '<input type="search" placeholder="Buscar un producto" value="' + esc(filt.q) + '" data-q>'
+      + (filt.q ? '<button class="sx" data-qx aria-label="Limpiar">✕</button>' : '') + '</div>';
+    var h = '';
+
+    h += '<div class="sblock"><h3><span class="step">1</span>¿Para cuántas personas?</h3>'
+      + '<div class="chips" style="margin-bottom:10px"><button class="chip" data-people="" aria-pressed="' + (filt.people==null) + '">Ver todo</button></div>'
+      + '<div class="cgroup"><span class="glabel">Somos alrededor de</span><div class="chips">'
+      + PEOPLE.map(function(o){ return '<button class="chip" data-people="' + o.v + '" aria-pressed="'
+          + (filt.people===o.v) + '">' + esc(o.l) + '</button>'; }).join('') + '</div></div></div>';
+
+    h += '<div class="sblock"><h3><span class="step">2</span>¿Qué estás buscando?</h3>'
+      + '<div class="chips" style="margin-bottom:12px"><button class="chip" data-cat="" data-event="" aria-pressed="'
+      + (filt.cat==null && filt.event==null) + '">Ver todo</button></div>';
+    (state.groups||[]).forEach(function(g){
+      h += '<div class="cgroup"><span class="glabel">' + esc(g.name) + '</span><div class="chips">';
+      if(g.id === 'evento'){
+        h += state.events.filter(function(e){ return e.activo; }).map(function(e){
+          return '<button class="chip" data-event="' + esc(e.id) + '" aria-pressed="' + (filt.event===e.id) + '">'
+            + esc(e.name) + '</button>'; }).join('');
+      } else {
+        h += state.categories.filter(function(c){ return c.group === g.id; }).map(function(c){
+          return '<button class="chip" data-cat="' + esc(c.id) + '" aria-pressed="' + (filt.cat===c.id) + '">'
+            + esc(c.short||c.name) + '</button>'; }).join('');
+      }
+      h += '</div></div>';
+    });
+    h += '</div>';
+
+    if(!movil) return buscador + h;
+
+    /* en celular los filtros van plegados, para llegar antes a las tortas */
+    var act = [];
+    if(filt.people != null) act.push('Para ' + filt.people);
+    if(filt.cat){
+      var c = state.categories.filter(function(x){ return x.id === filt.cat; })[0];
+      if(c) act.push(c.short || c.name);
+    }
+    if(filt.event){
+      var e = state.events.filter(function(x){ return x.id === filt.event; })[0];
+      if(e) act.push(e.name);
+    }
+    return buscador
+      + '<details class="filtros"' + (filtrosAbiertos ? ' open' : '') + '>'
+      + '<summary>Elegí lo que buscás'
+      + '<span class="st">' + (act.length ? esc(act.join(' · ')) : 'Viendo todo') + '</span>'
+      + '</summary><div class="fbody">' + h + '</div></details>';
+  }
+
+  function secHTML(c, items, startIdx){
+    var open = !closed[c.id];
+    var h = '<section class="cat"><div class="cat-top">'
+      + '<button class="cat-head" data-sec="' + esc(c.id) + '" aria-expanded="' + open + '">'
+      + '<h2>' + esc(c.name) + '</h2>'
+      + (c.note ? '<span class="note">' + esc(c.note) + '</span>' : '')
+      + '<span class="cnt tnum">' + items.length + '</span>'
+      + '<span class="chev">' + CHEV + '</span></button>'
+      + '<button class="pdfbtn" data-pdfcat="' + esc(c.id) + '" title="Descargar esta sección en PDF">'
+      + PDFICON + 'PDF</button>'
+      + '</div><div class="rule"></div>'
+      + '<div class="' + claseGrid() + '"' + (open ? '' : ' hidden') + '>';
+    items.forEach(function(p,i){ h += cardHTML(p, Math.min((startIdx||0)+i,9)); });
+    return h + '</div></section>';
+  }
+
+  /* Si una foto de la galería no existe, la tarjeta se saca sola.
+     Si al final no quedó ninguna, se muestran los recuadros punteados. */
+  function vacias(){
+    var h = '';
+    for(var i=0;i<4;i++){ h += '<div class="icard empty">' + ART.monito + '<span>Acá van tus fotos</span></div>'; }
+    return h;
+  }
+  window.cakeSinFoto = function(img){
+    var c = img.parentNode;
+    var grid = c ? c.parentNode : null;
+    if(c && grid) grid.removeChild(c);
+    if(grid && !grid.children.length) grid.innerHTML = vacias();
+  };
+
+  /* ===========================================================
+     FOTOS EXTRA AUTOMÁTICAS
+     Si un producto tiene "Torta.jpeg", la página busca sola
+     "Torta 2.jpeg", "Torta 3.jpeg"… y también "Torta (2).jpeg",
+     que es como las numera Windows. Las que encuentra las suma.
+     =========================================================== */
+  function baseDeFoto(u){
+    var m = String(u).match(/^(.*?)(\.[a-z0-9]+)$/i);
+    if(!m) return null;
+    return { base: m[1].replace(/(?:%20|\s)*(?:\(\d+\)|\d+)$/, ''), ext: m[2] };
+  }
+  function probarFoto(url, cb){
+    var i = new Image();
+    i.onload  = function(){ cb(true); };
+    i.onerror = function(){ cb(false); };
+    i.src = url;
+  }
+  /* Galerías automáticas: busca "prefijo 1", "prefijo 2"… hasta que falta uno.
+     Sirve para «Modelos de inspiración» y para «Fuera de molde». */
+  function autoGaleria(prefijos, listo){
+    var out = [], exts = ['.jpeg', '.jpg', '.png'], vacios = 0;
+
+    (function porNumero(n){
+      if(n > 24 || vacios >= 4){ listo(out); return; }
+
+      /* n = 0 es el archivo sin número: "fuera de molde.jpeg" */
+      var cands = [];
+      prefijos.forEach(function(pf){
+        exts.forEach(function(e){
+          if(n === 0) cands.push('fotos/' + encodeURIComponent(pf) + e);
+          else {
+            cands.push('fotos/' + encodeURIComponent(pf + ' ' + n) + e);
+            cands.push('fotos/' + encodeURIComponent(pf + ' (' + n + ')') + e);
+          }
+        });
+      });
+
+      var k = 0;
+      (function probar(){
+        if(k >= cands.length){ vacios++; porNumero(n + 1); return; }
+        var u = cands[k++];
+        probarFoto(u, function(ok){
+          if(ok){
+            vacios = 0;
+            if(out.indexOf(u) === -1) out.push(u);
+            porNumero(n + 1);
+          } else probar();
+        });
+      })();
+    })(0);
+  }
+
+  function cargarGalerias(listo){
+    var falta = 2, hubo = false;
+    var fin = function(){ if(--falta === 0 && hubo) listo(); };
+
+    autoGaleria(['inspiracion', 'inspiración', 'modelo'], function(fs){
+      if(fs.length){
+        state.inspiracion = fs.map(function(f, i){
+          return { id:'i' + (i+1), foto:f, titulo:'', activo:true }; });
+        hubo = true;
+      }
+      fin();
+    });
+
+    autoGaleria(['fuera de molde', 'rara'], function(fs){
+      if(fs.length){
+        state.rarezas = fs.map(function(f, i){
+          return { id:'r' + (i+1), foto:f, titulo:'', activo:true }; });
+        hubo = true;
+      }
+      fin();
+    });
+  }
+
+  /* el nombre del archivo puede estar en minúscula o sin tildes */
+  function sinTildes(s){
+    return String(s).normalize ? String(s).normalize('NFD').replace(/[̀-ͯ]/g, '') : String(s);
+  }
+  function variantesNombre(n){
+    var a = [n, n.toLowerCase(), sinTildes(n), sinTildes(n).toLowerCase()];
+    return a.filter(function(v, i){ return a.indexOf(v) === i; });
+  }
+
+  /* Parte una ruta en carpeta + nombre + extensión, ya sin codificar */
+  function partesRuta(u){
+    var d; try{ d = decodeURIComponent(String(u)); }catch(e){ d = String(u); }
+    var i = d.lastIndexOf('/');
+    var dir = i < 0 ? 'fotos/' : d.slice(0, i + 1);
+    var f   = i < 0 ? d : d.slice(i + 1);
+    var j   = f.lastIndexOf('.');
+    return { dir:dir, base:(j < 0 ? f : f.slice(0, j)), ext:(j < 0 ? '.jpeg' : f.slice(j)) };
+  }
+  function armarRuta(dir, base, ext){ return dir + encodeURIComponent(base + ext); }
+
+  /* prueba una lista de candidatos y devuelve el primero que exista */
+  function primeraQueCarga(lista, cb){
+    var i = 0;
+    (function paso(){
+      if(i >= lista.length){ cb(null); return; }
+      var u = lista[i++];
+      probarFoto(u, function(ok){ if(ok) cb(u); else paso(); });
+    })();
+  }
+
+  function autoFotos(listo){
+    var pend = 0, hubo = false;
+
+    /* Solo salimos a buscar fotos de los productos que no tienen ninguna.
+       Los que ya están resueltos arriba se dibujan bien de entrada y no
+       generan ni una consulta de más. */
+    (state.products || []).filter(function(p){ return !photosOf(p).length; })
+      .forEach(function(p){
+      pend++;
+      var conf = photosOf(p), antes = conf.join('|'), lista = [];
+
+      var terminar = function(){
+        p.fotos = lista; delete p.photo;
+        if(lista.join('|') !== antes) hubo = true;
+        if(--pend === 0 && hubo) listo();
+      };
+
+      /* con la primera ya resuelta, busca 2, 3, 4… tolerando huecos */
+      var extender = function(){
+        var q = partesRuta(lista[0]);
+        var raiz = q.base.replace(/\s*(?:\(\d+\)|\d+)$/, '');
+        var fallas = 0;
+        (function siguiente(n){
+          if(n > 10 || fallas > 2){ terminar(); return; }
+          var cands = [];
+          variantesNombre(raiz).forEach(function(b){
+            cands.push(armarRuta(q.dir, b + ' ' + n, q.ext));
+            cands.push(armarRuta(q.dir, b + ' (' + n + ')', q.ext));
+          });
+          primeraQueCarga(cands, function(u){
+            if(u){ fallas = 0; if(lista.indexOf(u) === -1) lista.push(u); }
+            else fallas++;
+            siguiente(n + 1);
+          });
+        })(2);
+      };
+
+      /* 1 · verificamos las cargadas a mano, probando mayúsculas y tildes */
+      var i = 0;
+      (function verificar(){
+        if(i < conf.length){
+          var q = partesRuta(conf[i++]);
+          var cands = variantesNombre(q.base).map(function(b){
+            return armarRuta(q.dir, b, q.ext); });
+          primeraQueCarga(cands, function(u){
+            if(u && lista.indexOf(u) === -1) lista.push(u);
+            verificar();
+          });
+          return;
+        }
+        if(lista.length){ extender(); return; }
+
+        /* 2 · si no quedó ninguna, buscamos por el nombre del producto */
+        var cands = [];
+        ['.jpeg', '.jpg', '.png'].forEach(function(e){
+          variantesNombre(p.name).forEach(function(b){
+            cands.push(armarRuta('fotos/', b, e));
+          });
+        });
+        ['.jpeg', '.jpg'].forEach(function(e){
+          variantesNombre(p.name).forEach(function(b){
+            cands.push(armarRuta('fotos/', b + ' (2)', e));
+          });
+        });
+        primeraQueCarga(cands, function(u){
+          if(u){ lista.push(u); extender(); } else terminar();
+        });
+      })();
+    });
+  }
+
+  /* ===========================================================
+     EXPORTAR A PDF
+     Arma una hoja limpia con la marca y manda a imprimir.
+     En el diálogo de impresión se elige «Guardar como PDF».
+     =========================================================== */
+  var PDFICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
+    + 'stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 10 4.5 4 4.5-4"/>'
+    + '<path d="M4 18v2h16v-2"/></svg>';
+
+  /* el dibujito repetido de fondo, en caramelo bien suave */
+  function fondoTortitas(){
+    var sinSvg = function(s){
+      return String(s).replace(/^\s*<svg[^>]*>/i, '').replace(/<\/svg>\s*$/i, '');
+    };
+    var torta = sinSvg(ART.monito), cup = sinSvg(ART.cupcake), porc = sinSvg(ART.porcion);
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">'
+      + '<g fill="none" stroke="#C08552" stroke-width="2.6" stroke-linecap="round" '
+      + 'stroke-linejoin="round" opacity="0.14">'
+      + '<g transform="translate(18,22) scale(1.05)">' + torta + '</g>'
+      + '<g transform="translate(175,58) scale(0.72) rotate(12)">' + cup + '</g>'
+      + '<g transform="translate(160,165) scale(0.95) rotate(-8)">' + torta + '</g>'
+      + '<g transform="translate(30,190) scale(0.75) rotate(9)">' + porc + '</g>'
+      + '</g></svg>';
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+
+  function filaPDF(p){
+    var pr = promoFor(p), fs = photosOf(p);
+    var h = '<div class="pdf-i">'
+      + (fs.length ? '<img src="' + esc(fs[0]) + '" alt="">' : '<div class="pdf-sf"></div>')
+      + '<div class="pdf-b"><div class="pdf-nm">' + esc(p.name) + '</div>'
+      + (porcTxt(p) ? '<div class="pdf-p">' + esc(porcTxt(p)) + '</div>' : '')
+      + (p.desc ? '<div class="pdf-d">' + esc(p.desc) + '</div>' : '');
+    if(p.incluye && p.incluye.length){
+      h += '<ul class="pdf-l">' + ordenIncluye(p.incluye).map(function(x){
+        return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+    }
+    if(p.opciones && p.opciones.length){
+      h += '<div class="pdf-d"><b>'
+        + (p.elegir ? p.elegir + ' gustos a elección: ' : 'Gustos: ') + '</b>'
+        + esc(p.opciones.join(' · ')) + '</div>';
+    }
+    if(p.price){
+      h += '<div class="pdf-pr">'
+        + (p.plabel ? '<small>' + esc(p.plabel) + '</small>' : '') + money(withOff(p.price, pr));
+      if(p.price2) h += '&nbsp;&nbsp;·&nbsp;&nbsp;'
+        + (p.p2label ? '<small>' + esc(p.p2label) + '</small>' : '') + money(withOff(p.price2, pr));
+      h += '</div>';
+    } else {
+      h += '<div class="pdf-pr" style="font-size:14px">Consultar</div>';
+    }
+    return h + '</div></div>';
+  }
+
+  function exportarPDF(titulo, nota, lista){
+    var b = state.brand, s = state.settings;
+    var h = '<div class="pdf-h"><div class="pdf-m">Cake</div>'
+      + '<div class="pdf-s">Café y pastelería</div></div>'
+      + '<h1 class="pdf-t">' + esc(titulo) + '</h1>'
+      + (nota ? '<p class="pdf-n">' + esc(nota) + '</p>' : '')
+      + '<div class="pdf-grid">' + lista.map(filaPDF).join('') + '</div>'
+
+      /* el mismo bloque de información que está en la página */
+      + '<div class="pdf-info">'
+      + '<div><h4>Cómo encargar</h4><ul>'
+      + '<li>' + esc(s.anticipacion) + '</li>'
+      + '<li>' + esc(s.sena) + '</li>'
+      + '<li>Contactanos para más asesoramiento</li></ul></div>'
+
+      + '<div><h4>Formas de pago</h4><ul>'
+      + (s.pagos || []).map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('')
+      + '</ul>'
+      + (s.planNombre
+          ? '<div class="pdf-plan"><b>' + esc(s.planNombre) + '</b>'
+            + '<span>' + esc(s.planDesc || '') + '</span></div>' : '')
+      + '</div>'
+
+      + '<div><h4>' + esc(s.cafeTitulo || '¿Conocés nuestro café?') + '</h4>'
+      + '<p>' + esc(s.cafeTexto || '') + '</p></div>'
+      + '</div>'
+
+      + '<div class="pdf-f">'
+      + '<div class="fm">Cake</div>'
+      + '<div class="fs">Café y pastelería</div>'
+      + '<div class="fd">' + esc(b.address) + '</div>'
+      + '<div class="fh">' + esc(b.hours) + '</div>'
+      + '<div class="fi">@' + esc(b.instagram)
+      + (b.instagram2 ? ' · @' + esc(b.instagram2) : '')
+      + ' · ' + esc(String(b.whatsapp).replace(/^549/, '')) + '</div>'
+      + '</div>';
+
+    var cont = document.getElementById('imprimible');
+    cont.innerHTML = h;
+    cont.style.backgroundImage = 'url("' + fondoTortitas() + '")';
+    document.body.classList.add('imprimiendo');
+    var limpiar = function(){
+      document.body.classList.remove('imprimiendo');
+      cont.innerHTML = '';
+    };
+    setTimeout(function(){
+      window.print();
+      setTimeout(limpiar, 600);
+    }, 350);
+  }
+
+  function inspiHTML(){
+    var list = (state.inspiracion||[]).filter(function(x){ return x.activo; });
+    var h = '<section class="inspi"><div class="inspi-head"><h2>¿Todavía no sabés qué querés?</h2>'
+      + '<p>Mirá algunos modelos que hicimos. Mandanos el que más te guste y lo adaptamos a tu fecha, tu sabor y tu cantidad de porciones.</p></div>';
+    h += '<div class="igrid" id="igrid">';
+    if(!list.length){
+      h += vacias();
+    } else {
+      list.forEach(function(it){
+        var msg = 'Hola! Vi un modelo en la galería' + (it.titulo ? ' (' + it.titulo + ')' : '')
+          + ' y me gustaría algo así. ¿Me pasás presupuesto?';
+        h += '<div class="icard">'
+          + (it.foto ? '<img src="' + esc(it.foto) + '" alt="' + esc(it.titulo||'Modelo')
+              + '" loading="lazy" onerror="cakeSinFoto(this)">' : '')
+          + (it.titulo ? '<div class="cap">' + esc(it.titulo) + '</div>' : '')
+          + '<a class="want" target="_blank" rel="noopener" href="' + esc(waBase() + '?text=' + encodeURIComponent(msg))
+          + '"><span>Quiero algo así</span></a></div>';
+      });
+    }
+    return h + '</div></section>';
+  }
+
+  /* --- Fuera de molde: las tortas raras, las que no entran en ninguna categoría --- */
+  function rarezasHTML(){
+    var list = (state.rarezas||[]).filter(function(x){ return x.activo; });
+    var isAdm = !!admin.token;
+    if(!list.length && !isAdm) return '';
+    var h = '<section class="inspi rarezas"><div class="inspi-head"><h2>Fuera de molde</h2>'
+      + '<p>Las que nos pidieron y nos animamos a hacer. Si lo que tenés en la cabeza no se parece '
+      + 'a nada de lo de arriba, es exactamente lo que nos gusta que nos pidan.</p></div>';
+    h += '<div class="igrid" id="rgrid">';
+    if(!list.length){
+      h += vacias();
+    } else {
+      list.forEach(function(it){
+        var msg = 'Hola! Vi una torta en «Fuera de molde»' + (it.titulo ? ' (' + it.titulo + ')' : '')
+          + ' y quiero algo así de distinto. ¿Me pasás presupuesto?';
+        h += '<div class="icard">'
+          + (it.foto ? '<img src="' + esc(it.foto) + '" alt="' + esc(it.titulo||'Torta')
+              + '" loading="lazy" onerror="cakeSinFoto(this)">' : '')
+          + (it.titulo ? '<div class="cap">' + esc(it.titulo) + '</div>' : '')
+          + '<a class="want" target="_blank" rel="noopener" href="' + esc(waBase() + '?text=' + encodeURIComponent(msg))
+          + '"><span>Quiero una así</span></a></div>';
+      });
+    }
+    return h + '</div></section>';
+  }
+
+  function cardHTML(p, idx){
+    var pr = promoFor(p), fs = photosOf(p), isAdm = !!admin.token;
+    var h = '<article class="card' + (p.activo?'':' off') + '" style="animation-delay:' + (idx*55) + 'ms">';
+    var dib = (p.cat==='postres'?ART.porcion : p.cat==='mini'?ART.cupcake : ART.monito);
+    h += '<div class="ph' + (fs.length ? ' clic" data-gal="' + esc(p.id) + '"' : '"') + '>'
+      + (pr ? '<span class="offtag">' + esc(pr.badge) + '</span>' : '')
+      + '<div class="mark">' + dib + '</div>'
+      + (fs.length ? '<img src="' + esc(fs[0]) + '" alt="' + esc(p.name) + '" loading="lazy" onerror="this.remove()">' : '')
+      + (fs.length > 1 ? '<span class="phcount tnum">' + fs.length + ' fotos</span>' : '')
+      + '</div>';
+    h += '<div class="body"><div class="nm">' + esc(p.name) + '</div>';
+    if(porcTxt(p)) h += '<span class="porc">' + esc(porcTxt(p)) + '</span>';
+    if(p.desc) h += '<div class="ds">' + esc(p.desc) + '</div>';
+    if(p.cat==='crema' || p.cat==='ganache'){
+      var sx = state.settings;
+      h += '<details class="relldet"><summary>Bizcochuelo y rellenos</summary>'
+        + '<p class="rb">' + esc(sx.bizcochuelo) + '</p>'
+        + ((sx.coberturas || []).length
+            ? '<p class="gr">Coberturas</p><ul>'
+              + sx.coberturas.map(function(r){ return '<li>' + esc(r) + '</li>'; }).join('')
+              + '</ul>' : '')
+        + '<ul>'
+        + (sx.rellenos || []).map(function(r){ return '<li>' + esc(r) + '</li>'; }).join('')
+        + '</ul></details>';
+    }
+    if(p.incluye && p.incluye.length){
+      h += '<ul class="incl">' + ordenIncluye(p.incluye).map(function(i){ var a=String(i).split('·');
+        return '<li>' + (a.length>1 ? '<b>' + esc(a[0].trim()) + '</b> ' + esc(a.slice(1).join('·').trim()) : esc(i)) + '</li>';
+      }).join('') + '</ul>';
+    }
+    if(p.opciones && p.opciones.length){
+      h += '<details class="relldet"><summary>'
+        + (p.elegir ? p.elegir + ' gustos a elección' : 'Gustos a elección') + '</summary>'
+        + '<ul>' + p.opciones.map(function(o){ return '<li>' + esc(o) + '</li>'; }).join('')
+        + '</ul></details>';
+    }
+    if(p.price){
+      h += '<div class="prices">' + priceRow(p.price, p.plabel, pr, false);
+      if(p.price2) h += priceRow(p.price2, p.p2label||'Grande', pr, true);
+      h += '</div>';
+    }
+    h += '</div>';
+    var enC = enCarrito(p);
+    h += '<div class="act"><div class="addrow">'
+      + (p.price && !isAdm
+          ? (enC > 0
+              ? '<div class="qt"><button data-menosp="' + esc(p.id) + '" aria-label="Quitar uno">−</button>'
+                + '<b>' + enC + '</b>'
+                + '<button data-add="' + esc(p.id) + '" aria-label="Agregar uno">+</button></div>'
+              : '<button class="btn add" data-add="' + esc(p.id) + '">Agregar</button>')
+          : '')
+      + '<a class="btn wa" target="_blank" rel="noopener" href="' + esc(waLink(p)) + '">'
+      + WAICON + (!p.price ? 'Consultar' : (isAdm ? 'Pedir por WhatsApp' : 'Pedir')) + '</a>'
+      + '<button class="pdfbtn" data-pdfprod="' + esc(p.id) + '" title="Descargar en PDF" '
+      + 'aria-label="Descargar en PDF">' + PDFICON + '</button>'
+      + '</div></div>';
+    if(isAdm){
+      h += '<div class="cardadmin">'
+        + '<button data-edit="' + esc(p.id) + '">Editar</button>'
+        + '<button data-fotos="' + esc(p.id) + '">Fotos</button>'
+        + '<button data-toggle="' + esc(p.id) + '">' + (p.activo?'Ocultar':'Mostrar') + '</button>'
+        + '<button class="mv" data-up="' + esc(p.id) + '" title="Subir">↑</button>'
+        + '<button class="mv" data-down="' + esc(p.id) + '" title="Bajar">↓</button>'
+        + '<button class="del" data-del="' + esc(p.id) + '">Borrar</button></div>';
+    }
+    return h + '</article>';
+  }
+
+  function priceRow(v, label, pr, sec){
+    var h = '<div class="prow' + (sec?' sec':'') + '"><span class="pl">' + esc(label||'') + '</span><span class="pv tnum">';
+    if(pr) h += '<s>' + money(v) + '</s><span class="now">' + money(withOff(v,pr)) + '</span>';
+    else h += money(v);
+    return h + '</span></div>';
+  }
+
+  /* ===========================================================
+     VISOR DE FOTOS
+     =========================================================== */
+  var lb = null, lbScroll = 0;
+  function closeLb(){
+    if(lb){ lb.close(); lb.remove(); lb = null; }
+    window.scrollTo(0, lbScroll);
+  }
+  function openGal(id){
+    var p = findById(id); if(!p) return;
+    var fs = photosOf(p); if(!fs.length) return;
+    var i = 0;
+    lbScroll = window.scrollY;
+    lb = document.createElement('dialog'); lb.className = 'lb';
+    function paint(){
+      lb.innerHTML = '<button class="lbx" data-x aria-label="Cerrar">✕</button>'
+        + '<img src="' + esc(fs[i]) + '" alt="' + esc(p.name) + '">'
+        + '<div class="lbbar"><div class="lbt">' + esc(p.name) + '</div>'
+        + (fs.length > 1 ? '<span class="lbc tnum">' + (i+1) + ' / ' + fs.length + '</span>'
+            + '<button class="lbn" data-p aria-label="Anterior">‹</button>'
+            + '<button class="lbn" data-n aria-label="Siguiente">›</button>' : '')
+        + '</div>';
+      lb.querySelector('[data-x]').onclick = closeLb;
+      var pv = lb.querySelector('[data-p]'), nx = lb.querySelector('[data-n]');
+      if(pv) pv.onclick = function(){ i = (i-1+fs.length)%fs.length; paint(); };
+      if(nx) nx.onclick = function(){ i = (i+1)%fs.length; paint(); };
+    }
+    paint();
+    lb.addEventListener('close', function(){
+      if(lb){ lb.remove(); lb=null; }
+      document.body.style.overflow = '';
+      window.scrollTo(0, lbScroll);
+    });
+    lb.addEventListener('click', function(ev){ if(ev.target===lb) closeLb(); });
+
+    /* el teclado va en el documento, no en el visor: al cambiar de foto se
+       redibuja por dentro y el foco se perdería después de la primera tecla */
+    function alTeclear(ev){
+      if(!lb) return;
+      if(ev.key === 'Escape'){ closeLb(); return; }
+      if(fs.length < 2) return;
+      if(ev.key === 'ArrowRight'){ ev.preventDefault(); i = (i+1)%fs.length; paint(); }
+      if(ev.key === 'ArrowLeft'){  ev.preventDefault(); i = (i-1+fs.length)%fs.length; paint(); }
+    }
+    document.addEventListener('keydown', alTeclear);
+    lb.addEventListener('close', function(){ document.removeEventListener('keydown', alTeclear); });
+
+    /* pasar fotos deslizando con el dedo */
+    var x0 = null;
+    lb.addEventListener('touchstart', function(ev){ x0 = ev.touches[0].clientX; }, { passive:true });
+    lb.addEventListener('touchend', function(ev){
+      if(x0 === null || fs.length < 2) return;
+      var dx = ev.changedTouches[0].clientX - x0; x0 = null;
+      if(Math.abs(dx) > 45){ i = (i + (dx < 0 ? 1 : -1) + fs.length) % fs.length; paint(); }
+    }, { passive:true });
+
+    document.body.appendChild(lb);
+
+    /* si el navegador del celular es viejo y no soporta showModal, lo abrimos a mano */
+    if(typeof lb.showModal === 'function'){
+      try{ lb.showModal(); }
+      catch(e){ lb.setAttribute('open',''); lb.classList.add('lb-plano'); }
+    } else {
+      lb.setAttribute('open','');
+      lb.classList.add('lb-plano');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  /* ===========================================================
+     DIÁLOGOS
+     =========================================================== */
+  function dialog(title, body, onSave, saveLabel){
+    var d = document.createElement('dialog');
+    d.innerHTML = '<div class="dlg-h"><h3>' + esc(title) + '</h3></div><div class="dlg-b">' + body + '</div>'
+      + '<div class="dlg-f"><button class="btn ghost" data-x="c">Cancelar</button>'
+      + '<button class="btn" data-x="s">' + esc(saveLabel||'Guardar') + '</button></div>';
+    document.body.appendChild(d);
+    d.querySelector('[data-x="c"]').onclick = function(){ d.close(); d.remove(); };
+    d.querySelector('[data-x="s"]').onclick = function(){ if(onSave(d)!==false){ d.close(); d.remove(); render(); } };
+    d.addEventListener('close', function(){ d.remove(); });
+    d.showModal(); return d;
+  }
+
+  function shrink(file, max, cb){
+    var fr = new FileReader();
+    fr.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var w=img.width, hh=img.height, M=max||900;
+        if(w>M||hh>M){ var r=Math.min(M/w,M/hh); w=Math.round(w*r); hh=Math.round(hh*r); }
+        var cv=document.createElement('canvas'); cv.width=w; cv.height=hh;
+        var cx=cv.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,w,hh); cx.drawImage(img,0,0,w,hh);
+        cb(cv.toDataURL('image/jpeg', 0.72));
+      };
+      img.onerror = function(){ cb(null); };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  }
+
+  /* --------- login --------- */
+  function openLogin(){
+    if(admin.token){
+      dialog('Sesión iniciada', '<p class="hint">Entraste como <b>' + esc(admin.email||'') + '</b>.</p>',
+        function(){ return true; }, 'Cerrar');
+      return;
+    }
+    var body = '<label class="fld"><span>Correo</span><input id="lg-e" type="email" autocomplete="username"></label>'
+      + '<label class="fld"><span>Contraseña</span><input id="lg-p" type="password" autocomplete="current-password"></label>'
+      + '<p class="err" id="lg-err" hidden></p>'
+      + '<p class="hint">Solo para la administración de Cake.</p>';
+    var d = dialog('Entrar', body, function(dd){
+      var e = dd.querySelector('#lg-e').value.trim();
+      var p = dd.querySelector('#lg-p').value;
+      var err = dd.querySelector('#lg-err');
+      if(!e || !p){ err.hidden=false; err.textContent='Completá los dos campos.'; return false; }
+      if(FB_API_KEY.indexOf('PEGAR') === 0){
+        err.hidden=false; err.textContent='Falta cargar la API Key de Firebase en el código.'; return false;
+      }
+      err.hidden=false; err.textContent='Entrando…';
+      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + FB_API_KEY, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ email:e, password:p, returnSecureToken:true })
+      }).then(function(r){ return r.json(); }).then(function(j){
+        if(j.idToken){
+          admin.token = j.idToken; admin.email = j.email;
+          try{ sessionStorage.setItem('cake-adm', JSON.stringify({t:j.idToken, e:j.email})); }catch(x){}
+          d.close(); d.remove(); render();
+          toast('Listo. Ya podés editar.');
+        } else {
+          err.textContent = 'No pudimos entrar. Revisá el correo y la contraseña.';
+        }
+      }).catch(function(){ err.textContent = 'Sin conexión con Firebase.'; });
+      return false;
+    }, 'Entrar');
+  }
+
+  function salir(){
+    if(admin.dirty && !confirm('Tenés cambios sin guardar. ¿Salir igual?')) return;
+    admin.token = null; admin.email = null; admin.dirty = false;
+    try{ sessionStorage.removeItem('cake-adm'); }catch(e){}
+    render(); toast('Sesión cerrada.');
+  }
+
+  /* --------- guardar en Firebase --------- */
+  function guardar(){
+    if(!admin.token) return;
+    toast('Guardando…', 1500);
+    fetch(DB_BASE + DB_NODE + '?auth=' + encodeURIComponent(admin.token), {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(state)
+    }).then(function(r){
+      if(r.ok){ admin.dirty = false; render(); toast('Guardado. Ya se ve en la web.'); }
+      else if(r.status === 401 || r.status === 403){
+        toast('La sesión venció o no tenés permiso. Entrá de nuevo.', 4000);
+        admin.token = null; try{ sessionStorage.removeItem('cake-adm'); }catch(e){} render();
+      }
+      else toast('No se pudo guardar (' + r.status + ').', 4000);
+    }).catch(function(){ toast('Sin conexión. No se guardó.', 4000); });
+  }
+
+  /* --------- producto --------- */
+  function openProduct(id){
+    var isNew = !id;
+    var p = id ? findById(id) : {id:uid(), cat:state.categories[0].id, name:'', desc:'',
+      price:0, plabel:'', p2label:'', eventos:[], fotos:[], activo:true};
+    var body = '<label class="fld"><span>Nombre</span><input id="f-name" value="' + esc(p.name) + '"></label>'
+      + '<label class="fld"><span>Sección</span><select id="f-cat">'
+      + state.categories.map(function(c){ return '<option value="' + esc(c.id) + '"' + (c.id===p.cat?' selected':'') + '>' + esc(c.name) + '</option>'; }).join('')
+      + '</select></label>'
+      + '<label class="fld"><span>Descripción</span><textarea id="f-desc">' + esc(p.desc) + '</textarea></label>'
+      + '<div class="row2"><label class="fld"><span>Porciones desde</span><input id="f-pmin" type="number" inputmode="numeric" value="' + (p.pmin||'') + '"></label>'
+      + '<label class="fld"><span>Hasta</span><input id="f-pmax" type="number" inputmode="numeric" value="' + (p.pmax||'') + '"></label></div>'
+      + '<div class="row2"><label class="fld"><span>Precio</span><input id="f-price" type="number" inputmode="numeric" value="' + (p.price||'') + '"></label>'
+      + '<label class="fld"><span>Etiqueta</span><input id="f-plabel" placeholder="20 cm" value="' + esc(p.plabel) + '"></label></div>'
+      + '<div class="row2"><label class="fld"><span>2° precio</span><input id="f-price2" type="number" inputmode="numeric" value="' + (p.price2||'') + '"></label>'
+      + '<label class="fld"><span>Etiqueta 2</span><input id="f-p2label" placeholder="26 cm" value="' + esc(p.p2label) + '"></label></div>'
+      + '<div class="fld"><span>Aparece en</span><div class="checks" id="f-evs">'
+      + state.events.map(function(e){ return '<label><input type="checkbox" value="' + esc(e.id) + '"'
+          + ((p.eventos||[]).indexOf(e.id)>-1?' checked':'') + '> ' + esc(e.name) + '</label>'; }).join('')
+      + '</div></div>'
+      + '<label class="fld"><span>Visible en la web</span><select id="f-act">'
+      + '<option value="1"' + (p.activo?' selected':'') + '>Sí</option>'
+      + '<option value="0"' + (p.activo?'':' selected') + '>No, oculto</option></select></label>'
+      + '<p class="hint">Dejá el precio en 0 para que el botón diga “Consultar”.</p>';
+    dialog(isNew?'Nuevo producto':'Editar producto', body, function(dd){
+      var nm = dd.querySelector('#f-name').value.trim();
+      if(!nm){ alert('Poné un nombre.'); return false; }
+      p.name = nm;
+      p.cat = dd.querySelector('#f-cat').value;
+      p.desc = dd.querySelector('#f-desc').value.trim();
+      p.pmin = Number(dd.querySelector('#f-pmin').value) || null;
+      p.pmax = Number(dd.querySelector('#f-pmax').value) || null;
+      p.price = Number(dd.querySelector('#f-price').value) || 0;
+      p.plabel = dd.querySelector('#f-plabel').value.trim();
+      p.price2 = Number(dd.querySelector('#f-price2').value) || null;
+      p.p2label = dd.querySelector('#f-p2label').value.trim();
+      p.eventos = Array.prototype.slice.call(dd.querySelectorAll('#f-evs input:checked')).map(function(i){ return i.value; });
+      p.activo = dd.querySelector('#f-act').value === '1';
+      if(isNew) state.products.push(p);
+      touch();
+    });
+  }
+
+  /* --------- fotos del producto --------- */
+  function openFotos(id){
+    var p = findById(id); if(!p) return;
+    var fs = photosOf(p).slice();
+    var d = dialog('Fotos · ' + p.name, '<div id="fl"></div>'
+      + '<div class="fld"><span>Subir una foto</span><input id="f-file" type="file" accept="image/*">'
+      + '<p class="hint">Se achica sola. Queda guardada en la base de datos.</p></div>'
+      + '<label class="fld"><span>O escribir el nombre del archivo</span>'
+      + '<input id="f-path" placeholder="fotos/Rogel.jpeg"></label>'
+      + '<button class="btn ghost" id="f-addpath" style="align-self:flex-start">Agregar por nombre</button>',
+      function(){
+        if(fs.length === 1){ p.photo = fs[0]; delete p.fotos; }
+        else if(fs.length > 1){ p.fotos = fs; delete p.photo; }
+        else { delete p.photo; delete p.fotos; }
+        touch();
+      });
+
+    function paint(){
+      var box = d.querySelector('#fl');
+      if(!fs.length){ box.innerHTML = '<p class="hint">Sin fotos todavía.</p>'; return; }
+      box.innerHTML = '<div class="fotolist">' + fs.map(function(f,i){
+        return '<div class="fotorow"><img src="' + esc(f) + '" alt="" onerror="this.style.visibility=\'hidden\'">'
+          + '<span class="fp">' + esc(f.length > 60 ? 'Foto subida a la base' : decodeURIComponent(f)) + '</span>'
+          + '<span class="fb2">'
+          + '<button data-mu="' + i + '" title="Subir">↑</button>'
+          + '<button data-md="' + i + '" title="Bajar">↓</button>'
+          + '<button class="dl" data-dl="' + i + '" title="Quitar">✕</button></span></div>';
+      }).join('') + '</div>';
+      box.querySelectorAll('[data-mu]').forEach(function(el){
+        el.onclick = function(){ var i=+el.getAttribute('data-mu'); if(i>0){ var t=fs[i]; fs[i]=fs[i-1]; fs[i-1]=t; paint(); } }; });
+      box.querySelectorAll('[data-md]').forEach(function(el){
+        el.onclick = function(){ var i=+el.getAttribute('data-md'); if(i<fs.length-1){ var t=fs[i]; fs[i]=fs[i+1]; fs[i+1]=t; paint(); } }; });
+      box.querySelectorAll('[data-dl]').forEach(function(el){
+        el.onclick = function(){ fs.splice(+el.getAttribute('data-dl'),1); paint(); }; });
+    }
+    paint();
+
+    d.querySelector('#f-file').onchange = function(ev){
+      var f = ev.target.files && ev.target.files[0]; if(!f) return;
+      shrink(f, 900, function(durl){
+        if(!durl){ alert('No pudimos leer esa imagen.'); return; }
+        fs.push(durl); paint(); ev.target.value='';
+      });
+    };
+    d.querySelector('#f-addpath').onclick = function(){
+      var v = d.querySelector('#f-path').value.trim();
+      if(!v) return;
+      fs.push(v.indexOf('fotos/')===0 ? v.replace(/ /g,'%20') : 'fotos/' + v.replace(/ /g,'%20'));
+      d.querySelector('#f-path').value=''; paint();
+    };
+  }
+
+  /* --------- promo --------- */
+  function openPromo(id){
+    var isNew = !id, pr = null;
+    state.promos.forEach(function(x){ if(x.id===id) pr = x; });
+    if(isNew) pr = {id:uid(), badge:'10% OFF', titulo:'', desc:'', pct:10, cats:[], hasta:'', activo:true};
+    var body = '<label class="fld"><span>Título</span><input id="q-t" placeholder="Tortas clásicas con 10% de descuento" value="' + esc(pr.titulo) + '"></label>'
+      + '<label class="fld"><span>Detalle</span><textarea id="q-d">' + esc(pr.desc) + '</textarea></label>'
+      + '<div class="row2"><label class="fld"><span>Cartel</span><input id="q-b" placeholder="10% OFF" value="' + esc(pr.badge) + '"></label>'
+      + '<label class="fld"><span>Descuento %</span><input id="q-p" type="number" inputmode="numeric" value="' + (pr.pct||'') + '"></label></div>'
+      + '<label class="fld"><span>Válida hasta</span><input id="q-h" type="date" value="' + esc(pr.hasta) + '"></label>'
+      + '<div class="fld"><span>Se aplica a</span><div class="checks" id="q-c">'
+      + state.categories.map(function(c){ return '<label><input type="checkbox" value="' + esc(c.id) + '"'
+          + ((pr.cats||[]).indexOf(c.id)>-1?' checked':'') + '> ' + esc(c.name) + '</label>'; }).join('')
+      + '</div></div>'
+      + '<label class="fld"><span>Activa</span><select id="q-a">'
+      + '<option value="1"' + (pr.activo?' selected':'') + '>Sí</option>'
+      + '<option value="0"' + (pr.activo?'':' selected') + '>No</option></select></label>'
+      + '<p class="hint">El precio tachado aparece solo. Pasada la fecha, la promo se oculta sola.</p>';
+    dialog(isNew?'Nueva promo':'Editar promo', body, function(dd){
+      var t = dd.querySelector('#q-t').value.trim();
+      if(!t){ alert('Poné un título.'); return false; }
+      pr.titulo=t; pr.desc=dd.querySelector('#q-d').value.trim();
+      pr.badge=dd.querySelector('#q-b').value.trim()||'PROMO';
+      pr.pct=Number(dd.querySelector('#q-p').value)||0;
+      pr.hasta=dd.querySelector('#q-h').value;
+      pr.cats=Array.prototype.slice.call(dd.querySelectorAll('#q-c input:checked')).map(function(i){ return i.value; });
+      pr.activo = dd.querySelector('#q-a').value === '1';
+      if(isNew) state.promos.push(pr);
+      touch();
+    });
+  }
+
+  /* --------- anuncio --------- */
+  function openAnuncio(id){
+    var isNew = !id, a = null;
+    state.anuncios.forEach(function(x){ if(x.id===id) a = x; });
+    if(isNew) a = {id:uid(), texto:'', activo:true};
+    var body = '<label class="fld"><span>Texto</span><input id="n-t" maxlength="90" placeholder="Cerrado el lunes 12 por feriado" value="' + esc(a.texto) + '"></label>'
+      + '<label class="fld"><span>Mostrar</span><select id="n-a">'
+      + '<option value="1"' + (a.activo?' selected':'') + '>Sí</option>'
+      + '<option value="0"' + (a.activo?'':' selected') + '>No</option></select></label>'
+      + '<p class="hint">Va arriba de todo, en una línea. Cuanto más corto, mejor.</p>'
+      + (isNew ? '' : '<button class="btn danger" id="n-del" style="margin-top:4px">Borrar este anuncio</button>');
+    var d = dialog(isNew?'Nuevo anuncio':'Editar anuncio', body, function(dd){
+      var t = dd.querySelector('#n-t').value.trim();
+      if(!t){ alert('Escribí el texto.'); return false; }
+      a.texto = t; a.activo = dd.querySelector('#n-a').value === '1';
+      if(isNew) state.anuncios.push(a);
+      touch();
+    });
+    var db = d.querySelector('#n-del');
+    if(db) db.onclick = function(){
+      state.anuncios = state.anuncios.filter(function(x){ return x.id!==a.id; });
+      touch(); d.close(); d.remove(); render();
+    };
+  }
+
+  /* --------- datos generales --------- */
+  function openDatos(){
+    var b=state.brand, s=state.settings;
+    var body = '<div class="row2"><label class="fld"><span>Nombre</span><input id="s-nm" value="' + esc(b.name) + '"></label>'
+      + '<label class="fld"><span>Bajada</span><input id="s-sb" value="' + esc(b.sub) + '"></label></div>'
+      + '<label class="fld"><span>WhatsApp</span><input id="s-wa" value="' + esc(b.whatsapp) + '"></label>'
+      + '<div class="row2"><label class="fld"><span>Instagram 1</span><input id="s-ig" value="' + esc(b.instagram) + '"></label>'
+      + '<label class="fld"><span>Instagram 2</span><input id="s-ig2" value="' + esc(b.instagram2||'') + '"></label></div>'
+      + '<label class="fld"><span>Dirección</span><input id="s-ad" value="' + esc(b.address) + '"></label>'
+      + '<label class="fld"><span>Horarios</span><input id="s-ho" value="' + esc(b.hours) + '"></label>'
+      + '<label class="fld"><span>Presentación</span><textarea id="s-tg">' + esc(b.tagline) + '</textarea></label>'
+      + '<label class="fld"><span>Anticipación</span><input id="s-an" value="' + esc(s.anticipacion) + '"></label>'
+      + '<label class="fld"><span>Seña</span><input id="s-se" value="' + esc(s.sena) + '"></label>'
+      + '<label class="fld"><span>Bizcochuelo</span><input id="s-bi" value="' + esc(s.bizcochuelo) + '"></label>'
+      + '<label class="fld"><span>Coberturas (una por línea)</span><textarea id="s-co" style="min-height:80px">' + esc((s.coberturas||[]).join('\n')) + '</textarea></label>'
+      + '<label class="fld"><span>Rellenos (uno por línea)</span><textarea id="s-re" style="min-height:80px">' + esc(s.rellenos.join('\n')) + '</textarea></label>'
+      + '<label class="fld"><span>Formas de pago (una por línea)</span><textarea id="s-pg">' + esc(s.pagos.join('\n')) + '</textarea></label>'
+      + '<label class="fld"><span>Nombre del plan</span><input id="s-pn" value="' + esc(s.planNombre||'') + '"></label>'
+      + '<label class="fld"><span>Cómo funciona el plan</span><textarea id="s-pd">' + esc(s.planDesc||'') + '</textarea></label>'
+      + '<label class="fld"><span>Título del bloque del café</span><input id="s-ct" value="' + esc(s.cafeTitulo||'') + '"></label>'
+      + '<label class="fld"><span>Texto del café</span><textarea id="s-cx">' + esc(s.cafeTexto||'') + '</textarea></label>'
+      + '<label class="fld"><span>Link del menú</span><input id="s-mu" placeholder="https://…" value="' + esc(s.menuUrl||'') + '"></label>';
+    dialog('Datos y textos', body, function(dd){
+      b.name=dd.querySelector('#s-nm').value.trim()||b.name; b.sub=dd.querySelector('#s-sb').value.trim();
+      b.whatsapp=dd.querySelector('#s-wa').value.trim(); b.instagram=dd.querySelector('#s-ig').value.trim();
+      b.instagram2=dd.querySelector('#s-ig2').value.trim();
+      b.address=dd.querySelector('#s-ad').value.trim(); b.hours=dd.querySelector('#s-ho').value.trim();
+      b.tagline=dd.querySelector('#s-tg').value.trim(); s.anticipacion=dd.querySelector('#s-an').value.trim();
+      s.sena=dd.querySelector('#s-se').value.trim(); s.bizcochuelo=dd.querySelector('#s-bi').value.trim();
+      s.coberturas=dd.querySelector('#s-co').value.split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+      s.rellenos=dd.querySelector('#s-re').value.split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+      s.pagos=dd.querySelector('#s-pg').value.split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+      s.planNombre=dd.querySelector('#s-pn').value.trim();
+      s.planDesc=dd.querySelector('#s-pd').value.trim();
+      s.cafeTitulo=dd.querySelector('#s-ct').value.trim();
+      s.cafeTexto=dd.querySelector('#s-cx').value.trim();
+      s.menuUrl=dd.querySelector('#s-mu').value.trim();
+      touch();
+    });
+  }
+
+  /* --------- mover producto --------- */
+  function mover(id, dir){
+    var i = idxById(id); if(i < 0) return;
+    var p = state.products[i], j = -1;
+    for(var k = i + dir; k >= 0 && k < state.products.length; k += dir){
+      if(state.products[k].cat === p.cat){ j = k; break; }
+    }
+    if(j < 0) return;
+    state.products[i] = state.products[j]; state.products[j] = p;
+    touch(); render();
+  }
+
+  /* ===========================================================
+     EVENTOS
+     =========================================================== */
+  function wire(){
+    var q = root.querySelectorAll('[data-q]');
+    q.forEach(function(el){
+      el.oninput = function(){
+        var v = el.value;
+        clearTimeout(el._t);
+        el._t = setTimeout(function(){
+          filt.q = v; animEntrada = true; render();
+          var f = root.querySelector('[data-q]');
+          if(f){ f.focus(); f.setSelectionRange(f.value.length, f.value.length); }
+        }, 260);
+      };
+    });
+    root.querySelectorAll('[data-qx]').forEach(function(el){
+      el.onclick = function(){ filt.q=''; animEntrada = true; render(); }; });
+
+    root.querySelectorAll('[data-gal]').forEach(function(el){
+      el.onclick = function(){ openGal(el.getAttribute('data-gal')); }; });
+    root.querySelectorAll('[data-people]').forEach(function(el){
+      el.onclick = function(){ var v=el.getAttribute('data-people'); filt.people = v===''?null:Number(v);
+        animEntrada = true; irAResultados = true; render(); }; });
+    root.querySelectorAll('[data-cat]').forEach(function(el){
+      el.onclick = function(){ var v=el.getAttribute('data-cat'); filt.cat = v===''?null:v; filt.event=null;
+        animEntrada = true; irAResultados = true; render(); }; });
+    root.querySelectorAll('[data-event]:not([data-cat])').forEach(function(el){
+      el.onclick = function(){ var id=el.getAttribute('data-event');
+        filt.event = (filt.event===id)?null:id; filt.cat=null;
+        animEntrada = true; irAResultados = true; render(); }; });
+    root.querySelectorAll('[data-sec]').forEach(function(el){
+      el.onclick = function(){ var id=el.getAttribute('data-sec');
+        if(closed[id]) delete closed[id]; else closed[id]=true; animEntrada = true; render(); }; });
+
+    var det = root.querySelector('details.filtros');
+    if(det) det.addEventListener('toggle', function(){ filtrosAbiertos = det.open; });
+
+    var ab = root.querySelector('[data-adm]'); if(ab) ab.onclick = openLogin;
+
+    /* ---- carrito ---- */
+    root.querySelectorAll('[data-add]').forEach(function(el){
+      el.onclick = function(){
+        agregar(findById(el.getAttribute('data-add')), el.closest('.card'));
+      };
+    });
+    root.querySelectorAll('[data-menosp]').forEach(function(el){
+      el.onclick = function(){
+        var id = el.getAttribute('data-menosp');
+        var ks = Object.keys(carrito).filter(function(k){ return k.split('|')[0] === id; });
+        if(!ks.length) return;
+        tocado = id;
+        sumarCarrito(ks[ks.length - 1], -1);
+        render();
+      };
+    });
+    /* ---- exportar a PDF ---- */
+    root.querySelectorAll('[data-pdfcat]').forEach(function(el){
+      el.onclick = function(ev){
+        ev.stopPropagation();
+        var id = el.getAttribute('data-pdfcat');
+        var c = state.categories.filter(function(x){ return x.id === id; })[0];
+        if(!c) return;
+        var items = state.products.filter(function(p){
+          return p.cat === id && (p.activo || admin.token); });
+        exportarPDF(c.name, c.note, items);
+      };
+    });
+    root.querySelectorAll('[data-pdfprod]').forEach(function(el){
+      el.onclick = function(ev){
+        ev.stopPropagation();
+        var p = findById(el.getAttribute('data-pdfprod'));
+        if(p) exportarPDF(p.name, '', [p]);
+      };
+    });
+
+    root.querySelectorAll('[data-verpedido]').forEach(function(el){
+      el.onclick = function(){ dlgPedidoCarrito({}); };
+    });
+
+    if(!admin.token) return;
+
+    root.querySelectorAll('[data-edit]').forEach(function(el){
+      el.onclick = function(){ openProduct(el.getAttribute('data-edit')); }; });
+    root.querySelectorAll('[data-fotos]').forEach(function(el){
+      el.onclick = function(){ openFotos(el.getAttribute('data-fotos')); }; });
+    root.querySelectorAll('[data-toggle]').forEach(function(el){
+      el.onclick = function(){ var p=findById(el.getAttribute('data-toggle')); p.activo=!p.activo; touch(); render(); }; });
+    root.querySelectorAll('[data-up]').forEach(function(el){
+      el.onclick = function(){ mover(el.getAttribute('data-up'), -1); }; });
+    root.querySelectorAll('[data-down]').forEach(function(el){
+      el.onclick = function(){ mover(el.getAttribute('data-down'), 1); }; });
+    root.querySelectorAll('[data-del]').forEach(function(el){
+      el.onclick = function(){
+        var p = findById(el.getAttribute('data-del'));
+        if(!confirm('¿Borrar "' + p.name + '"? Si solo querés sacarlo un tiempo, usá Ocultar.')) return;
+        state.products = state.products.filter(function(x){ return x.id!==p.id; });
+        touch(); render();
+      }; });
+    root.querySelectorAll('[data-pedit]').forEach(function(el){
+      el.onclick = function(){ openPromo(el.getAttribute('data-pedit')); }; });
+    root.querySelectorAll('[data-pdel]').forEach(function(el){
+      el.onclick = function(){ if(!confirm('¿Borrar esta promo?')) return;
+        var id = el.getAttribute('data-pdel');
+        state.promos = state.promos.filter(function(x){ return x.id!==id; });
+        touch(); render(); }; });
+    root.querySelectorAll('[data-anedit]').forEach(function(el){
+      el.onclick = function(){ openAnuncio(el.getAttribute('data-anedit')); }; });
+    root.querySelectorAll('[data-act]').forEach(function(el){
+      el.onclick = function(){
+        var a = el.getAttribute('data-act');
+        if(a==='newp') openProduct(null);
+        else if(a==='promo') openPromo(null);
+        else if(a==='anuncio') openAnuncio(null);
+        else if(a==='datos') openDatos();
+        else if(a==='guardar') guardar();
+        else if(a==='salir') salir();
+      }; });
+  }
+
+  window.addEventListener('beforeunload', function(ev){
+    if(admin.dirty){ ev.preventDefault(); ev.returnValue = ''; }
+  });
+
+  /* ===========================================================
+     ARRANQUE
+     =========================================================== */
+  /* ===========================================================
+     ENCABEZADO QUE SE ACHICA Y CONFETI AL HACER EL PEDIDO
+     =========================================================== */
+  var sinMovimiento = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      document.body.classList.toggle('compacto', window.scrollY > 70);
+      ticking = false;
+    });
+  }, { passive:true });
+
+  function confeti(){
+    if(sinMovimiento) return;
+    var viejo = document.getElementById('confeti');
+    if(viejo) viejo.remove();
+
+    var cv = document.createElement('canvas');
+    cv.id = 'confeti';
+    var W = cv.width  = window.innerWidth;
+    var H = cv.height = window.innerHeight;
+    document.body.appendChild(cv);
+    var cx = cv.getContext('2d');
+
+    var COL = ['#C08552', '#895737', '#5E3023', '#F3E9DC', '#E9DAC5'];
+    var piezas = [];
+    for(var i = 0; i < 110; i++){
+      piezas.push({
+        x: W / 2 + (Math.random() - .5) * W * .5,
+        y: H + 20 + Math.random() * 60,
+        vx: (Math.random() - .5) * 7,
+        vy: -(11 + Math.random() * 9),
+        g: 0.24 + Math.random() * .12,
+        w: 6 + Math.random() * 7,
+        h: 9 + Math.random() * 9,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - .5) * .28,
+        col: COL[(Math.random() * COL.length) | 0]
+      });
+    }
+
+    var t0 = performance.now();
+    (function cuadro(t){
+      var vida = t - t0;
+      cx.clearRect(0, 0, W, H);
+      piezas.forEach(function(p){
+        p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        cx.save();
+        cx.translate(p.x, p.y);
+        cx.rotate(p.rot);
+        cx.globalAlpha = Math.max(0, 1 - vida / 2600);
+        cx.fillStyle = p.col;
+        cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        cx.restore();
+      });
+      if(vida < 2600) requestAnimationFrame(cuadro);
+      else cv.remove();
+    })(t0);
+  }
+
+  /* se dispara al mandar un pedido por WhatsApp */
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a.wa, a.btn.wa');
+    if(a && /wa\.me/.test(a.getAttribute('href') || '')) confeti();
+  });
+
+  /* el botón de administración aparece solo con #admin en la dirección,
+     o si ya hay una sesión abierta */
+  function chequearAdmin(){
+    var on = location.hash === '#admin' || !!admin.token;
+    document.body.classList.toggle('modoadmin', on);
+    return on;
+  }
+  window.addEventListener('hashchange', function(){
+    if(chequearAdmin() && !admin.token) openLogin();
+  });
+
+  /* ===========================================================
+     FOTOS YA RESUELTAS
+     Los nombres de archivo tal cual están subidos, con sus
+     mayúsculas y tildes exactas. Así la página se dibuja bien
+     desde el primer segundo, sin tener que salir a buscarlas.
+     Para agregar una foto: sumá el nombre del archivo acá.
+     =========================================================== */
+  var FOTOS = {
+    p1: ['Mini cake (2).jpeg', 'Mini cake.jpeg', 'Mini cake (3).jpeg',
+         'Mini cake (4).jpeg', 'Mini cake (5).jpeg', 'Mini cake (6).jpeg'],
+    dz9: ['Donitas.jpeg', 'Donitas (2).jpeg', 'Donitas (3).jpeg', 'Donitas (4).jpeg'],
+    dz6: ['Cakepops.jpeg', 'Cakepops (2).jpeg', 'Cakepops (3).jpeg', 'Cakepops (4).jpeg'],
+    dz7: ['Oreos.jpeg', 'Oreos (2).jpeg', 'Oreos (3).jpeg', 'Oreos (4).jpeg', 'Oreos (5).jpeg'],
+    dz1: ['Cupcakes.jpeg', 'Cupcakes (2).jpeg', 'Cupcakes (3).jpeg', 'Cupcakes (4).jpeg',
+          'Cupcakes (5).jpeg', 'Cupcakes (6).jpeg'],
+    dz2: ['Galletas.jpeg', 'Galletas (2).jpeg', 'Galletas (3).jpeg', 'Galletas (4).jpeg',
+          'Galletas (5).jpeg'],
+    dz10:['Galletas 3D.jpeg', 'Galletas 3D (2).jpeg', 'Galletas 3D (3).jpeg', 'Galletas 3D (4).jpeg',
+          'Galletas 3D (5).jpeg', 'Galletas 3D (6).jpeg', 'Galletas 3D (7).jpeg'],
+    dz3: ['Paletas.jpeg', 'Paletas (2).jpeg', 'Paletas (3).jpeg',
+          'paletas (4).jpeg', 'paletas (5).jpeg'],
+    dz4: ['Alfajores personalizados.jpeg', 'Alfajores personalizados (2).jpeg',
+          'Alfajores personalizados (3).jpeg'],
+    dz5: ['Icepops.jpeg', 'Icepops (2).jpeg', 'Icepops (3).jpeg', 'Icepops (4).jpeg',
+          'Icepops (5).jpeg', 'Icepops (6).jpeg', 'Icepops (7).jpeg'],
+    p2: ['Torta chica crema.jpeg', 'Torta chica crema (2).jpeg'],
+    p3: ['torta mediana crema.jpeg', 'Torta mediana crema 2.jpeg'],
+    p4: ['Torta grande crema.jpeg', 'torta grande crema (2).jpeg'],
+    p5: ['Torta chica personalizada.jpeg'],
+    p6: ['torta mediana personalizada.jpeg', 'torta mediana personalizada (2).jpeg'],
+    p7: ['torta grande personalizada.jpeg'],
+    ps1:['Torta de dos pisos.jpeg', 'Torta de dos pisos (2).jpeg',
+         'torta de dos pisos (3).jpeg', 'Torta de dos pisos (4).jpeg'],
+    c1: ['Chocotorta.jpeg', 'chocotorta 2.jpeg'],
+    d1: ['Cheesecake NY.jpeg'],
+    d10:['Cheesecake New York de pistacho.jpeg'],
+    d2: ['Lemon pie.jpeg', 'Lemon pie (2).jpeg'],
+    d3: ['Rogel.jpeg', 'Rogel 2.jpeg'],
+    d6: ['Havannet.jpeg'],
+    d7: ['Coco y dulce de leche.jpeg', 'Coco y dulce de leche 2.jpeg'],
+    d8: ['Brownie.jpeg'],
+    d9: ['Frutales.jpeg', 'Frutales (2).jpeg', 'Frutales (3).jpeg', 'Frutales 4.jpeg'],
+    tp1:['red velvet.jpeg', 'red velvet 2.jpeg'],
+    tp2:['matilda.jpeg'],
+    tp3:['chajá.jpeg'],
+    tp4:['Mousse de chocolate.jpeg'],
+    tp5:['milojas.jpeg'],
+    md1:['Mesa dulce chica.jpeg', 'Mesa dulce chica (2).jpeg'],
+    md2:['Mesa dulce mediana.jpeg'],
+    md3:['Mesa dulce grande.jpeg'],
+    bb1:['Bombonería.jpeg', 'Bombonería (2).jpeg', 'Bombonería (3).jpeg',
+         'Bombonería (4).jpeg', 'Bombonería (5).jpeg', 'Bombonería (7).jpeg'],
+    m2: ['desayunos empresariales.jpeg', 'Desayunos empresariales (2).jpeg'],
+    m3: ['Presentes empresariales.jpeg', 'Presentes empresariales (2).jpeg',
+         'Presentes empresariales (3).jpeg', 'Presentes empresariales (4).jpeg'],
+    m4: ['Box empresariales dulces.jpeg', 'Box empresariales dulces (2).jpeg',
+         'Box empresariales dulces (3).jpeg', 'Box empresariales dulces (4).jpeg',
+         'Box empresariales dulces (5).jpeg', 'Box empresariales dulces (6).jpeg'],
+    m5: ['Box empresariales salados.jpeg', 'Box empresariales salados (2).jpeg',
+         'Box empresariales salados (3).jpeg'],
+    k1: ['combo 15 años.jpeg'],
+    k2: ['combo comunion.jpeg', 'combo comunion (2).jpeg', 'combo comunion (3).jpeg',
+         'combo comunion (4).jpeg', 'combo comunion (5).jpeg', 'combo comunion (6).jpeg',
+         'combo comunion (7).jpeg'],
+    k3: ['combo chico.jpeg'],
+    k4: ['combo mediano.jpeg'],
+    k5: ['Combo grande.jpeg'],
+    k6: ['Combo premium · 50 unidades.jpeg', 'Combo premium · 50 unidades (2).jpeg',
+         'Combo premium · 50 unidades (3).jpeg', 'Combo premium · 50 unidades (4).jpeg',
+         'Combo premium · 50 unidades (6).jpeg', 'Combo premium · 50 unidades (7).jpeg',
+         'Combo premium · 50 unidades (8).jpeg', 'Combo premium · 50 unidades (9).jpeg',
+         'Combo premium · 50 unidades (10).jpeg'],
+    k7: ['Combo casamiento.jpeg', 'Combo casamiento (2).jpeg']
+  };
+  (state.products || []).forEach(function(p){
+    if(FOTOS[p.id]){
+      p.fotos = FOTOS[p.id].map(function(f){ return 'fotos/' + encodeURIComponent(f); });
+      delete p.photo;
+    }
+  });
+
+  /* Las dos galerías, también con los nombres exactos.
+     Para sumar una foto nueva, agregá el nombre del archivo acá. */
+  var GALERIAS = {
+    inspiracion: ['inspiracion 2.jpeg', 'inspiracion 3.jpeg',
+                  'inspiracion (2).jpeg', 'inspiracion (3).jpeg', 'inspiracion (4).jpeg',
+                  'inspiracion (5).jpeg', 'inspiracion (6).jpeg'],
+    rarezas:     ['fuera de molde.jpeg', 'fuera de molde (2).jpeg', 'fuera de molde (3).jpeg']
+  };
+  state.inspiracion = GALERIAS.inspiracion.map(function(f, i){
+    return { id:'i' + (i+1), foto:'fotos/' + encodeURIComponent(f), titulo:'', activo:true }; });
+  state.rarezas = GALERIAS.rarezas.map(function(f, i){
+    return { id:'r' + (i+1), foto:'fotos/' + encodeURIComponent(f), titulo:'', activo:true }; });
+
+  render();
+  autoFotos(function(){ render(); });
+  /* la búsqueda automática de galerías solo corre si alguna quedó vacía */
+  if(!state.inspiracion.length || !state.rarezas.length){
+    cargarGalerias(function(){ render(); });
+  }
+  if(chequearAdmin() && !admin.token) openLogin();
+
+  if(USAR_BASE){
+    fetch(DB_BASE + DB_NODE, { cache:'no-store' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if(d && d.products && d.products.length && !admin.dirty){
+          state = normalize(d); render();
+        }
+      })
+      .catch(function(){ /* sin conexión: queda el catálogo embebido */ });
+  }
+})();
+</script>
+</body>
+</html>
