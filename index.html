@@ -1167,15 +1167,18 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     root.innerHTML = h;
     document.body.classList.toggle('admin', isAdm);
     wire();
-    if(irAResultados){
-      /* al tocar un filtro, llevamos la vista al principio de los resultados */
+    /* Al tocar un filtro bajamos a los resultados solo en celular, donde los
+       filtros están arriba del contenido. En computadora el panel está al
+       costado, así que mover la página sería moverle el panel de lugar. */
+    if(irAResultados && window.innerWidth < 900){
       irAResultados = false;
       var sec = root.querySelector('section.cat');
       var y = sec ? (sec.getBoundingClientRect().top + window.scrollY - 86) : 0;
       try{ window.scrollTo({ top:Math.max(0, y), behavior:'smooth' }); }
       catch(e){ window.scrollTo(0, Math.max(0, y)); }
-    } else if(sy){
-      window.scrollTo(0, sy);        /* no saltar al principio al editar o abrir una foto */
+    } else {
+      irAResultados = false;
+      if(sy) window.scrollTo(0, sy); /* no saltar al principio al editar o filtrar */
     }
     animEntrada = false;             /* la entrada escalonada corre una sola vez */
     tocado = null;
@@ -2406,7 +2409,7 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
      Para agregar una foto: sumá el nombre del archivo acá.
      =========================================================== */
   var FOTOS = {
-    p1: ['Mini cake (2).jpeg', 'Mini cake.jpeg', 'Mini cake (3).jpeg',
+    p1: ['Mini cake.jpeg', 'Mini cake (2).jpeg', 'Mini cake (3).jpeg',
          'Mini cake (4).jpeg', 'Mini cake (5).jpeg', 'Mini cake (6).jpeg'],
     dz9: ['Donitas.jpeg', 'Donitas (2).jpeg', 'Donitas (3).jpeg', 'Donitas (4).jpeg'],
     dz6: ['Cakepops.jpeg', 'Cakepops (2).jpeg', 'Cakepops (3).jpeg', 'Cakepops (4).jpeg'],
