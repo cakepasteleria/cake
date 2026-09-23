@@ -1,1 +1,67 @@
+FOTOS DEL CATALOGO CAKE
+=======================
 
+Esta carpeta "fotos" tiene que estar SIEMPRE al lado de index.html.
+La foto que falta no rompe nada: se ve el dibujito hasta que la cargues.
+Después de agregar fotos, refrescá con Ctrl + F5.
+
+
+VARIAS FOTOS POR PRODUCTO
+-------------------------
+Se puede. La primera es la que se muestra; las demás se ven haciendo clic.
+Para sumar más, agregá un número al final del nombre:
+
+    Rogel.jpeg
+    Rogel 2.jpeg
+    Rogel 3.jpeg
+
+Avisame cuáles cargaste y las engancho.
+
+
+YA ESTÁN CONECTADAS
+-------------------
+Mini cake (2).jpeg        <- es la principal, la del moño
+Mini cake.jpeg
+Torta chica crema.jpeg
+Torta mediana crema.jpeg
+Torta grande crema.jpeg
+Torta mediana personalizada.jpeg
+Torta grande personalizada.jpeg
+Chocotorta.jpeg
+Cheesecake NY.jpeg
+Lemon pie.jpeg  +  Lemon pie (2).jpeg
+Rogel.jpeg  +  Rogel 2.jpeg
+Havannet.jpeg
+Coco y dulce de leche.jpeg  +  Coco y dulce de leche 2.jpeg
+Frutales.jpeg  +  (2)  +  (3)  +  4  +  la de WhatsApp
+desayunos empresariales.jpeg
+
+
+FALTAN — nombres EXACTOS
+------------------------
+Respetá mayúsculas, espacios y la terminación .jpeg tal cual está acá.
+
+logo.png                          <- el logo redondo, fondo transparente
+
+Torta chica personalizada.jpeg
+Ricota.jpeg
+Ricota y ddl.jpeg
+Brownie.jpeg
+Mini pasteleria.jpeg              <- sin acento
+Combo 15.jpeg
+Combo comunion.jpeg               <- sin acento
+
+
+PENDIENTE DE ORDEN
+------------------
+El archivo "WhatsApp Image 2026-09-18 at 2.16.13 PM (1).jpeg" está conectado
+a Frutales, pero conviene renombrarlo a "Frutales 5.jpeg" para que la lista
+quede prolija. Si lo renombrás, avisame y actualizo el código.
+
+
+CÓMO SACARLAS
+-------------
+- La torta centrada, ocupando casi todo el cuadro.
+- Al lado de una ventana, con luz de día. Sin flash.
+- Fondo liso: pared blanca, mantel claro, tabla de madera.
+- Da igual si salen verticales u horizontales: entran enteras.
