@@ -814,14 +814,14 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
      Pegá acá la Web API Key: Firebase → ⚙ Configuración del proyecto
      → pestaña General → "Clave de API web".
      =========================================================== */
-  var FB_API_KEY = "PEGAR_ACA_LA_API_KEY";
+  var FB_API_KEY = "AIzaSyCylVUH074zX9MO2trFOk3OINFLxKX4XgE";
   var DB_BASE    = "https://cake-c9bfd-default-rtdb.firebaseio.com";
   var DB_NODE    = "/catalogo.json";
 
   /* Mientras esté en false, la página usa SOLO el catálogo que está más abajo
      en este archivo y no le hace caso a Firebase. Ponelo en true cuando la
      base ya tenga los datos al día y quieras editar desde el panel. */
-  var USAR_BASE  = false;
+  var USAR_BASE  = true;
 
   /* ---------- estado ---------- */
   function normalize(d){
@@ -1148,7 +1148,7 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
         + '<button data-act="datos">Datos</button>'
         + '<button data-act="salir">Salir</button>'
         + '<span class="sp">' + (admin.dirty ? 'Cambios sin guardar' : 'Todo guardado') + '</span>'
-        + '<button class="pri" data-act="guardar"' + (admin.dirty?'':' disabled') + '>Guardar</button></div>';
+        + '<button class="pri" data-act="guardar">Guardar</button></div>';
     } else {
       var nq = cantCarrito();
       if(nq > 0){
