@@ -98,12 +98,8 @@ body.compacto .brand .sub{opacity:0; max-height:0; margin-top:0;}
 /* confeti */
 #confeti{position:fixed; inset:0; z-index:95; pointer-events:none;}
 
-/* ---------- hoja para exportar a PDF ---------- */
+/* ---------- restos del exportador, sin uso ---------- */
 #imprimible{display:none;}
-body.imprimiendo #app, body.imprimiendo #bg, body.imprimiendo #veil{display:none !important;}
-body.imprimiendo #imprimible{display:block; max-width:840px; margin:0 auto; padding:26px;
-  background-repeat:repeat; background-size:300px 300px; background-position:center top;
-  -webkit-print-color-adjust:exact; print-color-adjust:exact;}
 .pdf-h{text-align:center; padding-bottom:16px; border-bottom:2.5px solid var(--line-strong);}
 .pdf-m{font-family:'Fraunces',serif; font-size:54px; font-weight:600; line-height:1; color:var(--brownie);}
 .pdf-s{font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--ink-soft);
@@ -145,23 +141,8 @@ body.imprimiendo #imprimible{display:block; max-width:840px; margin:0 auto; padd
 .pdf-f .fh{font-size:13.5px;}
 .pdf-f .fi{font-size:14px; margin-top:8px; color:var(--accent); font-weight:700;}
 
-/* botones de exportar */
 .cat-top{display:flex; align-items:center; gap:8px; width:100%;}
 .cat-top .cat-head{flex:1; min-width:0;}
-.pdfbtn{flex:none; border:1.5px solid var(--line-strong); background:var(--surface);
-  color:var(--ink-faint); border-radius:999px; padding:6px 11px; font-size:11.5px;
-  font-weight:700; letter-spacing:.06em; display:inline-flex; align-items:center; gap:5px;}
-.pdfbtn:hover{border-color:var(--accent); color:var(--accent);}
-.pdfbtn svg{width:13px; height:13px;}
-.addrow .pdfbtn{flex:0 0 auto; min-height:36px; padding:6px 12px;}
-
-@media print{
-  @page{ size:A4; margin:12mm; }
-  body{background:#fff;}
-  #app, #bg, #veil, .cta-fixed, .cartbar{display:none !important;}
-  #imprimible{display:block !important; max-width:none; padding:0;}
-  .pdf-i{background:#fff;}
-}
 .logo-slot{width:64px; height:64px; flex:none; border-radius:50%; border:1.5px solid var(--line-strong);
   background:var(--surface); display:grid; place-items:center; overflow:hidden; position:relative;
   font-family:'Fraunces',serif; font-size:31px; font-weight:600; color:var(--accent); line-height:1;}
@@ -308,8 +289,6 @@ section.cat{margin-bottom:34px;}
   .addrow .btn.add{flex:1 1 auto;}
   .addrow .btn.wa{flex:1 1 100%;}
   .addrow .qt{flex:1 1 auto; justify-content:space-between;}
-  .addrow .pdfbtn{flex:0 0 auto; width:36px; min-height:36px; padding:0; justify-content:center;}
-  .addrow .pdfbtn svg{width:14px; height:14px;}
   .incl{grid-template-columns:1fr; font-size:11px; gap:1px;}
   .relldet > summary{font-size:11.5px;}
   .relldet .rb, .relldet ul{font-size:11.5px;}
@@ -808,7 +787,6 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
 <div id="bg" aria-hidden="true"></div>
 <div id="veil" aria-hidden="true"></div>
 <div id="app"><div id="root"></div></div>
-<div id="imprimible" aria-hidden="true"></div>
 
 <script>
 (function(){
@@ -1405,8 +1383,6 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
       + (c.note ? '<span class="note">' + esc(c.note) + '</span>' : '')
       + '<span class="cnt tnum">' + items.length + '</span>'
       + '<span class="chev">' + CHEV + '</span></button>'
-      + '<button class="pdfbtn" data-pdfcat="' + esc(c.id) + '" title="Descargar esta sección en PDF">'
-      + PDFICON + 'PDF</button>'
       + '</div><div class="rule"></div>'
       + '<div class="' + claseGrid() + '"' + (open ? '' : ' hidden') + '>';
     items.forEach(function(p,i){ h += cardHTML(p, Math.min((startIdx||0)+i,9)); });
@@ -1603,32 +1579,6 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     });
   }
 
-  /* ===========================================================
-     EXPORTAR A PDF
-     Arma una hoja limpia con la marca y manda a imprimir.
-     En el diálogo de impresión se elige «Guardar como PDF».
-     =========================================================== */
-  var PDFICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
-    + 'stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 10 4.5 4 4.5-4"/>'
-    + '<path d="M4 18v2h16v-2"/></svg>';
-
-  /* el dibujito repetido de fondo, en caramelo bien suave */
-  function fondoTortitas(){
-    var sinSvg = function(s){
-      return String(s).replace(/^\s*<svg[^>]*>/i, '').replace(/<\/svg>\s*$/i, '');
-    };
-    var torta = sinSvg(ART.monito), cup = sinSvg(ART.cupcake), porc = sinSvg(ART.porcion);
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">'
-      + '<g fill="none" stroke="#C08552" stroke-width="2.6" stroke-linecap="round" '
-      + 'stroke-linejoin="round" opacity="0.14">'
-      + '<g transform="translate(18,22) scale(1.05)">' + torta + '</g>'
-      + '<g transform="translate(175,58) scale(0.72) rotate(12)">' + cup + '</g>'
-      + '<g transform="translate(160,165) scale(0.95) rotate(-8)">' + torta + '</g>'
-      + '<g transform="translate(30,190) scale(0.75) rotate(9)">' + porc + '</g>'
-      + '</g></svg>';
-    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-  }
-
   function filaPDF(p){
     var pr = promoFor(p), fs = photosOf(p);
     var h = '<div class="pdf-i">'
@@ -1693,19 +1643,7 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
       + (b.instagram2 ? ' · @' + esc(b.instagram2) : '')
       + ' · ' + esc(String(b.whatsapp).replace(/^549/, '')) + '</div>'
       + '</div>';
-
-    var cont = document.getElementById('imprimible');
-    cont.innerHTML = h;
-    cont.style.backgroundImage = 'url("' + fondoTortitas() + '")';
-    document.body.classList.add('imprimiendo');
-    var limpiar = function(){
-      document.body.classList.remove('imprimiendo');
-      cont.innerHTML = '';
-    };
-    setTimeout(function(){
-      window.print();
-      setTimeout(limpiar, 600);
-    }, 350);
+    return h;
   }
 
   function inspiHTML(){
@@ -1809,8 +1747,6 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
           : '')
       + '<a class="btn wa" target="_blank" rel="noopener" href="' + esc(waLink(p)) + '">'
       + WAICON + (!p.price ? 'Consultar' : (isAdm ? 'Pedir por WhatsApp' : 'Pedir')) + '</a>'
-      + '<button class="pdfbtn" data-pdfprod="' + esc(p.id) + '" title="Descargar en PDF" '
-      + 'aria-label="Descargar en PDF">' + PDFICON + '</button>'
       + '</div></div>';
     if(isAdm){
       h += '<div class="cardadmin">'
@@ -1845,19 +1781,31 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     var i = 0;
     lbScroll = window.scrollY;
     lb = document.createElement('dialog'); lb.className = 'lb';
+
+    /* El visor se arma UNA sola vez. Para cambiar de foto solo se le cambia
+       la dirección a la imagen: si se redibujara entero, el navegador
+       descartaría la imagen y se vería el parpadeo blanco de la recarga. */
+    lb.innerHTML = '<button class="lbx" data-x aria-label="Cerrar">✕</button>'
+      + '<img alt="' + esc(p.name) + '">'
+      + '<div class="lbbar"><div class="lbt">' + esc(p.name) + '</div>'
+      + (fs.length > 1 ? '<span class="lbc tnum"></span>'
+          + '<button class="lbn" data-p aria-label="Anterior">‹</button>'
+          + '<button class="lbn" data-n aria-label="Siguiente">›</button>' : '')
+      + '</div>';
+
+    var lbImg = lb.querySelector('img'), lbCnt = lb.querySelector('.lbc');
+
+    /* deja las otras fotos listas en memoria, para que el cambio sea inmediato */
+    fs.forEach(function(u){ var x = new Image(); x.src = u; });
+
     function paint(){
-      lb.innerHTML = '<button class="lbx" data-x aria-label="Cerrar">✕</button>'
-        + '<img src="' + esc(fs[i]) + '" alt="' + esc(p.name) + '">'
-        + '<div class="lbbar"><div class="lbt">' + esc(p.name) + '</div>'
-        + (fs.length > 1 ? '<span class="lbc tnum">' + (i+1) + ' / ' + fs.length + '</span>'
-            + '<button class="lbn" data-p aria-label="Anterior">‹</button>'
-            + '<button class="lbn" data-n aria-label="Siguiente">›</button>' : '')
-        + '</div>';
-      lb.querySelector('[data-x]').onclick = closeLb;
-      var pv = lb.querySelector('[data-p]'), nx = lb.querySelector('[data-n]');
-      if(pv) pv.onclick = function(){ i = (i-1+fs.length)%fs.length; paint(); };
-      if(nx) nx.onclick = function(){ i = (i+1)%fs.length; paint(); };
+      lbImg.src = fs[i];
+      if(lbCnt) lbCnt.textContent = (i + 1) + ' / ' + fs.length;
     }
+    lb.querySelector('[data-x]').onclick = closeLb;
+    var pv = lb.querySelector('[data-p]'), nx = lb.querySelector('[data-n]');
+    if(pv) pv.onclick = function(){ i = (i-1+fs.length)%fs.length; paint(); };
+    if(nx) nx.onclick = function(){ i = (i+1)%fs.length; paint(); };
     paint();
     lb.addEventListener('close', function(){
       if(lb){ lb.remove(); lb=null; }
@@ -2254,26 +2202,6 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
         render();
       };
     });
-    /* ---- exportar a PDF ---- */
-    root.querySelectorAll('[data-pdfcat]').forEach(function(el){
-      el.onclick = function(ev){
-        ev.stopPropagation();
-        var id = el.getAttribute('data-pdfcat');
-        var c = state.categories.filter(function(x){ return x.id === id; })[0];
-        if(!c) return;
-        var items = state.products.filter(function(p){
-          return p.cat === id && (p.activo || admin.token); });
-        exportarPDF(c.name, c.note, items);
-      };
-    });
-    root.querySelectorAll('[data-pdfprod]').forEach(function(el){
-      el.onclick = function(ev){
-        ev.stopPropagation();
-        var p = findById(el.getAttribute('data-pdfprod'));
-        if(p) exportarPDF(p.name, '', [p]);
-      };
-    });
-
     root.querySelectorAll('[data-verpedido]').forEach(function(el){
       el.onclick = function(){ dlgPedidoCarrito({}); };
     });
