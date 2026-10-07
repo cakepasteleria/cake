@@ -414,6 +414,31 @@ section.cat{margin-bottom:34px;}
 .rarezas .icard{border-color:var(--caramel);}
 .avisosena{background:var(--accent-soft); border-radius:12px; padding:11px 14px; margin-top:13px;
   font-size:13px; color:var(--ink-soft); line-height:1.4;}
+
+/* el código de descuento */
+.totlin{display:flex; justify-content:space-between; align-items:baseline;
+  padding:3px 0; font-size:13.5px; color:var(--ink-soft);}
+.totlin.desc{color:#2E7D32; font-weight:700;}
+.cupon{display:flex; gap:8px; margin-top:11px;}
+.cupon input{flex:1; min-width:0; font:inherit; font-size:14px; padding:10px 13px;
+  border:1.5px solid var(--line); border-radius:999px; background:var(--surface-2);
+  color:var(--ink); text-transform:uppercase; letter-spacing:.06em;}
+.cupon input::placeholder{text-transform:none; letter-spacing:0; color:var(--ink-soft);}
+.cupon input:focus{outline:none; border-color:var(--caramel);}
+.cupon button{flex:none; font:inherit; font-size:14px; font-weight:700; cursor:pointer;
+  padding:10px 18px; border-radius:999px; border:1.5px solid var(--cafe, #895737);
+  background:var(--cafe, #895737); color:#fff;}
+.cupon button:hover{filter:brightness(1.1);}
+dialog.cupdlg{width:min(420px,94vw);}
+dialog.cupdlg .cuptxt{margin:0 0 12px; font-size:14px; color:var(--ink-soft); line-height:1.45;}
+dialog.cupdlg .cupon{margin-top:0;}
+.dlg-f.cupf{display:grid; gap:8px;}
+.dlg-f.cupf .btn{width:100%;}
+.btn.ghost{background:transparent; border:1.5px solid var(--line); color:var(--ink-soft);}
+.btn.ghost:hover{border-color:var(--caramel); color:var(--ink);}
+.cupmsg{font-size:12.5px; margin-top:6px; line-height:1.35;}
+.cupmsg.ok{color:#2E7D32; font-weight:700;}
+.cupmsg.no{color:#B4432F;}
 /* el detalle del pedido, compacto para que entre en una pantalla */
 dialog.pedido{max-height:92vh;}
 dialog.pedido .dlg-h{position:relative; padding-bottom:6px;}
@@ -734,7 +759,7 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     {"id":"evento","name":"Casamientos","desc":"Torta de bodas y mesa dulce","tag":"","activo":true}
   ],
   "products":[
-    {"id":"dm1","cat":"madre","name":"Desayuno para mamá","desc":"Caja con sándwiches de jamón y queso, tarta individual de frutilla, shot de limón y merengue, alfajor de nuez, galleta de flor decorada y jugo de naranja.","price":47000,"plabel":"","p2label":"","eventos":[],"fotos":["fotos/Desayuno%20para%20mama.jpeg"],"activo":true},
+    {"id":"dm1","cat":"madre","name":"Desayuno para mamá","desc":"Caja con sándwiches de jamón y queso, tarta individual de frutilla, shot de limón y merengue, alfajor de nuez, galleta de flor decorada y jugo de naranja.","price":39950,"antes":47000,"badge":"15% OFF","plabel":"","p2label":"","eventos":[],"fotos":["fotos/Desayuno%20para%20mama.jpeg"],"activo":true},
     {"id":"dm2","cat":"madre","name":"Bombones doble piso premium","desc":"Caja de dos pisos: arriba 9 bombones rellenos, abajo chocolate en rama y Marroc.","price":28000,"plabel":"","p2label":"","eventos":[],"fotos":["fotos/Bombones%20doble%20piso%20premium.jpeg"],"activo":true},
     {"id":"dm3","cat":"madre","name":"Mug cake","desc":"Tazón de vidrio con tapa, para que le quede de regalo. Bizcochuelo de limón, crema de pistacho y crema con frutos rojos.","price":27000,"plabel":"","p2label":"","eventos":[],"fotos":["fotos/Mug%20cake%20mama.jpeg"],"activo":true},
     {"id":"dm4","cat":"madre","name":"Mini cake","desc":"Vainilla con dulce de leche y chips, con el cartelito dorado y una flor para mamá.","price":23000,"plabel":"","p2label":"","eventos":[],"fotos":["fotos/Mini%20cake%20mama.jpeg"],"activo":true},
@@ -757,7 +782,7 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     {"id":"d7","cat":"postres","name":"Coco y dulce de leche","desc":"Base de masa rellena de dulce de leche, con cobertura de craquelado de coco.","price":35000,"plabel":"20 cm","price2":46000,"p2label":"26 cm","eventos":["cumple"],"fotos":["fotos/Coco%20y%20dulce%20de%20leche.jpeg","fotos/Coco%20y%20dulce%20de%20leche%202.jpeg"],"activo":true},
     {"id":"d8","cat":"postres","name":"Brownie","desc":"Base de brownie con capa de dulce de leche y crema, decorado con frutas o chocolate en rama.","price":45000,"plabel":"20 cm","price2":60000,"p2label":"26 cm","eventos":["cumple"],"photo":"fotos/Brownie.jpeg","activo":true},
 
-    {"id":"d9","cat":"postres","name":"Tarta frutal","desc":"Base de masa, relleno de dulce de leche, crema chantilly y frutas a elección.","price":46000,"plabel":"20 cm","price2":58000,"p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/Frutales.jpeg","fotos/Frutales%20(2).jpeg","fotos/Frutales%20(3).jpeg","fotos/Frutales%204.jpeg"],"activo":true},
+    {"id":"d9","cat":"postres","name":"Tarta frutal","desc":"Base de masa, relleno de dulce de leche, crema chantilly y frutas a elección.","price":40000,"antes":46000,"plabel":"20 cm","price2":58000,"p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/Frutales.jpeg","fotos/Frutales%20(2).jpeg","fotos/Frutales%20(3).jpeg","fotos/Frutales%204.jpeg"],"activo":true},
     {"id":"tp1","cat":"tortaspostres","name":"Red velvet","desc":"Bizcochuelo red velvet suave y húmedo, relleno con frosting de queso crema.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/red%20velvet.jpeg","activo":true},
     {"id":"tp2","cat":"tortaspostres","name":"Matilda","desc":"Bizcochuelo de chocolate, cubierto con ganache de chocolate semiamargo y dulce de leche, crema Bariloche.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/WhatsApp%20Image%202026-09-18%20at%202.25.14%20PM%20(1).jpeg","activo":true},
     {"id":"tp3","cat":"tortaspostres","name":"Chajá","desc":"Bizcochuelo de vainilla, dulce de leche, crema, merengues y durazno.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/WhatsApp%20Image%202026-09-18%20at%202.25.17%20PM%20(1).jpeg","fotos/WhatsApp%20Image%202026-09-18%20at%202.16.13%20PM%20(1).jpeg"],"activo":true},
@@ -966,6 +991,24 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
   }
   function cantCarrito(){ return lineasCarrito().reduce(function(a,l){ return a + l.q; }, 0); }
   function totalCarrito(){ return lineasCarrito().reduce(function(a,l){ return a + l.sub; }, 0); }
+
+  /* ====== códigos de descuento ======
+     La clave es el código tal como lo publicás, en mayúsculas.
+     'hasta' es el último día en que funciona: después de esa fecha el código
+     deja de aplicar solo, sin que tengas que tocar nada.                     */
+  var CUPONES = {
+    'MESDEMAMA': { pct:10, hasta:'2026-10-19', texto:'10% por pedir desde el catálogo' }
+  };
+  function buscarCupon(cod){
+    var c = CUPONES[String(cod || '').trim().toUpperCase()];
+    if(!c) return null;
+    if(c.hasta && new Date().toISOString().slice(0, 10) > c.hasta) return null;
+    return c;
+  }
+  function descuentoCarrito(cod){
+    var c = buscarCupon(cod);
+    return c ? Math.round(totalCarrito() * c.pct / 100) : 0;
+  }
   function sumarCarrito(k, d){
     var q = (carrito[k] || 0) + d;
     if(q <= 0) delete carrito[k]; else carrito[k] = q;
@@ -985,7 +1028,15 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
       var et = etiquetaVar(l.p, l.v);
       m += '• ' + l.q + ' × ' + l.p.name + (et ? ' (' + et + ')' : '') + ' — ' + money(l.sub) + '\n';
     });
-    m += '\nTotal estimado: ' + money(totalCarrito()) + '\n';
+    var cup = buscarCupon(d.cupon), desc = cup ? descuentoCarrito(d.cupon) : 0;
+    if(cup){
+      m += '\nSubtotal: ' + money(totalCarrito());
+      m += '\nCódigo ' + String(d.cupon).trim().toUpperCase()
+        +  ' (−' + cup.pct + '%): −' + money(desc) + '\n';
+      m += 'Total estimado: ' + money(totalCarrito() - desc) + '\n';
+    } else {
+      m += '\nTotal estimado: ' + money(totalCarrito()) + '\n';
+    }
     if(d.fecha) m += '\nFecha del evento: ' + fmtDate(d.fecha);
     if(d.pago)  m += '\nMedio de pago: ' + d.pago;
     if(d.nota)  m += '\n\nAclaraciones: ' + d.nota;
@@ -993,13 +1044,55 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     return m;
   }
 
-  function waLink(p){
-    var pr = promoFor(p);
+  function waLink(p, cod){
+    var pr = promoFor(p), c = buscarCupon(cod);
     var m = 'Hola! Te escribo desde el catálogo. Me interesa: ' + p.name;
     var pt = porcTxt(p); if(pt) m += ' (' + pt + ')';
     if(pr) m += '. Vi que está con ' + pr.badge;
     m += '. ¿Me pasás disponibilidad y presupuesto?';
+    if(c) m += '\n\nTengo el código ' + String(cod).trim().toUpperCase()
+            +  ' (−' + c.pct + '%).';
     return waBase() + '?text=' + encodeURIComponent(m);
+  }
+
+  /* Antes de mandar un pedido suelto le damos la misma chance que en el carrito:
+     poner el código, o decir que no tiene y seguir. */
+  function dlgCuponProducto(p){
+    var d = document.createElement('dialog');
+    d.className = 'pedido cupdlg';
+    d.innerHTML = '<div class="dlg-h"><h3>¿Tenés un código?</h3>'
+      + '<button class="cerrarx" data-cerrar aria-label="Cerrar">✕</button></div><div class="dlg-b">'
+      + '<p class="cuptxt">Si viste un código de descuento en nuestras redes, escribilo acá '
+      + 'y lo sumamos al pedido.</p>'
+      + '<div class="cupon"><input id="p-cup" type="text" autocomplete="off" spellcheck="false"'
+      + ' placeholder="Código de descuento"><button type="button" id="p-cupb">Aplicar</button></div>'
+      + '<div id="p-cupmsg" class="cupmsg"></div></div>'
+      + '<div class="dlg-f cupf">'
+      + '<button class="btn wa" data-ir>' + WAICON + 'Pedir por WhatsApp</button>'
+      + '<button class="btn ghost" data-sin>No tengo ningún código</button></div>';
+
+    document.body.appendChild(d);
+    var inp = d.querySelector('#p-cup'), msg = d.querySelector('#p-cupmsg');
+    var revisar = function(){
+      var cod = inp.value.trim(), c = buscarCupon(cod);
+      if(!cod){ msg.className = 'cupmsg'; msg.textContent = ''; return; }
+      if(c){ msg.className = 'cupmsg ok'; msg.textContent = '¡Listo! ' + c.texto + '.'; }
+      else  { msg.className = 'cupmsg no'; msg.textContent = 'Ese código no existe o ya venció.'; }
+    };
+    var ir = function(cod){
+      window.open(waLink(p, cod), '_blank', 'noopener');
+      d.close(); d.remove();
+    };
+    d.querySelector('#p-cupb').onclick = revisar;
+    inp.addEventListener('keydown', function(ev){
+      if(ev.key === 'Enter'){ ev.preventDefault(); revisar(); }
+    });
+    d.querySelector('[data-ir]').onclick  = function(){ revisar(); ir(inp.value.trim()); };
+    d.querySelector('[data-sin]').onclick = function(){ ir(''); };
+    d.querySelector('[data-cerrar]').onclick = function(){ d.close(); d.remove(); };
+    d.addEventListener('close', function(){ d.remove(); });
+    d.showModal();
+    setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 60);
   }
 
   /* ---------- filtros ---------- */
@@ -1282,7 +1375,11 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
             + '<div class="sb tnum">' + money(l.sub) + '</div>'
             + '<button class="rm" data-x="' + esc(l.k) + '" aria-label="Sacar">✕</button></div>';
         }).join('') + '</div>'
-      + '<div class="total"><span>Total estimado</span><b class="tnum">' + money(totalCarrito()) + '</b></div>'
+      + '<div id="c-tot"></div>'
+      + '<div class="cupon"><input id="c-cup" type="text" autocomplete="off" spellcheck="false"'
+      + ' placeholder="¿Tenés un código?" value="' + esc(prev.cupon || '') + '">'
+      + '<button type="button" id="c-cupb">Aplicar</button></div>'
+      + '<div id="c-cupmsg" class="cupmsg"></div>'
       + '<div class="avisosena">' + esc(s.sena) + ' · ' + esc(s.anticipacion) + '</div>'
       + '<label class="fld" style="margin-top:14px"><span>¿Para qué fecha es?</span>'
       + '<input type="date" id="c-f" value="' + esc(prev.fecha || '') + '"></label>'
@@ -1303,8 +1400,37 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
       var pg = d.querySelector('.segm.pagos button.on');
       return { fecha:d.querySelector('#c-f').value,
                pago: pg ? pg.getAttribute('data-pago') : '',
+               cupon:d.querySelector('#c-cup').value.trim(),
                nota:d.querySelector('#c-n').value.trim() };
     };
+
+    /* el total se vuelve a dibujar cada vez que se aplica o se saca un código */
+    var pintarTotal = function(cod){
+      var c = buscarCupon(cod), t = totalCarrito(), desc = c ? descuentoCarrito(cod) : 0;
+      var h = '';
+      if(c){
+        h += '<div class="totlin"><span>Subtotal</span><b class="tnum">' + money(t) + '</b></div>'
+          +  '<div class="totlin desc"><span>' + esc(String(cod).trim().toUpperCase())
+          +  ' · −' + c.pct + '%</span><b class="tnum">−' + money(desc) + '</b></div>';
+      }
+      h += '<div class="total"><span>Total estimado</span><b class="tnum">'
+        +  money(t - desc) + '</b></div>';
+      d.querySelector('#c-tot').innerHTML = h;
+    };
+    var aplicarCupon = function(){
+      var cod = d.querySelector('#c-cup').value.trim();
+      var msg = d.querySelector('#c-cupmsg'), c = buscarCupon(cod);
+      if(!cod){ msg.className = 'cupmsg'; msg.textContent = ''; pintarTotal(''); return; }
+      if(c){ msg.className = 'cupmsg ok'; msg.textContent = '¡Listo! ' + c.texto + '.'; }
+      else  { msg.className = 'cupmsg no'; msg.textContent = 'Ese código no existe o ya venció.'; }
+      pintarTotal(cod);
+    };
+    pintarTotal(prev.cupon || '');
+    if(prev.cupon) aplicarCupon();
+    d.querySelector('#c-cupb').onclick = aplicarCupon;
+    d.querySelector('#c-cup').addEventListener('keydown', function(ev){
+      if(ev.key === 'Enter'){ ev.preventDefault(); aplicarCupon(); }
+    });
     d.querySelectorAll('[data-pago]').forEach(function(bt){
       bt.onclick = function(){
         d.querySelectorAll('[data-pago]').forEach(function(o){ o.classList.remove('on'); });
@@ -1707,7 +1833,8 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     var h = '<article class="card' + (p.activo?'':' off') + '" style="animation-delay:' + (idx*55) + 'ms">';
     var dib = (p.cat==='postres'?ART.porcion : p.cat==='mini'?ART.cupcake : ART.monito);
     h += '<div class="ph' + (fs.length ? ' clic" data-gal="' + esc(p.id) + '"' : '"') + '>'
-      + (pr ? '<span class="offtag">' + esc(pr.badge) + '</span>' : '')
+      + (pr ? '<span class="offtag">' + esc(pr.badge) + '</span>'
+            : (precioAntes(p) ? '<span class="offtag">' + esc(badgeAntes(p)) + '</span>' : ''))
       + '<div class="mark">' + dib + '</div>'
       + (fs.length ? '<img src="' + esc(fs[0]) + '" alt="' + esc(p.name) + '" loading="lazy" onerror="this.remove()">' : '')
       + (fs.length > 1 ? '<span class="phcount tnum">' + fs.length + ' fotos</span>' : '')
@@ -1739,7 +1866,7 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
         + '</ul></details>';
     }
     if(p.price){
-      h += '<div class="prices">' + priceRow(p.price, p.plabel, pr, false);
+      h += '<div class="prices">' + priceRow(p.price, p.plabel, pr, false, precioAntes(p));
       if(p.price2) h += priceRow(p.price2, p.p2label||'Grande', pr, true);
       h += '</div>';
     }
@@ -1753,8 +1880,12 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
                 + '<button data-add="' + esc(p.id) + '" aria-label="Agregar uno">+</button></div>'
               : '<button class="btn add" data-add="' + esc(p.id) + '">Agregar</button>')
           : '')
-      + '<a class="btn wa" target="_blank" rel="noopener" href="' + esc(waLink(p)) + '">'
-      + WAICON + (!p.price ? 'Consultar' : (isAdm ? 'Pedir por WhatsApp' : 'Pedir')) + '</a>'
+      /* con precio pasa primero por el código; sin precio va derecho a consultar */
+      + (p.price
+          ? '<button class="btn wa" data-pedir="' + esc(p.id) + '">' + WAICON
+            + (isAdm ? 'Pedir por WhatsApp' : 'Pedir') + '</button>'
+          : '<a class="btn wa" target="_blank" rel="noopener" href="' + esc(waLink(p)) + '">'
+            + WAICON + 'Consultar</a>')
       + '</div></div>';
     if(isAdm){
       h += '<div class="cardadmin">'
@@ -1768,11 +1899,24 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     return h + '</article>';
   }
 
-  function priceRow(v, label, pr, sec){
+  /* 'antes' es el precio viejo de un producto puntual: se muestra tachado
+     al lado del nuevo, igual que cuando hay una promo de categoría. */
+  function priceRow(v, label, pr, sec, antes){
     var h = '<div class="prow' + (sec?' sec':'') + '"><span class="pl">' + esc(label||'') + '</span><span class="pv tnum">';
-    if(pr) h += '<s>' + money(v) + '</s><span class="now">' + money(withOff(v,pr)) + '</span>';
-    else h += money(v);
+    if(pr)          h += '<s>' + money(v) + '</s><span class="now">' + money(withOff(v,pr)) + '</span>';
+    else if(antes)  h += '<s>' + money(antes) + '</s><span class="now">' + money(v) + '</span>';
+    else            h += money(v);
     return h + '</span></div>';
+  }
+  function precioAntes(p){
+    return (!promoFor(p) && p.antes && p.antes > p.price) ? p.antes : 0;
+  }
+  /* el cartelito: si el producto trae 'badge' se usa ese texto; si no,
+     se calcula el porcentaje real entre el precio viejo y el nuevo. */
+  function badgeAntes(p){
+    var a = precioAntes(p); if(!a) return '';
+    if(p.badge) return p.badge;
+    return Math.round((1 - p.price / a) * 100) + '% OFF';
   }
 
   /* ===========================================================
@@ -2193,6 +2337,13 @@ footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:w
     if(det) det.addEventListener('toggle', function(){ filtrosAbiertos = det.open; });
 
     var ab = root.querySelector('[data-adm]'); if(ab) ab.onclick = openLogin;
+
+    root.querySelectorAll('[data-pedir]').forEach(function(el){
+      el.onclick = function(){
+        var p = findById(el.getAttribute('data-pedir'));
+        if(p) dlgCuponProducto(p);
+      };
+    });
 
     /* ---- carrito ---- */
     root.querySelectorAll('[data-add]').forEach(function(el){
