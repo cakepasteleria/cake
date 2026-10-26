@@ -1,0 +1,1636 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Cake · Menú del café</title>
+<meta name="description" content="Menú de Cake, café y pastelería en Córdoba 417, Corrientes. Dulces, bebidas, salados y almuerzos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style id="app-style">
+/* =========================================================================
+   CAKE · Menú del café + carrito + panel de administración
+   Paleta: crema #F3E9DC · caramelo #C08552 · café #895737 · chocolate #5E3023
+   ========================================================================= */
+:root{
+  --ground:#F3E9DC; --surface:#FFFBF4; --surface-2:#E9DAC5;
+  --ink:#3A1C12; --ink-soft:#7A4B30; --ink-faint:#9C7452;
+  --accent:#895737; --accent-ink:#FFFBF4; --accent-soft:#E9DAC5;
+  --caramel:#C08552; --brownie:#5E3023;
+  --line:#DCC7AC; --line-strong:#C2A47F;
+  --draw:#C08552; --wa:#1F7A3D; --promo:#A34426;
+  --radius:18px; --shadow:0 1px 3px rgba(58,28,18,.07);
+}
+/* La página va siempre con los colores de la marca, sin modo oscuro
+   automático: la crema y el marrón son parte de la identidad. */
+:root{ color-scheme: light; }
+
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html,body{margin:0;}
+body{background:var(--ground); color:var(--ink);
+  font-family:'Karla', ui-sans-serif, system-ui, sans-serif; font-size:16px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:'Fraunces',serif; font-weight:600; margin:0; letter-spacing:-.01em;}
+/* Safari en iPhone le pone su propio azul a los botones si no se lo aclarás */
+button{font:inherit; cursor:pointer; color:inherit; -webkit-appearance:none; appearance:none;}
+.wrap{max-width:1180px; margin:0 auto; padding-inline:14px;}
+@media (min-width:620px){ .wrap{padding-inline:18px;} }
+
+/* fondo con cafecitos */
+#bg{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; color:var(--draw);}
+#bg span{position:absolute; display:block; opacity:.16;
+  animation:flota 11s ease-in-out infinite;}
+#bg span svg{display:block;}
+#bg .b1{top:6%;  left:-5%;  width:118px; animation-delay:0s;}    #bg .b1 svg{transform:rotate(-12deg);}
+#bg .b2{top:19%; right:-6%; width:146px; opacity:.1; animation-delay:-2.2s;} #bg .b2 svg{transform:rotate(9deg);}
+#bg .b3{top:36%; left:-7%;  width:130px; animation-delay:-4.4s;} #bg .b3 svg{transform:rotate(7deg);}
+#bg .b4{top:52%; right:-4%; width:108px; opacity:.1; animation-delay:-6.6s;} #bg .b4 svg{transform:rotate(-8deg);}
+#bg .b5{top:68%; left:-4%;  width:124px; animation-delay:-8.8s;} #bg .b5 svg{transform:rotate(11deg);}
+#bg .b6{top:84%; right:-6%; width:134px; opacity:.1; animation-delay:-1.1s;} #bg .b6 svg{transform:rotate(-6deg);}
+
+/* ---------- animaciones ---------- */
+@keyframes flota{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-16px)} }
+@keyframes sube{ from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} }
+@keyframes pop{ 0%{transform:scale(1)} 42%{transform:scale(1.16)} 100%{transform:scale(1)} }
+@keyframes barraSube{ from{transform:translateY(100%)} to{transform:none} }
+@keyframes aparece{ from{opacity:0; transform:scale(.95) translateY(12px)} to{opacity:1; transform:none} }
+@keyframes latido{ 0%,100%{transform:scale(1)} 30%{transform:scale(1.1)} }
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{ animation:none !important; transition:none !important; }
+}
+
+/* la bolsita que vuela al carrito */
+.volador{position:fixed; z-index:90; pointer-events:none;
+  filter:drop-shadow(0 8px 16px rgba(58,28,18,.3));}
+.volador svg{width:100%; height:100%; display:block;}
+@media (min-width:1100px){
+  #bg .b1{left:1%;} #bg .b2{right:2%;} #bg .b3{left:0;}
+  #bg .b4{right:1%;} #bg .b5{left:2%;} #bg .b6{right:0;}
+}
+#veil{position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(120% 70% at 50% 0%, transparent 44%, var(--ground) 100%);}
+#app{position:relative; z-index:2;}
+
+/* encabezado */
+header.top{background:color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line); position:sticky; top:env(safe-area-inset-top,0px); z-index:30;}
+.top-in{display:flex; align-items:center; gap:9px; padding-block:8px;
+  transition:padding-block .22s ease;}
+.logo-slot{width:44px; height:44px; flex:none; border-radius:50%; border:1.5px solid var(--line-strong);
+  background:var(--surface); display:grid; place-items:center; overflow:hidden; position:relative;
+  font-family:'Fraunces',serif; font-size:21px; font-weight:600; color:var(--accent); line-height:1;
+  transition:width .22s ease, height .22s ease;}
+
+/* al bajar, el encabezado se achica y devuelve pantalla */
+body.compacto .top-in{padding-block:5px;}
+body.compacto .logo-slot{width:32px; height:32px;}
+body.compacto .brand .nm{font-size:17px;}
+body.compacto .brand .sub{opacity:0; max-height:0; margin-top:0;}
+.brand .nm{transition:font-size .22s ease;}
+.brand .sub{transition:opacity .18s ease, max-height .22s ease, margin-top .22s ease;
+  max-height:14px; overflow:hidden;}
+@media (min-width:620px){
+  body.compacto .logo-slot{width:40px; height:40px;}
+  body.compacto .brand .nm{font-size:21px;}
+  body.compacto .top-in{padding-block:6px;}
+}
+.logo-slot img{position:absolute; left:50%; top:50%; width:226%; height:auto; max-width:none;
+  transform:translate(-46.6%,-45.6%); display:block;}
+.brand{display:flex; flex-direction:column; margin-right:auto; min-width:0;}
+.brand .nm{font-family:'Fraunces',serif; font-size:26px; font-weight:600; line-height:1;}
+.brand .sub{font-size:8.2px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-soft);
+  font-weight:700; margin-top:5px;}
+@media (min-width:620px){
+  .top-in{gap:10px; padding-block:11px;}
+  .brand .nm{font-size:32px;} .brand .sub{font-size:10px; letter-spacing:.3em;}
+}
+.top-wa{display:none;}
+@media (min-width:900px){ .top-wa{display:inline-flex;} }
+/* el candado no se ve: se entra agregando #admin al final de la dirección */
+.adm-btn{display:none;}
+body.modoadmin .adm-btn{flex:none; width:36px; height:36px; border-radius:50%;
+  border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink-faint);
+  display:grid; place-items:center;}
+.adm-btn svg{width:15px; height:15px;}
+.adm-btn:hover{border-color:var(--accent); color:var(--accent);}
+.adm-btn.on{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+/* botones */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:7px; border:none;
+  border-radius:999px; padding:11px 19px; font-weight:700; font-size:14.5px; text-decoration:none;
+  background:var(--accent); color:var(--accent-ink); transition:transform .14s, filter .14s; min-height:44px;}
+.btn:active{transform:scale(.97);}
+.btn.wa{background:var(--wa); color:#fff;}
+.btn.sm{padding:8px 15px; font-size:13.5px; min-height:0;}
+.btn.ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line-strong); font-weight:600;}
+.btn.danger{background:var(--promo); color:#fff;}
+.btn svg{width:17px; height:17px; flex:none;}
+
+/* hero */
+.hero{padding-block:16px 2px; text-align:center;}
+.hero .eyebrow{font-size:8.5px; letter-spacing:.2em; text-transform:uppercase; font-weight:700;
+  color:var(--ink-faint); margin-bottom:7px;}
+.hero h1{font-size:clamp(23px,6.6vw,36px); line-height:1.1;}
+.hero h1 em{font-style:italic; color:var(--accent);}
+.hero p.lead{max-width:46ch; margin:8px auto 0; color:var(--ink-soft); font-size:14px;}
+@media (min-width:620px){
+  .hero{padding-block:22px 4px;}
+  .hero .eyebrow{font-size:9.5px; margin-bottom:10px;}
+  .hero p.lead{font-size:16px; margin-top:11px;}
+}
+
+/* anuncios */
+.anuncios{margin-top:16px; display:grid; gap:8px;}
+.anuncio{display:flex; align-items:center; gap:10px; background:var(--surface);
+  border:1px solid var(--line); border-left:4px solid var(--caramel);
+  border-radius:12px; padding:11px 15px; font-size:14.5px;}
+.anuncio .dot{width:7px; height:7px; border-radius:50%; background:var(--caramel); flex:none;}
+.anuncio .ax{margin-left:auto; border:none; background:none; color:var(--accent);
+  font-size:12.5px; font-weight:700; text-decoration:underline;}
+
+/* ---------- LAYOUT: panel al costado + grilla ---------- */
+.layout{display:block; margin-block:14px 30px;}
+@media (min-width:900px){
+  .layout{display:grid; grid-template-columns:238px minmax(0,1fr); gap:32px; align-items:start;}
+}
+.side{display:none;}
+@media (min-width:900px){
+  .side{display:block; position:sticky; top:calc(88px + env(safe-area-inset-top,0px));
+    max-height:calc(100vh - 110px); overflow-y:auto; overscroll-behavior:contain;
+    padding-right:6px; scrollbar-width:thin;}
+  .side::-webkit-scrollbar{width:7px;}
+  .side::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:99px;}
+  .side::-webkit-scrollbar-track{background:transparent;}
+}
+/* en celular, buscador + categorías pegados arriba */
+.cinta{display:block; position:sticky; z-index:26; margin-bottom:14px;
+  top:calc(env(safe-area-inset-top,0px) + var(--htop, 60px));
+  background:color-mix(in srgb, var(--ground) 94%, transparent);
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  padding-block:9px; border-bottom:1px solid var(--line);
+  margin-inline:-14px; padding-inline:14px;}
+@media (min-width:900px){ .cinta{display:none;} }
+.cinta .chips{display:flex; gap:7px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px;}
+.cinta .chips::-webkit-scrollbar{display:none;}
+.cinta .chip{flex:none; white-space:nowrap; min-height:36px; padding:6px 13px; font-size:13.5px;}
+.cinta .buscador{margin-bottom:8px;}
+
+.sblock{margin-bottom:24px;}
+.sblock > h3{font-size:12.5px; letter-spacing:.04em; color:var(--ink);
+  font-family:'Karla',sans-serif; font-weight:700; margin-bottom:10px;
+  display:flex; align-items:center; gap:8px;}
+.sblock > h3 .step{flex:none; width:21px; height:21px; border-radius:50%; background:var(--accent);
+  color:var(--accent-ink); font-size:11.5px; display:grid; place-items:center; font-weight:700;}
+.chips{display:flex; gap:7px; flex-wrap:wrap;}
+.chip{border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink-soft);
+  border-radius:999px; padding:8px 14px; font-size:14px; font-weight:600; min-height:40px;
+  display:inline-flex; align-items:center; gap:7px;
+  transition:transform .14s, background .14s, color .14s, border-color .14s;}
+.chip:active{transform:scale(.95);}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.chip .n{font-size:11.5px; opacity:.7; font-variant-numeric:tabular-nums;}
+.side .chips .chip{justify-content:space-between; width:100%;}
+
+.buscador{position:relative; margin-bottom:6px;}
+.buscador input{width:100%; border:1.5px solid var(--line-strong); background:var(--surface);
+  color:var(--ink); border-radius:999px; padding:10px 15px 10px 38px; font:inherit; font-size:14.5px;}
+.buscador svg{position:absolute; left:13px; top:50%; transform:translateY(-50%);
+  width:15px; height:15px; color:var(--ink-faint);}
+
+.sinfo{background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding:15px 17px; font-size:13.5px; color:var(--ink-soft);}
+.sinfo b{display:block; font-family:'Karla',sans-serif; font-size:10.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:7px;}
+.sinfo p{margin:0 0 6px;}
+.sinfo p:last-child{margin:0;}
+
+/* ---------- secciones y tarjetas ---------- */
+section.cat{margin-bottom:26px; scroll-margin-top:150px;}
+.cat-head{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.cat-head svg{width:24px; height:24px; flex:none; color:var(--caramel);}
+.cat-head h2{font-size:21px; letter-spacing:-.015em;}
+.cat-head .note{font-size:12px; color:var(--ink-soft); width:100%; line-height:1.35;}
+.cat-head .ax{margin-left:auto; border:1.5px solid var(--line-strong); background:var(--surface);
+  color:var(--accent); border-radius:999px; padding:5px 12px; font-size:12.5px; font-weight:700;}
+.rule{height:2px; background:var(--line); margin:9px 0 14px;}
+@media (min-width:620px){
+  section.cat{margin-bottom:34px;}
+  .cat-head svg{width:30px; height:30px;}
+  .cat-head h2{font-size:26px;}
+  .cat-head .note{font-size:13px;}
+  .rule{margin:11px 0 20px;}
+}
+
+.grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;}
+@media (min-width:620px){ .grid{grid-template-columns:repeat(auto-fill,minmax(214px,1fr)); gap:15px;} }
+
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  overflow:hidden; display:flex; flex-direction:column; box-shadow:var(--shadow); position:relative;
+  transition:transform .16s ease, box-shadow .22s ease, border-color .22s ease;}
+.card:active{transform:scale(.982);}
+@media (hover:hover){
+  .card:hover{transform:translateY(-3px); box-shadow:0 10px 26px rgba(58,28,18,.14);}
+  .card:hover .ph img{transform:scale(1.07);}
+}
+.grid.anim .card{animation:sube .42s cubic-bezier(.2,.7,.3,1) both;
+  animation-delay:calc(var(--i, 0) * 45ms);}
+.card.off{opacity:.45;}
+.card .ph{aspect-ratio:1/1; background:var(--surface-2); position:relative; overflow:hidden;}
+.card .ph.clic{cursor:zoom-in;}
+.card .ph img{width:100%; height:100%; object-fit:cover; position:relative; z-index:1; display:block;
+  transition:transform .55s cubic-bezier(.2,.7,.3,1);}
+.card .ph .mark{position:absolute; inset:0; display:grid; place-items:center; color:var(--line-strong);}
+.card .ph .mark svg{width:52px;}
+.card .ph .falta{position:absolute; left:0; right:0; bottom:0; z-index:2; text-align:center;
+  font-size:10px; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+  color:var(--ink-faint); padding:6px 4px; background:color-mix(in srgb, var(--surface) 80%, transparent);}
+.tagtop{position:absolute; left:9px; top:9px; z-index:3; background:var(--caramel); color:var(--brownie);
+  border-radius:999px; padding:4px 10px; font-size:9.5px; letter-spacing:.12em;
+  text-transform:uppercase; font-weight:700;}
+.offtag{position:absolute; right:9px; top:9px; z-index:3; background:var(--promo); color:#fff;
+  border-radius:999px; padding:5px 11px; font-size:12px; font-weight:700; letter-spacing:.02em;}
+.card .pr .antes{font-size:11.5px; color:var(--ink-faint); text-decoration:line-through;
+  font-weight:700; margin-right:5px;}
+@media (min-width:620px){ .card .pr .antes{font-size:13.5px; margin-right:7px;} }
+.offtag{font-size:10.5px; padding:4px 8px;}
+@media (min-width:620px){ .offtag{font-size:12px; padding:5px 11px;} }
+.tagtop{font-size:8px; padding:3px 7px; letter-spacing:.08em;}
+@media (min-width:620px){ .tagtop{font-size:9.5px; padding:4px 10px; letter-spacing:.12em;} }
+.card.conoff{border-color:var(--promo);}
+
+.card .body{padding:10px 11px 0; display:flex; flex-direction:column; gap:3px; flex:1;}
+.card .nm{font-family:'Fraunces',serif; font-size:15.5px; font-weight:600; line-height:1.15; color:var(--ink);}
+.card .ds{font-size:11.4px; color:var(--ink-faint); line-height:1.33;}
+.card .ds b{color:var(--ink-soft); font-weight:700;}
+.card .pr{margin-top:auto; padding-top:7px; font-size:18px; font-weight:700; color:var(--accent);
+  font-variant-numeric:tabular-nums; line-height:1.1;}
+.card .pr small{font-size:10.5px; color:var(--ink-faint); margin-left:4px; font-weight:700;}
+.card .act{padding:9px 11px 11px;}
+.card .act .add{width:100%; border:1.5px solid var(--line-strong); background:transparent;
+  color:var(--accent); border-radius:999px; padding:8px 8px; font-size:12.5px; font-weight:700;}
+@media (min-width:620px){
+  .card .body{padding:13px 15px 0; gap:5px;}
+  .card .nm{font-size:18.5px;} .card .ds{font-size:12.8px;}
+  .card .pr{font-size:21px; padding-top:9px;}
+  .card .act{padding:12px 15px 15px;}
+  .card .act .add{padding:9px 12px; font-size:13.5px;}
+}
+.card .act .add{transition:background .16s, color .16s, border-color .16s, transform .13s;}
+.card .act .add:hover{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.card .act .add:active{transform:scale(.94);}
+.card .act.pop .qt, .card .act.pop .add{animation:pop .32s cubic-bezier(.3,1.4,.5,1);}
+.card .act .qt{display:flex; align-items:center; justify-content:space-between; gap:6px;
+  background:var(--accent); border-radius:999px; padding:4px;}
+.card .act .qt button{width:31px; height:31px; border:none; border-radius:50%; background:transparent;
+  color:var(--accent-ink); font-size:18px; font-weight:700; line-height:1; display:grid; place-items:center;}
+.card .act .qt button:hover{background:rgba(255,255,255,.2);}
+.card .act .qt b{color:var(--accent-ink); font-size:15px; font-variant-numeric:tabular-nums;}
+
+.cardadmin{display:flex; gap:5px; padding:0 15px 13px; flex-wrap:wrap; align-items:center;}
+.cardadmin button{background:transparent; border:1.5px solid var(--line-strong); color:var(--ink-soft);
+  border-radius:8px; padding:4px 9px; font-size:11.5px; font-weight:700;}
+.cardadmin button:hover{border-color:var(--accent); color:var(--accent);}
+.cardadmin .mv{width:30px; padding:0; font-size:13px;}
+.cardadmin .del{margin-left:auto; border-color:transparent; color:var(--promo);}
+
+.nada{text-align:center; color:var(--ink-faint); padding:44px 0;}
+
+/* bloque de encargos */
+.chip.promo[aria-pressed="true"]{background:var(--promo); border-color:var(--promo); color:#fff;}
+.chip.promo{border-color:var(--promo); color:var(--promo);}
+
+.encargo{margin-top:14px; border-radius:15px; background:var(--brownie); color:#F7EFE4;
+  padding:13px 15px; display:flex; align-items:center; gap:12px;}
+.encargo svg{width:36px; height:36px; flex:none; color:var(--caramel);}
+.encargo .tx{flex:1; min-width:0;}
+.encargo .et{display:none;}
+.encargo h3{font-size:15.5px; margin-bottom:2px; line-height:1.15;}
+.encargo p{margin:0; font-size:12.5px; line-height:1.35; opacity:.88;}
+.encargo a{flex:none; display:inline-flex; align-items:center; gap:6px; background:var(--caramel);
+  color:var(--brownie); border-radius:999px; padding:8px 14px; font-weight:700; font-size:13px;
+  text-decoration:none; white-space:nowrap;}
+@media (max-width:520px){
+  .encargo a{padding:8px 11px; font-size:0;}
+  .encargo a::after{content:'→'; font-size:16px;}
+}
+@media (min-width:760px){
+  .encargo{margin-top:18px; border-radius:20px; padding:20px 24px; gap:18px;}
+  .encargo svg{width:52px; height:52px;}
+  .encargo .et{display:block; font-size:9px; letter-spacing:.22em; text-transform:uppercase;
+    font-weight:700; color:var(--caramel); margin-bottom:4px;}
+  .encargo h3{font-size:19px; margin-bottom:4px;}
+  .encargo p{font-size:14px;}
+  .encargo a{padding:10px 18px; font-size:14px;}
+}
+
+/* pie */
+footer{margin-top:34px; border-top:1px solid var(--line); padding-block:28px 46px; text-align:center;}
+footer .ig{display:inline-flex; gap:12px; margin-bottom:16px;}
+footer .ig a{display:inline-flex; align-items:center; gap:7px; border:1.5px solid var(--line-strong);
+  border-radius:999px; padding:8px 15px; color:var(--ink); text-decoration:none;
+  font-size:14px; font-weight:700;}
+footer .ig a:hover{border-color:var(--accent); color:var(--accent);}
+footer .dir{font-size:15px;}
+footer .dir a{color:var(--accent); font-weight:700; text-decoration:none;}
+footer .hr{font-size:14px; color:var(--ink-soft); margin-top:5px;}
+footer .wa{display:inline-flex; align-items:center; gap:8px; margin-top:17px; background:var(--wa);
+  color:#fff; border-radius:999px; padding:11px 21px; font-weight:700; text-decoration:none; font-size:15px;}
+footer .cl{margin-top:19px; font-size:9.5px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ink-faint); font-weight:700;}
+footer svg{width:16px; height:16px;}
+
+/* diálogos */
+dialog{border:none; border-radius:20px; padding:0; background:var(--surface); color:var(--ink);
+  max-width:520px; width:calc(100% - 28px); box-shadow:0 18px 60px rgba(58,28,18,.3);}
+dialog::backdrop{background:rgba(42,21,16,.55); backdrop-filter:blur(3px);}
+dialog[open]{animation:aparece .26s cubic-bezier(.2,.8,.3,1) both;}
+dialog[open]::backdrop{animation:aparece .26s ease both;}
+.hero{animation:sube .5s cubic-bezier(.2,.7,.3,1) both;}
+.encargo{animation:sube .5s cubic-bezier(.2,.7,.3,1) .06s both;}
+.chip{transition:transform .13s, background .16s, color .16s, border-color .16s;}
+.chip:active{transform:scale(.93);}
+.cat-head h2, .rule{animation:sube .45s cubic-bezier(.2,.7,.3,1) both;}
+.ln{transition:opacity .2s;}
+.segm button{transition:background .16s, color .16s, border-color .16s, transform .12s;}
+.segm button:active{transform:scale(.96);}
+.btn.wa{transition:transform .13s, filter .16s;}
+.btn.wa:active{transform:scale(.97);}
+dialog{max-height:92vh;}
+.dlg{padding:18px 17px 18px; position:relative;}
+.dlg h3{font-size:19px; margin-bottom:5px; padding-right:38px;}
+@media (min-width:620px){ .dlg{padding:24px 24px 22px;} .dlg h3{font-size:21px;} }
+
+/* el detalle del pedido, compacto para que entre en una pantalla */
+.dlg.pedido{padding:15px 15px 15px;}
+.dlg.pedido h3{font-size:18px; margin-bottom:10px;}
+.dlg.pedido .fld{margin-bottom:9px;}
+.dlg.pedido .fld span{font-size:9.5px; margin-bottom:3px;}
+.dlg.pedido .fld input, .dlg.pedido .fld select, .dlg.pedido .fld textarea{
+  padding:8px 11px; font-size:14px; border-radius:9px;}
+.dlg.pedido .fld textarea{min-height:42px;}
+.dlg.pedido .lineas{max-height:min(30vh, 220px); overflow-y:auto; overscroll-behavior:contain;
+  padding-right:7px; scrollbar-width:thin; scrollbar-color:var(--line-strong) transparent;}
+.dlg.pedido .lineas::-webkit-scrollbar{width:7px;}
+.dlg.pedido .lineas::-webkit-scrollbar-thumb{background:var(--line-strong); border-radius:99px;}
+.dlg.pedido .lineas::-webkit-scrollbar-track{background:transparent;}
+.dlg.pedido .ln{padding:8px 0;}
+.dlg.pedido .ln .nb{font-size:14px;}
+.dlg.pedido .total{margin-top:10px; padding-top:9px;}
+.dlg.pedido .total b{font-size:23px;}
+.dlg.pedido .segm button{padding:8px 6px; font-size:13.5px;}
+.dlg.pedido .acciones{margin-top:12px;}
+.dlg.pedido .btn{padding:12px 19px;}
+.doscol{display:grid; grid-template-columns:1fr 1fr; gap:9px;}
+.doscol .fld{margin-bottom:0;}
+.cerrarx{position:absolute; right:16px; top:16px; width:34px; height:34px; border-radius:50%;
+  border:1.5px solid var(--line-strong); background:var(--surface); color:var(--ink-soft);
+  font-size:17px; line-height:1; display:grid; place-items:center; z-index:2;}
+.cerrarx:hover{border-color:var(--accent); color:var(--accent);}
+.dlg p.sm{font-size:14px; color:var(--ink-soft); margin:0 0 17px;}
+.fld{display:block; margin-bottom:13px;}
+.fld span{display:block; font-size:10.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-faint); font-weight:700; margin-bottom:5px;}
+.fld input, .fld textarea, .fld select{width:100%; border:1.5px solid var(--line-strong);
+  background:var(--ground); color:var(--ink); border-radius:11px; padding:10px 13px;
+  font:inherit; font-size:15px;}
+.fld textarea{min-height:66px; resize:vertical;}
+.fld.row{display:flex; gap:11px;} .fld.row > label{flex:1;}
+.chk{display:flex; align-items:center; gap:9px; font-size:14.5px; margin-bottom:13px; cursor:pointer;}
+.chk input{width:18px; height:18px; accent-color:var(--accent);}
+.acciones{display:flex; gap:9px; margin-top:19px; flex-wrap:wrap;}
+.err{color:var(--promo); font-size:13.5px; font-weight:700; margin-top:9px; min-height:19px;}
+
+/* el pedido */
+.lineas{max-height:42vh; overflow-y:auto;}
+.ln{display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid var(--line);}
+.ln:last-child{border-bottom:none;}
+.ln .nb{flex:1; min-width:0; font-size:15px; font-weight:700; line-height:1.25;}
+.ln .nb small{display:block; font-weight:400; font-size:12.5px; color:var(--ink-faint);}
+.ln .qt{display:flex; align-items:center; gap:3px; border:1.5px solid var(--line-strong);
+  border-radius:999px; padding:2px;}
+.ln .qt button{width:24px; height:24px; border:none; border-radius:50%; background:transparent;
+  color:var(--accent); font-size:16px; font-weight:700; line-height:1;}
+.ln .qt b{min-width:18px; text-align:center; font-size:14px;}
+.ln .sb{width:76px; text-align:right; font-weight:700; font-variant-numeric:tabular-nums; font-size:14.5px;}
+.segm{display:flex; gap:7px; flex-wrap:wrap;}
+.segm button{flex:1 1 0; min-width:74px; border:1.5px solid var(--line-strong);
+  background:var(--ground); color:var(--ink); border-radius:11px; padding:10px 6px;
+  font-size:13.5px; font-weight:700; white-space:nowrap;}
+.segm button.on{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+.ln .rm{width:26px; height:26px; border:none; background:none; color:var(--ink-faint);
+  font-size:16px; line-height:1; border-radius:50%; flex:none;}
+.ln .rm:hover{background:var(--surface-2); color:var(--promo);}
+.total{display:flex; align-items:baseline; justify-content:space-between; margin-top:14px;
+  padding-top:13px; border-top:2px solid var(--line-strong);}
+.total span{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:700;}
+.total b{font-family:'Fraunces',serif; font-size:27px; font-weight:600;}
+
+/* barras pegadas abajo */
+.cartbar{position:sticky; bottom:0; z-index:40; background:var(--brownie); color:#F7EFE4;
+  padding:12px 0; box-shadow:0 -6px 24px rgba(42,21,16,.22);}
+.cartbar.entra{animation:barraSube .34s cubic-bezier(.2,.8,.3,1) both;}
+.cartbar .btn{transition:transform .13s, filter .16s;}
+.cartbar .btn:active{transform:scale(.95);}
+.cartbar.late .qn b{animation:latido .36s ease;}
+.cartbar .in{display:flex; gap:12px; align-items:center;}
+.cartbar .qn{flex:1; min-width:0;}
+.cartbar .qn b{display:block; font-size:14px;}
+.cartbar .qn span{font-size:12.5px; opacity:.82;}
+.cartbar .btn{background:var(--caramel); color:var(--brownie); padding:11px 17px; font-size:14px;}
+.cartbar{padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));}
+footer{padding-bottom:calc(46px + env(safe-area-inset-bottom,0px));}
+.admbar{position:sticky; bottom:0; z-index:41; background:var(--brownie); color:#F7EFE4; padding:11px 0;}
+.admbar .in{display:flex; gap:9px; align-items:center; flex-wrap:wrap;}
+.admbar .qn{font-size:13.5px; margin-right:auto; opacity:.9;}
+.admbar .btn{padding:9px 16px; font-size:13.5px; min-height:0;}
+.admbar .btn.ghost{color:#F7EFE4; border-color:rgba(247,239,228,.4);}
+
+/* visor de fotos */
+#lb{position:fixed; inset:0; margin:auto; padding:0; border:none;
+  width:min(860px,94vw); max-width:94vw; height:max-content; max-height:92vh;
+  background:transparent; box-shadow:none;}
+#lb img{width:100%; height:auto; max-height:86vh; object-fit:contain; border-radius:16px; display:block;}
+#lb .x{position:absolute; right:10px; top:10px; width:38px; height:38px; border-radius:50%;
+  background:rgba(42,21,16,.72); color:#F7EFE4; border:none; font-size:20px;}
+#lb img{cursor:pointer;}
+#lb .cont{position:absolute; left:50%; bottom:12px; transform:translateX(-50%);
+  background:rgba(42,21,16,.72); color:#F7EFE4; border-radius:999px; padding:5px 14px;
+  font-size:12.5px; font-weight:700; font-variant-numeric:tabular-nums;}
+#lb .cont:empty{display:none;}
+#lb .nav{position:absolute; top:50%; transform:translateY(-50%); width:46px; height:46px;
+  border-radius:50%; background:rgba(42,21,16,.72); color:#F7EFE4; border:none;
+  font-size:28px; line-height:1; display:grid; place-items:center; padding-bottom:4px;
+  transition:background .15s, transform .13s;}
+#lb .nav:hover{background:rgba(42,21,16,.92);}
+#lb .nav:active{transform:translateY(-50%) scale(.92);}
+#lb .prev{left:10px;} #lb .next{right:10px;}
+#lb.sola .nav, #lb.sola .cont{display:none;}
+@media (max-width:520px){ #lb .nav{width:40px; height:40px; font-size:25px;}
+  #lb .prev{left:6px;} #lb .next{right:6px;} }
+.phcount{position:absolute; right:9px; bottom:9px; z-index:3; background:rgba(58,28,18,.78);
+  color:#F7EFE4; border-radius:999px; padding:4px 10px; font-size:11px; font-weight:700;}
+</style>
+</head>
+<body>
+
+<div id="bg"></div>
+<div id="veil"></div>
+<div id="app"></div>
+
+<dialog id="dlg"><div class="dlg" id="dlg-in"></div></dialog>
+<dialog id="lb">
+  <button class="x" onclick="document.getElementById('lb').close()" aria-label="Cerrar">✕</button>
+  <img id="lb-i" alt="">
+  <button class="nav prev" data-lb="-1" aria-label="Anterior">‹</button>
+  <button class="nav next" data-lb="1" aria-label="Siguiente">›</button>
+  <div class="cont"></div>
+</dialog>
+
+<!-- =====================================================================
+     EL MENÚ DE ARRANQUE. Si Firebase está prendido, manda lo que esté allá.
+     Para poner una foto: "photo":"fotos/Nombre del archivo.jpeg"
+     ===================================================================== -->
+<script type="application/json" id="app-state">
+{
+  "brand": {
+      "name": "Cake",
+      "sub": "Café y pastelería",
+      "logo": "fotos/LOGO.jpeg",
+      "whatsapp": "5493794009517",
+      "address": "Córdoba 417, Corrientes",
+      "maps": "https://www.google.com/maps/search/?api=1&query=C%C3%B3rdoba%20417%2C%20Corrientes",
+      "hours": "Lunes a sábado · 7:30–13:30 · 17–20:30",
+      "instagram": "cakealpaso",
+      "claim": "Diez años acompañando momentos importantes"
+  },
+  "settings": {
+      "titulo": "El menú de todos los días",
+      "bajada": "Lo que hay en la vitrina, de lunes a sábado. Armá tu pedido y mandanoslo por WhatsApp.",
+      "catalogoUrl": "index.html"
+  },
+  "anuncios": [],
+  "secciones": [
+    {"id": "combos", "name": "Combos", "icono": "caja", "nota": ""},
+    {"id": "dulces", "name": "Dulces", "icono": "cupcake", "nota": ""},
+    {"id": "tartas", "name": "Tartas", "icono": "cupcake", "nota": ""},
+    {"id": "salados", "name": "Salados", "icono": "croissant", "nota": ""},
+    {"id": "almuerzos", "name": "Almuerzos y cenas", "icono": "cubiertos", "nota": "Consultanos la disponibilidad del día"},
+    {"id": "compartir", "name": "Para compartir", "icono": "caja", "nota": ""},
+    {"id": "bebidas", "name": "Bebidas", "icono": "taza", "nota": ""}
+  ],
+  "items": [
+    {"id": "k01", "sec": "combos", "name": "Café + chipá", "desc": "Elegí tu café", "price": "$6.500", "suf": "", "photo": "fotos-cafe/combo%20cafe%20%2B%20chipa%20baston.jpeg", "opciones": ["Capuchino", "Americano", "Cortado", "Con leche"], "off": 0, "destacado": true, "activo": true},
+    {"id": "k02", "sec": "combos", "name": "Café + 2 medialunas", "desc": "Elegí tu café", "price": "$7.000", "suf": "", "photo": "fotos-cafe/medialunas.jpeg", "opciones": ["Capuchino", "Americano", "Cortado", "Con leche"], "off": 0, "destacado": false, "activo": true},
+    {"id": "k03", "sec": "combos", "name": "Jugo + tostado", "desc": "Jugo de naranja exprimido", "price": "$12.500", "suf": "", "photo": "fotos-cafe/tostal%20de%20jamon%20y%20queso.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "k04", "sec": "combos", "name": "Jugo + chipá", "desc": "Jugo de naranja exprimido", "price": "$8.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+
+    {"id": "d01", "sec": "dulces", "name": "Alfajores sueltos", "desc": "Chocolate negro · Maizena", "price": "$3.600", "suf": "", "photo": "fotos-cafe/alfajores%20sueltos.jpeg", "opciones": ["Chocolate negro", "Maizena"], "off": 0, "destacado": false, "activo": true},
+    {"id": "d02", "sec": "dulces", "name": "Alfajores artesanales", "desc": "Nutella · Block · Bon o bon · Nuez · Pistacho", "price": "$5.500", "suf": "", "photos": ["fotos-cafe/alfajor%20artesanal%202.jpeg", "fotos-cafe/alfajor%20artesanal%203.jpeg", "fotos-cafe/alfajor%20artesanal%204.jpeg", "fotos-cafe/alfajor%20artesanal%205.jpeg", "fotos-cafe/lfajor%20artesanal.jpeg"], "opciones": ["Nutella", "Block", "Bon o bon", "Nuez", "Pistacho"], "off": 0, "destacado": true, "activo": true},
+    {"id": "d03", "sec": "dulces", "name": "Alfajores", "desc": "Chips · Chocolate negro · Maizena", "price": "$8.000", "suf": "× 8", "photo": "fotos-cafe/Alfajores.jpeg", "opciones": ["Chips", "Chocolate negro", "Maizena", "Surtidos"], "off": 0, "destacado": false, "activo": true},
+    {"id": "d04", "sec": "dulces", "name": "Budín porción", "desc": "Mandarina · Limón · Naranja · Cacao · Banana con dulce de leche", "price": "$5.000", "suf": "", "photo": "fotos-cafe/Bud%C3%ADn%20porci%C3%B3n.jpeg", "opciones": ["Mandarina", "Limón", "Naranja", "Cacao", "Banana con dulce de leche"], "off": 0, "destacado": false, "activo": true},
+    {"id": "d05", "sec": "dulces", "name": "Budín mediano", "desc": "Mandarina · Limón · Naranja · Cacao · Banana con dulce de leche", "price": "$8.500", "suf": "", "photo": "fotos-cafe/Bud%C3%ADn%20individual.jpeg", "opciones": ["Mandarina", "Limón", "Naranja", "Cacao", "Banana con dulce de leche"], "off": 0, "destacado": false, "activo": true},
+    {"id": "d07", "sec": "dulces", "name": "Galletas artesanales", "desc": "New York · Nutella y Oreo · Pistacho · Red velvet", "price": "$5.000", "suf": "", "photo": "fotos-cafe/galletas.jpeg", "opciones": ["New York", "Nutella y Oreo", "Pistacho", "Red velvet"], "off": 0, "destacado": true, "activo": true},
+    {"id": "d08", "sec": "dulces", "name": "Pastafrolas", "desc": "Batata · Membrillo", "price": "$6.000", "suf": "", "photo": "fotos-cafe/pastafrola.jpeg", "opciones": ["Batata", "Membrillo"], "off": 0, "destacado": false, "activo": true},
+    {"id": "d09", "sec": "dulces", "name": "Cuadrado de brownie", "desc": "Brownie clásico", "price": "$7.500", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "d11", "sec": "dulces", "name": "Cuadrado de lemonie", "desc": "Lemonies", "price": "$7.500", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "d15", "sec": "dulces", "name": "Donitas", "desc": "", "price": "$4.000", "suf": "× 2", "photo": "fotos-cafe/donas.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "d16", "sec": "dulces", "name": "Masitas secas", "desc": "", "price": "$5.000", "suf": "100 g", "photo": "fotos-cafe/masitas%20secas.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "d17", "sec": "dulces", "name": "Pepas", "desc": "", "price": "$5.000", "suf": "100 g", "photo": "fotos-cafe/pepas.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "d18", "sec": "dulces", "name": "Pepas integrales", "desc": "", "price": "$5.500", "suf": "100 g", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "d19", "sec": "dulces", "name": "Medialuna dulce", "desc": "", "price": "$2.000", "suf": "", "photo": "fotos-cafe/medialunas.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "d20", "sec": "dulces", "name": "Medialuna con dulce de leche", "desc": "", "price": "$2.500", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+
+    {"id": "d13", "sec": "tartas", "name": "Tarta clásica", "desc": "Individual · Ricota · Coco y dulce de leche · Havannet", "price": "$7.500", "suf": "", "photos": ["fotos-cafe/tarta%20clasica.jpeg", "fotos-cafe/tarta%20clasica%202.jpeg", "fotos-cafe/tarta%20clasica%20%282%29.jpeg"], "opciones": ["Ricota", "Coco y dulce de leche", "Havannet"], "off": 0, "destacado": false, "activo": true},
+    {"id": "d14", "sec": "tartas", "name": "Tarta de pistacho", "desc": "Individual", "price": "$9.500", "suf": "", "photo": "fotos-cafe/tarta%20de%20pistachos.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "d10", "sec": "tartas", "name": "Tartas postres", "desc": "Brownie con frutos rojos · Nutella y kinder", "price": "$10.000", "suf": "", "photo": "fotos-cafe/Postre%20brownie.jpeg", "opciones": ["Brownie con frutos rojos", "Nutella y kinder"], "off": 0, "destacado": false, "activo": true},
+    {"id": "d12", "sec": "tartas", "name": "Cheesecake individual", "desc": "Frutos rojos", "price": "$10.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": false},
+
+    {"id": "s01", "sec": "salados", "name": "Medialunas saladas", "desc": "", "price": "$2.000", "suf": "", "photo": "fotos-cafe/medialunas%20saladas.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "s02", "sec": "salados", "name": "Medialunas de jamón y queso", "desc": "", "price": "$2.500", "suf": "", "photo": "fotos-cafe/medialunas%20saladas.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "s07", "sec": "salados", "name": "Croissant de jamón y queso", "desc": "", "price": "$9.000", "suf": "", "photo": "fotos-cafe/croissant.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "s03", "sec": "salados", "name": "Chipá porción", "desc": "", "price": "$3.500", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "s08", "sec": "salados", "name": "Chipá bastón", "desc": "", "price": "$3.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "s04", "sec": "salados", "name": "Scon de queso", "desc": "Provolone", "price": "$3.500", "suf": "× 2", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "s05", "sec": "salados", "name": "Tostado en pan lactal", "desc": "", "price": "$4.000", "suf": "", "photo": "fotos-cafe/tostado%20en%20pan%20lactal.jpeg", "off": 0, "destacado": false, "activo": true},
+    {"id": "s06", "sec": "salados", "name": "Tostado en ciabatta", "desc": "", "price": "$8.000", "suf": "", "photo": "fotos-cafe/tostal%20de%20jamon%20y%20queso.jpeg", "off": 0, "destacado": true, "activo": true},
+
+    {"id": "a01", "sec": "almuerzos", "name": "Sándwich de milanesa", "desc": "De pollo, con lechuga y tomate", "price": "$12.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "a02", "sec": "almuerzos", "name": "Empanadas", "desc": "Carne · Jamón y muzzarella · Espinaca · Pollo", "price": "$7.000", "suf": "× 3", "photo": "", "opciones": ["Carne", "Jamón y muzzarella", "Espinaca", "Pollo", "Surtidas"], "off": 0, "destacado": false, "activo": true},
+    {"id": "a03", "sec": "almuerzos", "name": "Empanadas", "desc": "Carne · Jamón y muzzarella · Espinaca · Pollo", "price": "$12.000", "suf": "× 6", "photo": "", "opciones": ["Carne", "Jamón y muzzarella", "Espinaca", "Pollo", "Surtidas"], "off": 0, "destacado": false, "activo": true},
+
+    {"id": "c01", "sec": "compartir", "name": "Box grande", "desc": "Con sticker", "price": "$14.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "c02", "sec": "compartir", "name": "Box mediano", "desc": "Con sticker", "price": "$10.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "c03", "sec": "compartir", "name": "Pastafrola grande", "desc": "Membrillo · Batata", "price": "$15.000", "suf": "", "photo": "", "opciones": ["Membrillo", "Batata"], "off": 0, "destacado": false, "activo": true},
+    {"id": "c04", "sec": "compartir", "name": "Tarta mediana dulce", "desc": "", "price": "$12.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+
+    {"id": "b01", "sec": "bebidas", "name": "Café", "desc": "Americano · Cortado · Con leche · Capuchino", "price": "$4.000", "suf": "", "photo": "", "opciones": ["Americano", "Cortado", "Con leche", "Capuchino"], "off": 0, "destacado": true, "activo": true},
+    {"id": "b02", "sec": "bebidas", "name": "Chocolate caliente", "desc": "", "price": "$5.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "b06", "sec": "bebidas", "name": "Submarino", "desc": "Leche y barrita", "price": "$6.500", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "b07", "sec": "bebidas", "name": "Té", "desc": "Negro · Verde · Frutos rojos", "price": "$4.000", "suf": "", "photo": "", "opciones": ["Negro", "Verde", "Frutos rojos"], "off": 0, "destacado": false, "activo": true},
+    {"id": "b08", "sec": "bebidas", "name": "Mate cocido", "desc": "Con leche o solo", "price": "$3.500", "suf": "", "photo": "", "opciones": ["Solo", "Con leche"], "off": 0, "destacado": false, "activo": true},
+    {"id": "b09", "sec": "bebidas", "name": "Latte", "desc": "Café frío con leche", "price": "$5.000", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "b03", "sec": "bebidas", "name": "Jugo de naranja", "desc": "Exprimido al momento", "price": "$4.500", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "b10", "sec": "bebidas", "name": "Licuado", "desc": "Banana · Frutilla · Durazno", "price": "$5.600", "suf": "", "photo": "", "opciones": ["Banana", "Frutilla", "Durazno"], "off": 0, "destacado": false, "activo": true},
+    {"id": "b04", "sec": "bebidas", "name": "Jugo en caja", "desc": "", "price": "$2.800", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "b05", "sec": "bebidas", "name": "Gaseosa", "desc": "", "price": "$2.800", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "b11", "sec": "bebidas", "name": "Agua mineral chica", "desc": "", "price": "$2.800", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true},
+    {"id": "b12", "sec": "bebidas", "name": "Agua mineral grande", "desc": "1,5 litro", "price": "$3.600", "suf": "", "photo": "", "off": 0, "destacado": false, "activo": true}
+  ]
+}
+</script>
+
+<script id="app-script">
+(function(){
+'use strict';
+
+/* =========================================================================
+   1 · CONEXIÓN CON LA BASE
+   ========================================================================= */
+var FB_API_KEY = "AIzaSyCylVUH074zX9MO2trFOk3OINFLxKX4XgE";
+var DB_BASE    = "https://cake-c9bfd-default-rtdb.firebaseio.com";
+var DB_NODE    = "/menu.json";
+
+/* Mientras esté en false, la página usa SOLO el menú escrito más arriba
+   en este archivo. Cuando termines de configurar Firebase, poné true. */
+var USAR_BASE  = true;
+
+/* =========================================================================
+   2 · ESTADO
+   ========================================================================= */
+var state  = JSON.parse(document.getElementById('app-state').textContent);
+var admin  = { token:null, email:null, dirty:false };
+var filtro = '';
+var catSel = null;            /* null = todas */
+var carrito = {};
+
+/* control de animaciones: solo animan cuando corresponde, no en cada toque */
+var animEntrada  = true;      /* entrada escalonada de las tarjetas */
+var tocado       = null;      /* el producto que se acaba de sumar o restar */
+var barraVisible = false;     /* si la barra del carrito ya estaba en pantalla */
+
+try{
+  var sv = sessionStorage.getItem('cake-cafe-adm');
+  if(sv){ var o = JSON.parse(sv); admin.token = o.t; admin.email = o.e; }
+}catch(e){}
+try{ carrito = JSON.parse(localStorage.getItem('cake-cafe-carrito') || '{}') || {}; }catch(e){ carrito = {}; }
+function guardarCarrito(){ try{ localStorage.setItem('cake-cafe-carrito', JSON.stringify(carrito)); }catch(e){} }
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function nuevoId(){ return 'x' + Date.now().toString(36) + Math.random().toString(36).slice(2,5); }
+
+/* =========================================================================
+   3 · DIBUJOS
+   ========================================================================= */
+function svg(inner){
+  return '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.6" '
+    + 'stroke-linecap="round" stroke-linejoin="round">' + inner + '</svg>';
+}
+var D = {
+  taza:'<path d="M24 40h46v22c0 10-8 18-18 18h-10c-10 0-18-8-18-18Z"/>'
+    + '<path d="M70 46h6a9 9 0 0 1 0 18h-6"/><ellipse cx="50" cy="86" rx="34" ry="6"/>'
+    + '<path d="M38 30c0-4 4-5 4-9s-4-5-4-9M52 30c0-4 4-5 4-9s-4-5-4-9M66 30c0-3 3-4 3-7"/>',
+  cupcake:'<path d="M30 56h40l-5 30a4 4 0 0 1-4 3H39a4 4 0 0 1-4-3Z"/>'
+    + '<path d="M40 59v28M50 59v29M60 59v28"/>'
+    + '<path d="M30 56c-4 0-7-3-7-7s3-7 7-7c0-6 5-11 11-11 2-4 6-6 10-5 3-3 8-3 11 0 5-1 9 3 9 8 4 1 6 5 5 9-1 5-5 8-9 8"/>'
+    + '<path d="M50 26v-7M50 19c-2-1-3-3-2-5 2-1 4 0 4 2 0-2 2-3 4-2 1 2 0 4-2 5Z"/>',
+  croissant:'<path d="M14 66c0-22 18-40 40-40 18 0 32 14 32 30 0 8-5 14-12 14-6 0-10-4-10-10"/>'
+    + '<path d="M14 66c0 6 4 10 10 10 6 0 10-4 10-10"/>'
+    + '<path d="M34 66c0 6 4 10 10 10s10-4 10-10"/><path d="M54 66c0 6 4 10 10 10"/>'
+    + '<path d="M44 36c3 5 4 11 3 17M58 33c4 6 5 13 3 20M30 45c3 4 5 9 5 14"/>',
+  cubiertos:'<path d="M30 88V46"/><path d="M22 12v22a8 8 0 0 0 16 0V12"/>'
+    + '<path d="M26 12v20M34 12v20"/>'
+    + '<path d="M70 88V56"/><path d="M70 56c9 0 14-8 14-22 0-13-6-22-14-22s-14 9-14 22c0 14 5 22 14 22Z"/>',
+  caja:'<path d="M16 42h68v40a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4Z"/>'
+    + '<path d="M12 28h76v14H12Z"/><path d="M50 28v58"/>'
+    + '<path d="M50 28c-8-2-14-7-12-12 4-3 10 2 12 12ZM50 28c8-2 14-7 12-12-4-3-10 2-12 12Z"/>',
+  pisos:'<path d="M16 86h68a3 3 0 0 0 3-3V68H13v15a3 3 0 0 0 3 3Z"/>'
+    + '<path d="M13 68c4-4 7 3 11-1s7 3 11-1 7 3 11-1 7 3 11-1 7 3 11-1 7 3 11-1"/>'
+    + '<path d="M26 68V52h48v16"/>'
+    + '<path d="M26 52c3-4 6 2 9-1s6 2 9-1 6 2 9-1 6 2 9-1 6 2 9-1"/>'
+    + '<path d="M36 52V38h28v14"/><path d="M36 38c2.5-3 5 1.5 7.5-1s5 1.5 7.5-1 5 1.5 7.5-1"/>'
+    + '<path d="M50 38V28M50 28c-3-1-5-3-4-6 2-1 5 1 5 3 1-2 3-3 5-2 1 2-1 5-4 5Z"/>'
+};
+var IG   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>';
+var WAI  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.4A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.2 1.2-1.7 1.2-.5.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2 .2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.3.3c-.1.1-.2.2-.1.5.1.2.6 1.1 1.4 1.8 1 .9 1.8 1.1 2 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.5-.1l1.9.9c.2.1.4.2.4.3.1.2.1.6-.1 1.2Z"/></svg>';
+var LOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="4" y="10" width="16" height="11" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
+var LUPA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>';
+var PIN  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s7-7.1 7-12a7 7 0 1 0-14 0c0 4.9 7 12 7 12Z"/><circle cx="12" cy="10" r="2.6"/></svg>';
+
+/* =========================================================================
+   4 · CARRITO
+   ========================================================================= */
+function waBase(txt){
+  return 'https://wa.me/' + state.brand.whatsapp + '?text='
+    + encodeURIComponent(txt || 'Hola! Te escribo desde el menú del café.');
+}
+function aNumero(p){ var n = String(p||'').replace(/[^\d]/g,''); return n ? parseInt(n,10) : 0; }
+function conPuntos(n){ return '$' + n.toLocaleString('es-AR'); }
+function itemPorId(id){ return state.items.filter(function(x){ return x.id === id; })[0]; }
+
+/* precio con el descuento ya aplicado, redondeado a los 50 */
+function precioFinal(it){
+  var v = aNumero(it.price);
+  if(it.off > 0) v = Math.round(v * (1 - it.off / 100) / 50) * 50;
+  return v;
+}
+function conDescuento(it){ return it && it.off > 0; }
+
+/* "× 8" se lee mejor como "8 unidades" dentro de la descripción */
+function textoSuf(s){
+  s = String(s || '').trim();
+  if(!s) return '';
+  var m = s.match(/^[×x]\s*(\d+)$/i);
+  if(m) return m[1] + (m[1] === '1' ? ' unidad' : ' unidades');
+  return s;
+}
+
+/* un producto puede tener una foto ("photo") o varias ("photos") */
+function fotosDe(it){
+  if(it.photos && it.photos.length) return it.photos;
+  return it.photo ? [it.photo] : [];
+}
+
+/* la clave del carrito es "idDelProducto|sabor". Sin sabor queda "id|" */
+function opcionesDe(it){ return (it && it.opciones && it.opciones.length > 1) ? it.opciones : null; }
+function partirClave(k){
+  var i = String(k).indexOf('|');
+  return i < 0 ? { id:k, op:'' } : { id:k.slice(0, i), op:k.slice(i + 1) };
+}
+
+function lineas(){
+  var out = [];
+  Object.keys(carrito).forEach(function(k){
+    var c = partirClave(k), it = itemPorId(c.id), q = carrito[k];
+    if(it && q > 0) out.push({ k:k, it:it, op:c.op, q:q, sub:precioFinal(it) * q });
+  });
+  return out;
+}
+function cantidadTotal(){ return lineas().reduce(function(a,l){ return a + l.q; }, 0); }
+function totalPesos(){ return lineas().reduce(function(a,l){ return a + l.sub; }, 0); }
+function sumar(k, d){
+  var q = (carrito[k] || 0) + d;
+  if(q <= 0) delete carrito[k]; else carrito[k] = q;
+  guardarCarrito();
+}
+/* cuántas unidades hay de un producto, sumando todos sus sabores */
+function enCarrito(id){
+  var n = 0;
+  Object.keys(carrito).forEach(function(k){ if(partirClave(k).id === id) n += carrito[k]; });
+  return n;
+}
+function ultimaClave(id){
+  var ks = Object.keys(carrito).filter(function(k){ return partirClave(k).id === id; });
+  return ks.length ? ks[ks.length - 1] : null;
+}
+function textoPedido(p){
+  p = p || {};
+  var m = 'Hola! Te hago un pedido desde el menú:\n\n';
+  lineas().forEach(function(l){
+    var ex = [l.op, textoSuf(l.it.suf)].filter(Boolean).join(', ');
+    m += '• ' + l.q + ' × ' + l.it.name + (ex ? ' (' + ex + ')' : '')
+       + ' — ' + conPuntos(l.sub) + '\n';
+  });
+  m += '\nTotal estimado: ' + conPuntos(totalPesos()) + '\n';
+  m += '\nEntrega: ' + (p.entrega === 'envio' ? 'Envío a domicilio' : 'Retiro en el local');
+  if(p.entrega === 'envio' && p.dir) m += '\nDirección: ' + p.dir;
+  if(p.pago) m += '\nPago: ' + p.pago;
+  if(p.nota) m += '\n\nAclaraciones: ' + p.nota;
+  return m;
+}
+
+/* =========================================================================
+   4c · FOTOS EXTRA AUTOMÁTICAS
+   Si un producto tiene "Chipa.jpeg", la página busca sola "Chipa 2.jpeg",
+   "Chipa 3.jpeg"… y también "Chipa (2).jpeg", que es como numera Windows.
+   ========================================================================= */
+function baseDeFoto(u){
+  var m = String(u).match(/^(.*?)(\.[a-z0-9]+)$/i);
+  if(!m) return null;
+  return { base: m[1].replace(/(?:%20|\s)*(?:\(\d+\)|\d+)$/, ''), ext: m[2] };
+}
+function probarFoto(url, cb){
+  var i = new Image();
+  i.onload  = function(){ cb(true); };
+  i.onerror = function(){ cb(false); };
+  i.src = url;
+}
+/* el nombre del archivo puede estar en minúscula o sin tildes */
+function sinTildes(s){
+  return String(s).normalize ? String(s).normalize('NFD').replace(/[̀-ͯ]/g, '') : String(s);
+}
+function variantesNombre(n){
+  var a = [n, n.toLowerCase(), sinTildes(n), sinTildes(n).toLowerCase()];
+  return a.filter(function(v, i){ return a.indexOf(v) === i; });
+}
+
+function autoFotos(listo){
+  var pend = 0, hubo = false;
+  var CARPETA = 'fotos-cafe/';
+
+  (state.items || []).forEach(function(it){
+    pend++;
+    var conf = fotosDe(it), antes = conf.join('|'), lista = [];
+
+    var terminar = function(){
+      it.photos = lista;
+      it.photo = '';
+      if(lista.join('|') !== antes) hubo = true;
+      if(--pend === 0 && hubo) listo();
+    };
+
+    /* a partir de la primera, busca "nombre 2", "nombre (3)"… */
+    var extender = function(){
+      var b = baseDeFoto(lista[0]);
+      if(!b){ terminar(); return; }
+      (function siguiente(n){
+        if(n > 9){ terminar(); return; }
+        var cands = [ b.base + '%20' + n + b.ext, b.base + '%20(' + n + ')' + b.ext ], k = 0;
+        (function probar(){
+          if(k >= cands.length){ terminar(); return; }
+          var u = cands[k++];
+          probarFoto(u, function(ok){
+            if(ok){ if(lista.indexOf(u) === -1) lista.push(u); siguiente(n + 1); }
+            else probar();
+          });
+        })();
+      })(2);
+    };
+
+    /* 1 · comprobamos que las cargadas a mano sigan existiendo */
+    var i = 0;
+    (function verificar(){
+      if(i < conf.length){
+        var u = conf[i++];
+        probarFoto(u, function(ok){ if(ok) lista.push(u); verificar(); });
+        return;
+      }
+      if(lista.length){ extender(); return; }
+
+      /* 2 · si no quedó ninguna, buscamos por el nombre del producto */
+      var exts = ['.jpeg', '.jpg', '.png'], cands = [];
+      variantesNombre(it.name).forEach(function(v){
+        exts.forEach(function(e){ cands.push(CARPETA + encodeURIComponent(v) + e); });
+      });
+      var k = 0;
+      (function porNombre(){
+        if(k >= cands.length){ terminar(); return; }
+        var u = cands[k++];
+        probarFoto(u, function(ok){
+          if(ok){ lista.push(u); extender(); } else porNombre();
+        });
+      })();
+    })();
+  });
+}
+
+/* =========================================================================
+   5 · RENDER
+   ========================================================================= */
+function coincide(it){
+  if(!filtro) return true;
+  return (it.name + ' ' + (it.desc||'') + ' ' + it.price).toLowerCase().indexOf(filtro) !== -1;
+}
+function visibles(secId, isAdm){
+  return state.items.filter(function(it){
+    return it.sec === secId && (it.activo || isAdm) && coincide(it);
+  });
+}
+function enPromo(isAdm){
+  return state.items.filter(function(it){
+    return conDescuento(it) && (it.activo || isAdm) && coincide(it);
+  });
+}
+
+function tarjeta(it, sc, isAdm, i){
+  var q = enCarrito(it.id);
+  var off = conDescuento(it);
+  var h = '<div class="card' + (it.activo ? '' : ' off') + (off ? ' conoff' : '')
+        + '" style="--i:' + (i || 0) + '">';
+
+  var fs = fotosDe(it);
+  h += '<div class="ph' + (fs.length ? ' clic" data-fotos="' + esc(it.id) + '' : '') + '">'
+    + '<div class="mark">' + svg(D[sc.icono] || D.cupcake) + '</div>'
+    + (fs.length
+        ? '<img src="' + esc(fs[0]) + '" alt="' + esc(it.name) + '" loading="lazy" onerror="this.remove()">'
+        : '<div class="falta">Falta la foto</div>')
+    + (fs.length > 1 ? '<span class="phcount">' + fs.length + ' fotos</span>' : '')
+    + (it.destacado ? '<span class="tagtop">Lo más pedido</span>' : '')
+    + (off ? '<span class="offtag">−' + it.off + '%</span>' : '')
+    + '</div>';
+
+  /* precio: con descuento, o con el "antes" de los combos */
+  var pr;
+  if(off) pr = '<span class="antes">' + esc(it.price) + '</span>' + conPuntos(precioFinal(it));
+  else if(it.antes) pr = '<span class="antes">' + esc(it.antes) + '</span>' + esc(it.price);
+  else pr = esc(it.price);
+
+  var uni = textoSuf(it.suf);
+  h += '<div class="body"><div class="nm">' + esc(it.name) + '</div>'
+    + (uni || it.desc
+        ? '<div class="ds">' + (uni ? '<b>' + esc(uni) + '</b>' + (it.desc ? ' · ' : '') : '')
+          + esc(it.desc || '') + '</div>'
+        : '')
+    + '<div class="pr">' + pr + '</div></div>';
+
+  if(isAdm){
+    h += '<div class="cardadmin">'
+      + '<button data-edit="' + esc(it.id) + '">editar</button>'
+      + '<button class="mv" data-sube="' + esc(it.id) + '">↑</button>'
+      + '<button class="mv" data-baja="' + esc(it.id) + '">↓</button>'
+      + '<button class="del" data-borra="' + esc(it.id) + '">borrar</button></div>';
+  } else {
+    h += '<div class="act' + (tocado === it.id ? ' pop' : '') + '">' + (q > 0
+      ? '<div class="qt"><button data-menos="' + esc(it.id) + '" aria-label="Quitar uno">−</button>'
+        + '<b>' + q + '</b>'
+        + '<button data-mas="' + esc(it.id) + '" aria-label="Agregar uno">+</button></div>'
+      : '<button class="add" data-mas="' + esc(it.id) + '">+ Agregar</button>') + '</div>';
+  }
+  return h + '</div>';
+}
+
+function render(){
+  var sy = window.scrollY;
+  var b = state.brand, s = state.settings, isAdm = !!admin.token;
+  var h = '';
+
+  document.getElementById('bg').innerHTML =
+    ['b1','b2','b3','b4','b5','b6'].map(function(c){
+      return '<span class="' + c + '">' + svg(D.taza) + '</span>'; }).join('');
+
+  /* --- encabezado --- */
+  h += '<header class="top"><div class="wrap top-in">'
+    + '<div class="brand"><span class="nm">' + esc(b.name) + '</span>'
+    + '<span class="sub">' + esc(b.sub) + '</span></div>'
+    + '<a class="btn wa sm top-wa" target="_blank" rel="noopener" href="' + esc(waBase()) + '">'
+    + WAI + 'Escribinos</a>'
+    + '<button class="adm-btn' + (isAdm ? ' on' : '') + '" data-adm aria-label="Administración">'
+    + LOCK + '</button></div></header>';
+
+  h += '<div class="wrap">';
+
+  /* --- encargos, arriba de todo --- */
+  h += '<div class="encargo">' + svg(D.pisos)
+    + '<div class="tx"><div class="et">¿Festejás algo?</div>'
+    + '<h3>Tortas y mesas dulces por encargo</h3>'
+    + '<p>Desde una mini para dos hasta una mesa para cuarenta y cinco.</p></div>'
+    + '<a href="' + esc(s.catalogoUrl || '#') + '">Ver el catálogo</a></div>';
+
+  /* --- hero --- */
+  h += '<div class="hero"><div class="eyebrow">El menú del café</div>'
+    + '<h1>' + esc(s.titulo) + '</h1>'
+    + '<p class="lead">' + esc(s.bajada) + '</p></div>';
+
+  /* --- anuncios --- */
+  var an = (state.anuncios || []).filter(function(a){ return a.activo || isAdm; });
+  if(an.length || isAdm){
+    h += '<div class="anuncios">';
+    an.forEach(function(a){
+      h += '<div class="anuncio"' + (a.activo ? '' : ' style="opacity:.5"') + '>'
+        + '<span class="dot"></span><span>' + esc(a.texto) + '</span>'
+        + (isAdm ? '<button class="ax" data-anedit="' + esc(a.id) + '">editar</button>' : '') + '</div>';
+    });
+    if(isAdm) h += '<div class="anuncio" style="border-left-color:var(--line)">'
+      + '<span class="dot" style="background:var(--line-strong)"></span>'
+      + '<span style="color:var(--ink-faint)">Agregar un aviso corto del día</span>'
+      + '<button class="ax" data-anedit="nuevo">agregar</button></div>';
+    h += '</div>';
+  }
+
+  /* --- chips de categorías (se usan arriba en celular y al costado en compu) --- */
+  var nPromo = enPromo(isAdm).length;
+  function chips(){
+    var t = '<button class="chip" data-cat="" aria-pressed="' + (catSel === null) + '">Todo</button>';
+    if(nPromo) t += '<button class="chip promo" data-cat="promo" aria-pressed="'
+      + (catSel === 'promo') + '">Con descuento<span class="n">' + nPromo + '</span></button>';
+    state.secciones.forEach(function(sc){
+      var n = visibles(sc.id, isAdm).length;
+      t += '<button class="chip" data-cat="' + esc(sc.id) + '" aria-pressed="'
+        + (catSel === sc.id) + '">' + esc(sc.name) + '<span class="n">' + n + '</span></button>';
+    });
+    return t;
+  }
+
+  function buscador(donde){
+    return '<div class="buscador">' + LUPA + '<input type="search" class="qi" data-q="' + donde
+      + '" placeholder="Buscar…" value="' + esc(filtro) + '"></div>';
+  }
+
+  h += '<div class="cinta">' + buscador('top')
+    + '<div class="chips">' + chips() + '</div></div>';
+
+  h += '<div class="layout">';
+
+  /* --- panel al costado --- */
+  h += '<aside class="side">'
+    + '<div class="sblock">' + buscador('side') + '</div>'
+    + '<div class="sblock"><h3><span class="step">1</span>Qué buscás</h3>'
+    + '<div class="chips" style="flex-direction:column;align-items:stretch">' + chips() + '</div></div>'
+    + '</aside>';
+
+  /* --- grilla --- */
+  h += '<main>';
+  var hayAlgo = false;
+
+  /* vista "con descuento" */
+  if(catSel === 'promo'){
+    var pl = enPromo(isAdm);
+    hayAlgo = pl.length > 0;
+    h += '<section class="cat"><div class="cat-head">' + svg(D.caja)
+      + '<h2>Con descuento</h2>'
+      + '<span class="note">Precios promocionales de esta semana</span>'
+      + '</div><div class="rule"></div><div class="grid' + (animEntrada ? ' anim' : '') + '">'
+      + pl.map(function(it, i){
+          var sc = state.secciones.filter(function(x){ return x.id === it.sec; })[0] || {icono:'cupcake'};
+          return tarjeta(it, sc, isAdm, i);
+        }).join('')
+      + '</div></section>';
+  }
+
+  state.secciones.forEach(function(sc){
+    if(catSel === 'promo') return;
+    if(catSel && catSel !== sc.id) return;
+    var lista = visibles(sc.id, isAdm);
+    if(!lista.length && !isAdm) return;
+    hayAlgo = hayAlgo || lista.length > 0;
+
+    h += '<section class="cat" id="s-' + esc(sc.id) + '">'
+      + '<div class="cat-head">' + svg(D[sc.icono] || D.cupcake)
+      + '<h2>' + esc(sc.name) + '</h2>'
+      + (isAdm ? '<button class="ax" data-add="' + esc(sc.id) + '">+ producto</button>' : '')
+      + (sc.nota ? '<span class="note">' + esc(sc.nota) + '</span>' : '')
+      + '</div><div class="rule"></div><div class="grid' + (animEntrada ? ' anim' : '') + '">'
+      + lista.map(function(it, i){ return tarjeta(it, sc, isAdm, i); }).join('')
+      + '</div></section>';
+  });
+  if(!hayAlgo){
+    h += '<p class="nada">' + (filtro
+      ? 'No encontramos nada con «' + esc(filtro) + '».'
+      : 'No hay productos en esta categoría.') + '</p>';
+  }
+
+  h += '</main></div>';   /* cierra main y layout */
+
+  /* --- pie --- */
+  h += '<footer>'
+    + '<div class="ig"><a href="https://instagram.com/' + esc(b.instagram) + '" target="_blank" rel="noopener">'
+    + IG + '@' + esc(b.instagram) + '</a></div>'
+    + '<div class="dir">' + PIN.replace('<svg', '<svg style="width:15px;height:15px;vertical-align:-2px;margin-right:4px;color:var(--accent)"')
+    + '<a href="' + esc(b.maps) + '" target="_blank" rel="noopener">' + esc(b.address) + '</a></div>'
+    + '<div class="hr">' + esc(b.hours) + '</div>'
+    + '<a class="wa" href="' + esc(waBase()) + '" target="_blank" rel="noopener">' + WAI + 'Escribinos</a>'
+    + '<div class="cl">' + esc(b.claim) + '</div></footer>';
+
+  h += '</div>';   /* cierra .wrap */
+
+  /* --- barras de abajo --- */
+  var nq = cantidadTotal();
+  if(nq > 0 && !isAdm){
+    h += '<div class="cartbar' + (barraVisible ? (tocado ? ' late' : '') : ' entra') + '">'
+      + '<div class="wrap in">'
+      + '<div class="qn"><b>' + nq + (nq === 1 ? ' producto' : ' productos') + '</b>'
+      + '<span>Total estimado ' + conPuntos(totalPesos()) + '</span></div>'
+      + '<button class="btn" data-verpedido>Ver el pedido</button></div></div>';
+  }
+  if(isAdm){
+    h += '<div class="admbar"><div class="wrap in">'
+      + '<span class="qn">' + esc(admin.email)
+      + (admin.dirty ? ' · hay cambios sin guardar' : ' · todo guardado') + '</span>'
+      + '<button class="btn ghost" data-ajustes>Datos del local</button>'
+      + '<button class="btn ghost" data-salir>Salir</button>'
+      + '<button class="btn" data-guardar>Guardar cambios</button></div></div>';
+  }
+
+  document.getElementById('app').innerHTML = h;
+  if(sy) window.scrollTo(0, sy);
+
+  /* las animaciones de entrada corren una sola vez por cambio de vista */
+  animEntrada = false;
+  tocado = null;
+  barraVisible = (nq > 0 && !isAdm);
+
+  medirEncabezado();
+  animarTotal();
+}
+
+/* =========================================================================
+   5b · LAS TRES ANIMACIONES
+   ========================================================================= */
+var sinMovimiento = window.matchMedia
+  && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* --- el encabezado achicándose --- */
+function medirEncabezado(){
+  var h = document.querySelector('header.top');
+  if(h) document.documentElement.style.setProperty('--htop', h.offsetHeight + 'px');
+}
+var ticking = false;
+window.addEventListener('scroll', function(){
+  if(ticking) return;
+  ticking = true;
+  requestAnimationFrame(function(){
+    document.body.classList.toggle('compacto', window.scrollY > 70);
+    medirEncabezado();
+    ticking = false;
+  });
+}, { passive:true });
+window.addEventListener('resize', medirEncabezado);
+
+/* --- el total contando --- */
+var totalMostrado = totalPesos();
+function animarTotal(){
+  var el = document.querySelector('.cartbar .qn span');
+  var hasta = totalPesos();
+  if(!el){ totalMostrado = hasta; return; }
+  var desde = totalMostrado;
+  if(desde === hasta || sinMovimiento){
+    el.textContent = 'Total estimado ' + conPuntos(hasta);
+    totalMostrado = hasta; return;
+  }
+  var t0 = performance.now(), dur = 520;
+  (function paso(t){
+    var k = Math.min(1, (t - t0) / dur);
+    var e = 1 - Math.pow(1 - k, 3);
+    var v = Math.round((desde + (hasta - desde) * e) / 10) * 10;
+    el.textContent = 'Total estimado ' + conPuntos(k < 1 ? v : hasta);
+    if(k < 1) requestAnimationFrame(paso); else totalMostrado = hasta;
+  })(t0);
+}
+
+/* --- la bolsita de papel con el logo --- */
+var BOLSA =
+  '<svg viewBox="0 0 100 116" xmlns="http://www.w3.org/2000/svg">'
+  /* lateral, el lado en sombra */
+  + '<path d="M74 34 L90 24 L90 94 L74 104 Z" fill="#9C6838"/>'
+  /* frente */
+  + '<path d="M10 34 H74 V104 H10 Z" fill="#C08552"/>'
+  /* solapa de arriba, doblada */
+  + '<path d="M10 34 H74 L90 24 H26 Z" fill="#D8A876"/>'
+  + '<path d="M26 24 L10 34" stroke="#9C6838" stroke-width="1.4" fill="none"/>'
+  /* pliegues del frente */
+  + '<path d="M20 34 V104 M64 34 V104" stroke="#AD7445" stroke-width="1" opacity=".45" fill="none"/>'
+  /* base */
+  + '<path d="M10 104 H74 L90 94" stroke="#8C5A2F" stroke-width="1.4" fill="none"/>'
+  /* el logo, bien grande para que se lea */
+  + '<text x="42" y="78" text-anchor="middle" fill="#4A2419" '
+  + 'font-family="Fraunces, Georgia, serif" font-size="27" font-weight="600">Cake</text>'
+  + '<path d="M28 88 H56" stroke="#4A2419" stroke-width="1.8" stroke-linecap="round" opacity=".7"/>'
+  + '</svg>';
+
+function agregarAlCarrito(clave, card){
+  var vuelo = rectDeTarjeta(card);
+  tocado = partirClave(clave).id;
+  sumar(clave, 1);
+  if(dlg.open && dd.classList.contains('pedido')) dlgPedido(datosPedido());
+  render();
+  volarAlCarrito(vuelo);
+  if(navigator.vibrate) try{ navigator.vibrate(12); }catch(x){}
+}
+
+function rectDeTarjeta(card){
+  if(!card) return null;
+  var ph = card.querySelector('.ph') || card;
+  return ph.getBoundingClientRect();
+}
+
+function volarAlCarrito(r){
+  if(!r || sinMovimiento || !r.width) return;
+  var ancho = Math.min(r.width * .78, 108);
+  var alto  = ancho * 1.16;
+  var x0 = r.left + r.width / 2 - ancho / 2;
+  var y0 = r.top  + r.height / 2 - alto / 2;
+
+  var el = document.createElement('div');
+  el.className = 'volador';
+  el.innerHTML = BOLSA;
+  el.style.left   = x0 + 'px';
+  el.style.top    = y0 + 'px';
+  el.style.width  = ancho + 'px';
+  el.style.height = alto + 'px';
+  document.body.appendChild(el);
+
+  requestAnimationFrame(function(){
+    var dest = document.querySelector('.cartbar .btn');
+    var dr = dest ? dest.getBoundingClientRect()
+                  : { left: window.innerWidth - 100, top: window.innerHeight - 56, width:70, height:42 };
+    var dx = (dr.left + dr.width / 2)  - (x0 + ancho / 2);
+    var dy = (dr.top  + dr.height / 2) - (y0 + alto / 2);
+
+    var fin = function(){ if(el.parentNode) el.remove(); };
+    if(!el.animate){ fin(); return; }
+    el.animate([
+      /* aparece */
+      { transform:'translate(0,0) scale(.35) rotate(-8deg)', opacity:0, offset:0 },
+      { transform:'translate(0,-10px) scale(1.12) rotate(3deg)', opacity:1, offset:.12 },
+      { transform:'translate(0,-14px) scale(1) rotate(0deg)', opacity:1, offset:.2 },
+      /* se queda un momento para que se lea "Cake" */
+      { transform:'translate(0,-16px) scale(1) rotate(-2deg)', opacity:1, offset:.42 },
+      /* recién ahí se va volando */
+      { transform:'translate(' + (dx * .3) + 'px,' + (dy * .2 - 60) + 'px) scale(.88) rotate(5deg)',
+        opacity:1, offset:.64 },
+      { transform:'translate(' + (dx * .72) + 'px,' + (dy * .6 - 40) + 'px) scale(.6) rotate(-4deg)',
+        opacity:.95, offset:.85 },
+      { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.18) rotate(10deg)', opacity:0, offset:1 }
+    ], { duration:1650, easing:'cubic-bezier(.32,.05,.3,1)' }).onfinish = fin;
+    setTimeout(fin, 2100);
+  });
+}
+
+/* =========================================================================
+   6 · DIÁLOGOS
+   ========================================================================= */
+var dlg = document.getElementById('dlg'), dd = document.getElementById('dlg-in');
+function abrir(html){ dd.innerHTML = html; if(!dlg.open) dlg.showModal(); }
+function abrirNormal(html){ dd.className = 'dlg'; abrir(html); }
+function cerrar(){ dlg.close(); }
+
+/* ---- elegir el sabor antes de sumarlo ---- */
+var elegirPend = null;
+function dlgSabor(it, card){
+  elegirPend = { id: it.id, card: card };
+  dd.className = 'dlg';
+  abrir('<button class="cerrarx" data-cerrar aria-label="Cerrar">✕</button>'
+    + '<h3>' + esc(it.name) + '</h3>'
+    + '<p class="sm">Elegí cuál querés. Si llevás de varios, agregalos de a uno.</p>'
+    + '<div class="segm" style="flex-direction:column;align-items:stretch">'
+    + it.opciones.map(function(o){
+        return '<button data-elige="' + esc(o) + '">' + esc(o) + '</button>'; }).join('')
+    + '</div>');
+}
+
+function dlgLogin(){
+  abrir('<h3>Administración</h3>'
+    + '<p class="sm">Entrá con el correo y la contraseña que creaste en Firebase.</p>'
+    + '<label class="fld"><span>Correo</span><input id="l-m" type="email" autocomplete="username"></label>'
+    + '<label class="fld"><span>Contraseña</span><input id="l-p" type="password" autocomplete="current-password"></label>'
+    + '<div class="err" id="l-e"></div>'
+    + '<div class="acciones"><button class="btn ghost" data-cerrar>Cancelar</button>'
+    + '<button class="btn" id="l-ok">Entrar</button></div>');
+  var err = dd.querySelector('#l-e');
+  dd.querySelector('#l-ok').onclick = function(){
+    var m = dd.querySelector('#l-m').value.trim(), p = dd.querySelector('#l-p').value;
+    if(!m || !p){ err.textContent = 'Completá los dos campos.'; return; }
+    if(FB_API_KEY.indexOf('PEGAR') === 0){ err.textContent = 'Falta pegar la API Key de Firebase.'; return; }
+    if(location.protocol === 'file:'){ err.textContent = 'Desde el disco no funciona: la página tiene que estar publicada.'; return; }
+    err.textContent = 'Entrando…';
+    fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + FB_API_KEY, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email:m, password:p, returnSecureToken:true })
+    }).then(function(r){ return r.json(); }).then(function(j){
+      if(j.idToken){
+        admin.token = j.idToken; admin.email = j.email;
+        try{ sessionStorage.setItem('cake-cafe-adm', JSON.stringify({t:j.idToken, e:j.email})); }catch(e){}
+        cerrar(); render();
+      } else err.textContent = 'No pudimos entrar. Revisá el correo y la contraseña.';
+    }).catch(function(){ err.textContent = 'No hay conexión con Firebase.'; });
+  };
+}
+
+/* lee lo que la persona ya escribió, para no perderlo al redibujar */
+var dirMemo = '';   /* recuerda la dirección aunque vuelva a "lo retiro" */
+function datosPedido(){
+  if(!dlg.open) return {};
+  var g = function(id){ var n = dd.querySelector(id); return n ? n.value : ''; };
+  var seg = dd.querySelector('.segm button.on[data-entrega]');
+  var pg  = dd.querySelector('.segm.pagos button.on');
+  var dir = g('#p-dir');
+  if(dir) dirMemo = dir; else dir = dirMemo;
+  return { nota:g('#p-n'), pago: pg ? pg.dataset.pago : '', dir:dir,
+           entrega: seg ? seg.dataset.entrega : 'retiro' };
+}
+
+function dlgPedido(p){
+  p = p || {};
+  var entrega = p.entrega || 'retiro';
+  var PAGOS = ['Efectivo', 'Transferencia', 'Tarjeta'];
+  var pago = p.pago || PAGOS[0];
+  var ls = lineas();
+  if(!ls.length){ cerrar(); return; }
+  dd.className = 'dlg pedido';
+  abrir('<button class="cerrarx" data-cerrar aria-label="Cerrar">✕</button>'
+    + '<h3>Tu pedido</h3>'
+    + '<div class="lineas">' + ls.map(function(l){
+        var sub = [l.op, textoSuf(l.it.suf)].filter(Boolean).join(' · ');
+        return '<div class="ln"><div class="nb">' + esc(l.it.name)
+          + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</div>'
+          + '<div class="qt"><button data-menosq="' + esc(l.k) + '">−</button><b>' + l.q + '</b>'
+          + '<button data-masq="' + esc(l.k) + '">+</button></div>'
+          + '<div class="sb">' + conPuntos(l.sub) + '</div>'
+          + '<button class="rm" data-quita="' + esc(l.k) + '" aria-label="Sacar del pedido">✕</button>'
+          + '</div>';
+      }).join('') + '</div>'
+    + '<div class="total"><span>Total estimado</span><b>' + conPuntos(totalPesos()) + '</b></div>'
+
+    + '<div class="fld" style="margin-top:12px"><span>¿Cómo lo querés?</span><div class="segm">'
+    + '<button data-entrega="retiro"' + (entrega === 'retiro' ? ' class="on"' : '') + '>Lo retiro</button>'
+    + '<button data-entrega="envio"'  + (entrega === 'envio'  ? ' class="on"' : '') + '>Con envío</button>'
+    + '</div></div>'
+
+    + '<div class="fld"><span>Medio de pago</span><div class="segm pagos">'
+    + PAGOS.map(function(x){
+        return '<button data-pago="' + esc(x) + '"' + (pago === x ? ' class="on"' : '') + '>'
+          + esc(x) + '</button>'; }).join('')
+    + '</div></div>'
+
+    + (entrega === 'envio'
+        ? '<label class="fld" style="margin-top:9px"><span>Dirección de entrega</span>'
+          + '<input id="p-dir" value="' + esc(p.dir || '') + '" '
+          + 'placeholder="Calle, número, piso y referencia"></label>'
+        : '')
+
+    + '<label class="fld" style="margin-top:9px"><span>Aclaraciones (opcional)</span>'
+    + '<textarea id="p-n" placeholder="Para las 10, sin azúcar…">' + esc(p.nota || '') + '</textarea></label>'
+
+    + '<div class="acciones"><button class="btn wa" id="p-wa" style="width:100%">'
+    + WAI + 'Enviar pedido por WhatsApp</button></div>');
+
+  dd.querySelector('#p-wa').onclick = function(){
+    var d = datosPedido();
+    if(d.entrega === 'envio' && !String(d.dir).trim()){
+      var n = dd.querySelector('#p-dir');
+      if(n){ n.focus(); n.style.borderColor = 'var(--promo)'; }
+      return;
+    }
+    d.nota = String(d.nota).trim(); d.dir = String(d.dir).trim();
+    window.open(waBase(textoPedido(d)), '_blank', 'noopener');
+  };
+}
+
+function dlgItem(id, secId){
+  var nuevo = !id;
+  var it = nuevo
+    ? { id:nuevoId(), sec:secId, name:'', desc:'', price:'', antes:'', suf:'', photo:'', off:0, destacado:false, activo:true }
+    : itemPorId(id);
+  if(!it) return;
+  abrir('<h3>' + (nuevo ? 'Nuevo producto' : 'Editar producto') + '</h3>'
+    + '<label class="fld"><span>Nombre</span><input id="i-n" value="' + esc(it.name) + '"></label>'
+    + '<label class="fld"><span>Detalle o variedades</span><textarea id="i-d">' + esc(it.desc) + '</textarea></label>'
+    + '<div class="fld row">'
+    + '<label><span>Precio</span><input id="i-p" value="' + esc(it.price) + '" placeholder="$4.000"></label>'
+    + '<label><span>Aclaración</span><input id="i-s" value="' + esc(it.suf) + '" placeholder="× 2 · 100 g"></label></div>'
+    + '<label class="fld"><span>Sabores para elegir (uno por línea)</span>'
+    + '<textarea id="i-op" placeholder="Chips&#10;Chocolate negro&#10;Maizena">'
+    + esc((it.opciones || []).join('\n')) + '</textarea></label>'
+    + '<div class="fld row">'
+    + '<label><span>Descuento %</span><input id="i-o" type="number" min="0" max="90" step="5" value="'
+    + (it.off || 0) + '"></label>'
+    + '<label><span>Precio anterior</span><input id="i-a" value="' + esc(it.antes || '') + '" '
+    + 'placeholder="$8.000 · para combos"></label></div>'
+    + '<label class="fld"><span>Foto</span><input id="i-f" value="' + esc(it.photo || '') + '" '
+    + 'placeholder="fotos-cafe/Nombre del archivo.jpeg"></label>'
+    + '<label class="fld"><span>Sección</span><select id="i-sec">'
+    + state.secciones.map(function(sc){
+        return '<option value="' + esc(sc.id) + '"' + (sc.id === it.sec ? ' selected' : '') + '>'
+          + esc(sc.name) + '</option>'; }).join('') + '</select></label>'
+    + '<label class="chk"><input type="checkbox" id="i-dest"' + (it.destacado ? ' checked' : '') + '>Marcarlo como «lo más pedido»</label>'
+    + '<label class="chk"><input type="checkbox" id="i-act"' + (it.activo ? ' checked' : '') + '>Mostrarlo en el menú</label>'
+    + '<div class="acciones"><button class="btn ghost" data-cerrar>Cancelar</button>'
+    + (nuevo ? '' : '<button class="btn danger" id="i-del">Borrar</button>')
+    + '<button class="btn" id="i-ok">Guardar</button></div>');
+
+  dd.querySelector('#i-ok').onclick = function(){
+    it.name  = dd.querySelector('#i-n').value.trim();
+    it.desc  = dd.querySelector('#i-d').value.trim();
+    it.price = dd.querySelector('#i-p').value.trim();
+    it.suf   = dd.querySelector('#i-s').value.trim();
+    it.off   = parseInt(dd.querySelector('#i-o').value, 10) || 0;
+    it.opciones = dd.querySelector('#i-op').value.split('\n')
+                    .map(function(x){ return x.trim(); }).filter(Boolean);
+    it.antes = dd.querySelector('#i-a').value.trim();
+    it.photo = dd.querySelector('#i-f').value.trim().replace(/ /g, '%20');
+    it.sec   = dd.querySelector('#i-sec').value;
+    it.destacado = dd.querySelector('#i-dest').checked;
+    it.activo    = dd.querySelector('#i-act').checked;
+    if(!it.name) return;
+    if(nuevo) state.items.push(it);
+    admin.dirty = true; cerrar(); render();
+  };
+  if(!nuevo) dd.querySelector('#i-del').onclick = function(){
+    if(!confirm('¿Borrar «' + it.name + '»?')) return;
+    state.items = state.items.filter(function(x){ return x.id !== it.id; });
+    admin.dirty = true; cerrar(); render();
+  };
+}
+
+function dlgAnuncio(id){
+  var nuevo = (id === 'nuevo');
+  var a = nuevo ? { id:nuevoId(), texto:'', activo:true }
+                : (state.anuncios||[]).filter(function(x){ return x.id === id; })[0];
+  if(!a) return;
+  abrir('<h3>' + (nuevo ? 'Nuevo aviso' : 'Editar aviso') + '</h3>'
+    + '<p class="sm">Una línea corta arriba del menú. Por ejemplo: «Hoy hay pastafrola de membrillo».</p>'
+    + '<label class="fld"><span>Texto</span><textarea id="a-t">' + esc(a.texto) + '</textarea></label>'
+    + '<label class="chk"><input type="checkbox" id="a-act"' + (a.activo ? ' checked' : '') + '>Mostrarlo</label>'
+    + '<div class="acciones"><button class="btn ghost" data-cerrar>Cancelar</button>'
+    + (nuevo ? '' : '<button class="btn danger" id="a-del">Borrar</button>')
+    + '<button class="btn" id="a-ok">Guardar</button></div>');
+  dd.querySelector('#a-ok').onclick = function(){
+    a.texto = dd.querySelector('#a-t').value.trim();
+    a.activo = dd.querySelector('#a-act').checked;
+    if(!a.texto) return;
+    if(!state.anuncios) state.anuncios = [];
+    if(nuevo) state.anuncios.push(a);
+    admin.dirty = true; cerrar(); render();
+  };
+  if(!nuevo) dd.querySelector('#a-del').onclick = function(){
+    state.anuncios = state.anuncios.filter(function(x){ return x.id !== a.id; });
+    admin.dirty = true; cerrar(); render();
+  };
+}
+
+function dlgAjustes(){
+  var b = state.brand, s = state.settings;
+  abrir('<h3>Datos del local</h3>'
+    + '<label class="fld"><span>Título</span><input id="s-t" value="' + esc(s.titulo) + '"></label>'
+    + '<label class="fld"><span>Bajada</span><textarea id="s-b">' + esc(s.bajada) + '</textarea></label>'
+    + '<label class="fld"><span>Dirección</span><input id="s-d" value="' + esc(b.address) + '"></label>'
+    + '<label class="fld"><span>Horarios</span><input id="s-h" value="' + esc(b.hours) + '"></label>'
+    + '<label class="fld"><span>Instagram (sin arroba)</span><input id="s-i" value="' + esc(b.instagram) + '"></label>'
+    + '<label class="fld"><span>WhatsApp</span><input id="s-w" value="' + esc(b.whatsapp) + '"></label>'
+    + '<label class="fld"><span>Link al catálogo de tortas</span><input id="s-c" value="' + esc(s.catalogoUrl) + '"></label>'
+    + '<div class="acciones"><button class="btn ghost" data-cerrar>Cancelar</button>'
+    + '<button class="btn" id="s-ok">Guardar</button></div>');
+  dd.querySelector('#s-ok').onclick = function(){
+    s.titulo = dd.querySelector('#s-t').value.trim();
+    s.bajada = dd.querySelector('#s-b').value.trim();
+    b.address = dd.querySelector('#s-d').value.trim();
+    b.hours = dd.querySelector('#s-h').value.trim();
+    b.instagram = dd.querySelector('#s-i').value.trim().replace('@','');
+    b.whatsapp = dd.querySelector('#s-w').value.trim();
+    s.catalogoUrl = dd.querySelector('#s-c').value.trim();
+    b.maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(b.address);
+    admin.dirty = true; cerrar(); render();
+  };
+}
+
+/* =========================================================================
+   7 · GUARDAR Y MOVER
+   ========================================================================= */
+function guardar(){
+  if(!admin.token) return;
+  if(location.protocol === 'file:'){
+    alert('Para guardar, la página tiene que estar publicada en internet.'); return;
+  }
+  fetch(DB_BASE + DB_NODE + '?auth=' + encodeURIComponent(admin.token), {
+    method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(state)
+  }).then(function(r){
+    if(r.ok){ admin.dirty = false; render(); alert('Guardado.'); }
+    else if(r.status === 401 || r.status === 403){
+      alert('La sesión venció. Entrá de nuevo.');
+      admin.token = null; try{ sessionStorage.removeItem('cake-cafe-adm'); }catch(e){} render();
+    } else alert('No se pudo guardar.');
+  }).catch(function(){ alert('No hay conexión con la base.'); });
+}
+
+function mover(id, dir){
+  var i = -1;
+  state.items.forEach(function(x, k){ if(x.id === id) i = k; });
+  if(i < 0) return;
+  var mismos = [];
+  state.items.forEach(function(x, k){ if(x.sec === state.items[i].sec) mismos.push(k); });
+  var pos = mismos.indexOf(i), dest = mismos[pos + dir];
+  if(dest === undefined) return;
+  var tmp = state.items[i]; state.items[i] = state.items[dest]; state.items[dest] = tmp;
+  admin.dirty = true; render();
+}
+
+/* =========================================================================
+   8 · EVENTOS
+   ========================================================================= */
+var lb = document.getElementById('lb'), lbi = document.getElementById('lb-i');
+var lbLista = [], lbIx = 0;
+
+function lbPintar(){
+  lbi.src = lbLista[lbIx];
+  lb.querySelector('.cont').textContent =
+    lbLista.length > 1 ? (lbIx + 1) + ' / ' + lbLista.length : '';
+}
+function lbMover(d){
+  if(lbLista.length < 2) return;
+  lbIx = (lbIx + d + lbLista.length) % lbLista.length;
+  lbPintar();
+}
+
+/* flechas del teclado */
+document.addEventListener('keydown', function(e){
+  if(!lb.open) return;
+  if(e.key === 'ArrowRight') lbMover(1);
+  if(e.key === 'ArrowLeft')  lbMover(-1);
+});
+
+/* deslizar con el dedo */
+(function(){
+  var x0 = null;
+  lb.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, { passive:true });
+  lb.addEventListener('touchend', function(e){
+    if(x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 45) lbMover(dx < 0 ? 1 : -1);
+    x0 = null;
+  }, { passive:true });
+})();
+
+document.addEventListener('click', function(e){
+  var t = e.target, b;
+  if(t.closest('[data-cerrar]')) { cerrar(); return; }
+
+  /* carrito */
+  /* agregar desde la tarjeta: si tiene sabores, primero se elige */
+  if((b = t.closest('[data-mas]'))){
+    var it0 = itemPorId(b.dataset.mas);
+    var card0 = b.closest('.card');
+    if(opcionesDe(it0)){ dlgSabor(it0, card0); return; }
+    agregarAlCarrito(it0.id + '|', card0);
+    return;
+  }
+  /* elegido el sabor */
+  if((b = t.closest('[data-elige]'))){
+    if(!elegirPend) return;
+    var pend = elegirPend; elegirPend = null; cerrar();
+    agregarAlCarrito(pend.id + '|' + b.dataset.elige, pend.card);
+    return;
+  }
+  /* quitar desde la tarjeta: saca el último sabor agregado */
+  if((b = t.closest('[data-menos]'))){
+    var k0 = ultimaClave(b.dataset.menos);
+    if(!k0) return;
+    tocado = b.dataset.menos;
+    sumar(k0, -1);
+    render(); return;
+  }
+  /* más y menos dentro del detalle del pedido, sobre un sabor puntual */
+  if((b = t.closest('[data-masq]'))){
+    tocado = partirClave(b.dataset.masq).id;
+    sumar(b.dataset.masq, 1);
+    if(dlg.open) dlgPedido(datosPedido());
+    render(); return;
+  }
+  if((b = t.closest('[data-menosq]'))){
+    tocado = partirClave(b.dataset.menosq).id;
+    sumar(b.dataset.menosq, -1);
+    if(dlg.open){
+      var d2 = datosPedido();
+      if(cantidadTotal() > 0) dlgPedido(d2); else cerrar();
+    }
+    render(); return;
+  }
+  if(t.closest('[data-verpedido]')){ dlgPedido({}); return; }
+
+  /* medio de pago */
+  if((b = t.closest('[data-pago]'))){
+    var dp = datosPedido();
+    dp.pago = b.dataset.pago;
+    dlgPedido(dp);
+    return;
+  }
+
+  /* retiro / envío: redibuja el detalle para mostrar u ocultar la dirección */
+  if((b = t.closest('[data-entrega]'))){
+    var de = datosPedido();
+    de.entrega = b.dataset.entrega;
+    dlgPedido(de);
+    if(de.entrega === 'envio'){
+      var di = dd.querySelector('#p-dir');
+      if(di) di.focus();
+    }
+    return;
+  }
+  if((b = t.closest('[data-quita]'))){
+    var d3 = datosPedido();
+    delete carrito[b.dataset.quita]; guardarCarrito();
+    if(cantidadTotal() > 0) dlgPedido(d3); else cerrar();
+    render(); return;
+  }
+
+  /* categorías */
+  if((b = t.closest('[data-cat]'))){
+    catSel = b.dataset.cat || null;
+    animEntrada = true;
+    render(); return;
+  }
+
+  /* foto ampliada */
+  if((b = t.closest('[data-fotos]'))){
+    lbLista = fotosDe(itemPorId(b.dataset.fotos)); lbIx = 0;
+    if(!lbLista.length) return;
+    lb.classList.toggle('sola', lbLista.length < 2);
+    lbPintar();
+    lb.showModal(); return;
+  }
+  if((b = t.closest('[data-lb]'))){ lbMover(Number(b.dataset.lb)); return; }
+  if(t === lbi){ lbMover(1); return; }
+
+  /* administración */
+  if(t.closest('[data-adm]'))    { admin.token ? dlgAjustes() : dlgLogin(); return; }
+  if(t.closest('[data-salir]'))  {
+    if(admin.dirty && !confirm('Hay cambios sin guardar. ¿Salir igual?')) return;
+    admin.token = null; admin.email = null; admin.dirty = false;
+    try{ sessionStorage.removeItem('cake-cafe-adm'); }catch(x){}
+    render(); return;
+  }
+  if(t.closest('[data-guardar]')){ guardar(); return; }
+  if(t.closest('[data-ajustes]')){ dlgAjustes(); return; }
+  if((b = t.closest('[data-edit]')))   { dlgItem(b.dataset.edit); return; }
+  if((b = t.closest('[data-add]')))    { dlgItem(null, b.dataset.add); return; }
+  if((b = t.closest('[data-borra]')))  {
+    var it = itemPorId(b.dataset.borra);
+    if(it && confirm('¿Borrar «' + it.name + '»?')){
+      state.items = state.items.filter(function(x){ return x.id !== it.id; });
+      admin.dirty = true; render();
+    } return;
+  }
+  if((b = t.closest('[data-sube]')))   { mover(b.dataset.sube, -1); return; }
+  if((b = t.closest('[data-baja]')))   { mover(b.dataset.baja,  1); return; }
+  if((b = t.closest('[data-anedit]'))) { dlgAnuncio(b.dataset.anedit); return; }
+});
+
+document.addEventListener('input', function(e){
+  if(e.target.classList && e.target.classList.contains('qi')){
+    filtro = e.target.value.trim().toLowerCase();
+    var donde = e.target.dataset.q, pos = e.target.selectionStart;
+    animEntrada = true;
+    render();
+    var n = document.querySelector('.qi[data-q="' + donde + '"]');
+    if(n){ n.focus(); try{ n.setSelectionRange(pos, pos); }catch(x){} }
+  }
+});
+
+window.addEventListener('beforeunload', function(e){
+  if(admin.dirty){ e.preventDefault(); e.returnValue = ''; }
+});
+
+/* =========================================================================
+   9 · ARRANQUE
+   ========================================================================= */
+/* el botón de administración aparece solo con #admin en la dirección,
+   o si ya hay una sesión abierta */
+function chequearAdmin(){
+  var on = location.hash === '#admin' || !!admin.token;
+  document.body.classList.toggle('modoadmin', on);
+  return on;
+}
+window.addEventListener('hashchange', function(){
+  if(chequearAdmin() && !admin.token) dlgLogin();
+});
+
+render();
+autoFotos(function(){ render(); });
+if(chequearAdmin() && !admin.token) dlgLogin();
+
+if(USAR_BASE){
+  fetch(DB_BASE + DB_NODE, { cache:'no-store' })
+    .then(function(r){ return r.json(); })
+    .then(function(j){ if(j && j.items && j.items.length){ state = j; render(); } })
+    .catch(function(){ /* sin conexión: queda el menú escrito en este archivo */ });
+}
+
+})();
+</script>
+</body>
+</html>
