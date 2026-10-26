@@ -1,0 +1,73 @@
+FOTOS DEL CAFÉ
+==============
+
+Esta carpeta es SOLO para las fotos del menú del café (cafe.html).
+Las de las tortas por encargo siguen en la carpeta "fotos" y no se mezclan.
+
+CÓMO SE CARGAN
+--------------
+Guardá cada foto acá adentro con el nombre exacto de la lista de abajo,
+y la página la toma sola. No hace falta tocar nada más.
+
+Si le ponés otro nombre, avisame y la enlazo, o cargala vos desde el panel
+de administración escribiendo en el campo "Foto":
+
+    fotos-cafe/Nombre del archivo.jpeg
+
+CÓMO SACARLAS
+-------------
+· Cuadradas. La página las recorta a cuadrado, así que si sacás vertical
+  se pierde la mitad.
+· Con luz de día, cerca de la ventana. Nunca con el flash del techo.
+· El producto solo, de cerca, sobre un plato o sobre madera clara.
+· Fondo limpio: sin servilletas arrugadas, sin celulares, sin la caja
+  registradora atrás.
+· Desde arriba para los platos, de costado para el café y los vasos.
+
+POR CUÁLES EMPEZAR
+------------------
+No hace falta que estén todas. Arrancá por estas diez, que son las que
+más se venden y las que más cambian la decisión de alguien con hambre:
+
+    Cafe.jpeg
+    Medialunas.jpeg
+    Tostado pan blanco.jpeg
+    Chipa.jpeg
+    Alfajores artesanales.jpeg
+    Galletas artesanales.jpeg
+    Cuadrado de brownie.jpeg
+    Cheesecake individual.jpeg
+    Sandwich de milanesa.jpeg
+    Empanadas.jpeg
+
+LOS COMBOS
+----------
+Estos conviene sacarlos armados, con las dos cosas juntas en la mesa:
+
+    Combo cafe y chipa.jpeg
+    Combo cafe y medialunas.jpeg
+    Combo cafe y tostado.jpeg
+    Combo jugo y chipa.jpeg
+
+EL RESTO
+--------
+    Alfajores sueltos.jpeg
+    Alfajores x8.jpeg
+    Budines citricos.jpeg
+    Budin porcion.jpeg
+    Budin individual.jpeg
+    Pastafrolas.jpeg
+    Postre brownie.jpeg
+    Cuadrado de lemonie.jpeg
+    Tarta clasica.jpeg
+    Tarta especial.jpeg
+    Donitas.jpeg
+    Masitas secas.jpeg
+    Pepas.jpeg
+    Chocolate caliente.jpeg
+    Jugo exprimido.jpeg
+    Jugo en cajita.jpeg
+    Gaseosa o agua.jpeg
+    Medialunas jamon y queso.jpeg
+    Scon de queso.jpeg
+    Tostado pan lactal.jpeg
