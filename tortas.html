@@ -1,0 +1,3026 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Cake Pastelería Creativa</title>
+<meta name="description" content="Tortas, postres y mesas dulces por encargo en Corrientes. Cake, café y pastelería creativa. Córdoba 417.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,90..100,400..800&family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+/* =========================================================================
+   CAKE · Catálogo de tortas + carrito + panel de administración
+   Estética del boceto (la misma que el menú del café): foto desenfocada de
+   fondo, vidrio, fotos redondas, dibujos de Canva flotando. Paleta tostada y dorada.
+   ========================================================================= */
+:root{
+  --crema:#F6F0E4; --crema-2:#EFE4D2; --tostado:#3A2E24; --nuez:#5C4632; --dorado:#B08049; --dorado-2:#D9B98A; --lino:#CDBFA6;
+  --vidrio:rgba(255,250,242,.42); --vidrio-b:rgba(255,255,255,.6);
+  --sombra:0 24px 60px -28px rgba(58,46,36,.55);
+  /* nombres viejos que siguen usando algunos estilos en línea del script */
+  --ground:#F6F0E4; --surface:#FFFBF4; --surface-2:#EFE4D2;
+  --ink:#3A2E24; --ink-soft:#5C4632; --ink-faint:#8C7A66;
+  --accent:#5C4632; --accent-ink:#F6F0E4; --accent-soft:#EFE4D2;
+  --caramel:#B08049; --brownie:#3A2E24; --cafe:#5C4632;
+  --line:#E2D7C4; --line-strong:#CDBFA6;
+  --draw:#B08049; --wa:#1F7A3D; --promo:#A34426;
+  --radius:26px; --shadow:0 1px 3px rgba(58,46,36,.07);
+  color-scheme: light;
+}
+
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+html,body{margin:0;}
+body{background:var(--crema); color:var(--tostado);
+  -webkit-text-size-adjust:100%; text-size-adjust:100%;
+  font-family:'Bricolage Grotesque', system-ui, sans-serif; font-size:16px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+.wrap{max-width:1100px; margin:0 auto; padding-inline:14px;}
+@media (min-width:620px){ .wrap{padding-inline:18px;} }
+h1,h2,h3,h4{font-family:'Cormorant Garamond', Georgia, serif; font-weight:600; margin:0; letter-spacing:-.01em; line-height:1.05; text-wrap:balance;}
+a{color:inherit;} img{max-width:100%; display:block;}
+button{font:inherit; cursor:pointer; color:inherit; -webkit-appearance:none; appearance:none;}
+a{-webkit-text-decoration-skip:objects;}
+:focus-visible{outline:2.5px solid var(--dorado); outline-offset:2px; border-radius:6px;}
+.tnum{font-variant-numeric:tabular-nums;}
+s{text-decoration-thickness:1.5px;}
+[hidden]{display:none !important;}
+.hint{font-size:13px; color:var(--ink-faint); margin:0;}
+
+/* ---------- fondo: foto desenfocada + velo + manchas ---------- */
+#fondo{position:fixed; inset:0; z-index:0; overflow:hidden; background:var(--crema); pointer-events:none;}
+#fondo .foto{position:absolute; inset:-6%; background:url("fotos/Torta grande crema.jpeg") center/cover no-repeat;
+  filter:blur(26px) saturate(1.1) brightness(1.05); -webkit-filter:blur(26px) saturate(1.1) brightness(1.05);
+  transform:scale(1.08); will-change:transform; animation:respira 28s ease-in-out infinite alternate;}
+#fondo .velo{position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(246,240,228,.80), rgba(246,240,228,.64) 40%, rgba(246,240,228,.88));}
+#fondo i{position:absolute; border-radius:50%; filter:blur(60px); -webkit-filter:blur(60px); opacity:.6; will-change:transform;
+  animation:flota 24s ease-in-out infinite alternate;}
+#fondo i:nth-child(3){width:48vw; height:48vw; left:-14vw; top:-10vw; background:#E8CBA3;}
+#fondo i:nth-child(4){width:40vw; height:40vw; right:-12vw; top:30vh; background:rgba(176,128,73,.38); animation-duration:31s; animation-delay:-11s;}
+@keyframes respira{ from{transform:scale(1.08) translate(0,0);} to{transform:scale(1.14) translate(-1.5%,1%);} }
+@keyframes flota{ from{transform:translate(0,0);} to{transform:translate(6vw,4vh);} }
+@media (max-width:760px){ #fondo .foto{filter:blur(18px) saturate(1.1); -webkit-filter:blur(18px) saturate(1.1); animation:none;} #fondo i{animation:none; filter:blur(40px);} }
+
+/* ---------- los dibujos de Canva repartidos por toda la pantalla ---------- */
+#deco{position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;}
+#deco img.bgi{position:absolute; display:block; left:var(--l); top:var(--t); width:var(--w); height:auto;
+  opacity:var(--o,.45); transform:rotate(var(--rot,0deg)); will-change:transform;
+  filter:drop-shadow(0 10px 14px rgba(58,46,36,.22)); -webkit-filter:drop-shadow(0 10px 14px rgba(58,46,36,.22));
+  animation:vaivenBg var(--dur,9s) ease-in-out var(--delay,0s) infinite alternate;}
+@media (max-width:760px){
+  #deco img.bgi{display:none;}
+  #deco img.bgi.m{display:block; left:var(--lm,var(--l)); top:var(--tm,var(--t)); width:calc(var(--w) * .66);}
+}
+#app{position:relative; z-index:2;}
+
+/* ---------- animaciones ---------- */
+@keyframes vaivenBg{ from{transform:translateY(0) rotate(var(--rot,0deg))} to{transform:translateY(-14px) rotate(calc(var(--rot,0deg) + 4deg))} }
+@keyframes sube{ from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} }
+@keyframes pop{ 0%{transform:scale(1)} 42%{transform:scale(1.18)} 100%{transform:scale(1)} }
+@keyframes barraSube{ from{transform:translateY(120%)} to{transform:none} }
+@keyframes levita{ from{transform:translateY(-6px);} to{transform:translateY(8px);} }
+@keyframes gira{ to{transform:rotate(360deg);} }
+@keyframes brillo{ to{background-position:200% 0;} }
+@keyframes corre{ to{transform:translateX(-50%);} }
+@keyframes entra{ from{opacity:0; transform:scale(.95) translateY(12px)} to{opacity:1; transform:none} }
+@keyframes latido{ 0%,100%{transform:scale(1)} 30%{transform:scale(1.1)} }
+@keyframes chipPop{ 0%{transform:scale(.94);} 60%{transform:scale(1.05);} 100%{transform:none;} }
+@keyframes breathe{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.025);} }
+@keyframes rise{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:none;} }
+
+/* aparición al hacer scroll: tarjetas y títulos entran con fade + 14 px, escalonados */
+.rv{opacity:0; transform:translateY(14px);
+  transition:opacity .55s cubic-bezier(.2,.7,.3,1), transform .55s cubic-bezier(.2,.7,.3,1);
+  transition-delay:var(--rvd, 0ms);}
+.rv.in{opacity:1; transform:none;}
+.card.rv{transition:opacity .55s cubic-bezier(.2,.7,.3,1) var(--rvd,0ms),
+  transform .55s cubic-bezier(.2,.7,.3,1) var(--rvd,0ms), box-shadow .3s ease;}
+.card.rv.in{transition:transform .45s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease, opacity .3s;}
+
+/* la tortita que vuela al carrito */
+.volador{position:fixed; z-index:90; pointer-events:none;
+  filter:drop-shadow(0 8px 16px rgba(58,28,18,.3)); color:var(--nuez);}
+.volador svg{width:100%; height:100%; display:block;}
+#confeti{position:fixed; inset:0; z-index:95; pointer-events:none;}
+
+/* ---------- vidrio ---------- */
+.glass{background:var(--vidrio); border:1px solid var(--vidrio-b); border-radius:var(--radius); box-shadow:var(--sombra);}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .glass{backdrop-filter:blur(14px) saturate(1.2); -webkit-backdrop-filter:blur(14px) saturate(1.2);}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .glass{background:rgba(246,240,228,.93);}
+}
+
+/* ---------- botones ---------- */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:none;
+  border-radius:999px; padding:12px 20px; font-weight:700; font-size:15px; text-decoration:none; min-height:44px;
+  background:linear-gradient(135deg, var(--nuez), var(--tostado)); color:var(--crema); position:relative; overflow:hidden;
+  box-shadow:0 14px 28px -14px rgba(58,46,36,.7);
+  transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s, filter .2s;}
+.btn.oro{background:linear-gradient(135deg, var(--dorado), #C9A06A); color:#fff;}
+.btn.wa{background:linear-gradient(135deg, #2C9654 0%, var(--wa) 55%, #166332 100%); color:#fff;}
+.btn.ghost{background:transparent; color:var(--tostado); border:1.5px solid var(--lino); box-shadow:none; font-weight:600;}
+.btn.danger{background:linear-gradient(135deg, var(--promo), #7E3119); color:#fff;}
+.btn.sm{padding:9px 15px; font-size:13.5px; min-height:40px;}
+.btn svg{width:17px; height:17px; flex:none;}
+.btn::after{content:''; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(110deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+  transform:translateX(-120%); transition:transform .7s ease;}
+.btn.ghost::after{display:none;}
+@media (hover:hover){
+  .btn:hover{transform:translateY(-2px); box-shadow:0 20px 34px -14px rgba(58,46,36,.75);}
+  .btn:hover::after{transform:translateX(120%);}
+  .btn.ghost:hover{border-color:var(--dorado); box-shadow:none;}
+}
+.btn:active{transform:scale(.97);}
+
+/* ---------- barra superior: píldora de vidrio ---------- */
+header.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:30; padding:10px 0 6px;
+  transition:padding .22s ease;}
+body.compacto header.top{padding:6px 0 4px;}
+.navbar{display:flex; align-items:center; gap:10px; padding:8px 10px 8px 8px; border-radius:999px;
+  box-shadow:0 10px 30px -20px rgba(58,46,36,.5);}
+/* el logo final: la palabra Cake con su bajada, en svg (carpeta logo, al lado del archivo) */
+.logo-cake{display:flex; align-items:center; margin-right:auto; min-width:0; padding-left:8px;}
+.logo-cake img{height:30px; width:auto; display:block;}
+@media (min-width:700px){ .logo-cake img{height:36px;} }
+/* respaldo si falta la carpeta logo: el nombre escrito */
+.brand{display:none; flex-direction:column; min-width:0; margin-right:auto;}
+.brand .nm{font-family:'DM Serif Display','Cormorant Garamond',serif; font-size:24px; font-weight:400; line-height:1; color:var(--tostado);}
+.brand .sub{font-family:'Montserrat',sans-serif; font-size:7.5px; letter-spacing:.3em; text-transform:uppercase; color:var(--dorado);
+  font-weight:600; margin-top:3px; white-space:nowrap;}
+.logo-cake.sinlogo{display:none;} .logo-cake.sinlogo + .brand{display:flex;}
+.navbar .links{display:none; gap:2px;}
+.navbar .links a{padding:8px 13px; border-radius:999px; font-weight:600; font-size:14px; text-decoration:none; color:var(--tostado);
+  transition:background .2s;}
+.navbar .links a:hover{background:rgba(176,128,73,.14);}
+.top-wa{display:inline-flex;}
+.top-wa .tx{display:none;}
+@media (min-width:700px){ .navbar .links{display:flex;} .top-wa .tx{display:inline;} .navbar{gap:14px;} }
+@media (max-width:699px){ .top-wa{width:44px; height:44px; padding:0; border-radius:50%;} }
+/* el candado no se ve: se entra agregando #admin al final de la dirección */
+.adm-btn{display:none;}
+body.modoadmin .adm-btn{flex:none; width:36px; height:36px; border-radius:50%;
+  border:1.5px solid var(--lino); background:#fff; color:var(--ink-faint); display:grid; place-items:center;}
+.adm-btn svg{width:15px; height:15px;}
+.adm-btn.on{background:var(--tostado); border-color:var(--tostado); color:var(--crema);}
+
+/* ---------- anuncios ---------- */
+.anuncios{margin-top:14px; display:grid; gap:8px;}
+.anuncio{display:flex; align-items:center; gap:10px; border-radius:16px; padding:11px 15px; font-size:14.5px;}
+.anuncio .dot{width:8px; height:8px; border-radius:50%; background:var(--dorado); flex:none;}
+.anuncio .ax{margin-left:auto; border:none; background:none; color:var(--nuez); font-size:12.5px; font-weight:700; text-decoration:underline;}
+
+/* ---------- hero ---------- */
+.hero{display:grid; grid-template-columns:1.1fr .9fr; gap:30px; align-items:center; padding:46px 0 26px; position:relative;}
+.hero .eyebrow{font-family:'Montserrat',sans-serif; font-size:10.5px; letter-spacing:.3em; text-transform:uppercase; color:var(--dorado); font-weight:600; margin-bottom:14px;}
+.hero h1{font-family:'DM Serif Display','Cormorant Garamond',serif; font-weight:400; font-size:clamp(38px, 6.2vw, 72px); letter-spacing:-.01em;}
+.hero h1 .ln{display:block; opacity:0; transform:translateY(22px); animation:sube .9s cubic-bezier(.2,.8,.2,1) forwards;}
+.hero h1 .ln.l2{animation-delay:.15s;}
+.hero h1 em{font-style:italic; font-weight:500; background:linear-gradient(90deg, var(--dorado), #8C5A2B, var(--dorado)); background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent; animation:brillo 6s linear infinite;}
+.hero p.lead{font-size:17px; color:var(--nuez); max-width:44ch; margin:16px 0 24px; opacity:0; animation:sube .9s .3s cubic-bezier(.2,.8,.2,1) forwards;}
+.hero .cta{display:flex; gap:12px; flex-wrap:wrap; opacity:0; animation:sube .9s .45s cubic-bezier(.2,.8,.2,1) forwards;}
+.hero .taza{position:relative; justify-self:center; width:min(100%, 420px); aspect-ratio:1; opacity:0; animation:sube 1s .2s cubic-bezier(.2,.8,.2,1) forwards;}
+.hero .taza .ring{position:absolute; inset:0; border-radius:50%; background:conic-gradient(from 0deg, var(--dorado-2), transparent 40%, var(--dorado) 70%, transparent);
+  animation:gira 14s linear infinite; opacity:.7; will-change:transform;}
+.hero .taza .ph{position:absolute; inset:14px; border-radius:50%; overflow:hidden; background:var(--crema-2);
+  box-shadow:var(--sombra), 0 0 0 10px rgba(255,255,255,.35); animation:levita 7s ease-in-out infinite alternate; cursor:zoom-in;}
+.hero .taza .ph img{width:100%; height:100%; object-fit:cover; transform:scale(1.05); display:block;}
+.hero .taza .tag{position:absolute; right:-4px; bottom:30px; background:var(--tostado); color:var(--crema); padding:10px 16px; border-radius:999px;
+  font-weight:800; font-size:16px; line-height:1.15; max-width:82%; text-align:center;
+  box-shadow:0 14px 28px -12px rgba(58,46,36,.8); animation:levita 5s ease-in-out -2s infinite alternate;}
+.hero .taza .tag small{display:block; font-family:'Montserrat',sans-serif; font-size:9px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--dorado-2);}
+@media (max-width:820px){
+  .hero{grid-template-columns:1fr; gap:14px; padding:22px 0 16px;}
+  .hero .taza{width:min(70%, 300px); order:-1; margin-bottom:10px;}
+  .hero .taza .tag{font-size:15px; padding:8px 13px; right:-8px; bottom:18px;}
+  .hero h1{font-size:clamp(34px, 9.5vw, 56px);}
+  .hero p.lead{font-size:15.5px; margin:12px 0 18px;}
+}
+@media (max-width:400px){
+  .hero{padding:14px 0 10px;}
+  .hero .taza{width:62%;}
+  .hero h1{font-size:clamp(30px, 9.5vw, 40px);}
+}
+
+/* ---------- promos ---------- */
+.promos{display:grid; gap:11px; margin:6px 0 16px;}
+@media (min-width:760px){ .promos{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));} }
+.promo{border-radius:22px; padding:16px 18px; display:flex; gap:16px; align-items:center;
+  background:rgba(58,46,36,.86); color:var(--crema); border:1px solid rgba(176,128,73,.45);
+  box-shadow:0 14px 34px -18px rgba(42,21,16,.7); transition:transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .25s ease;}
+.promo.off{opacity:.5;}
+.promo .pbadge{flex:none; background:linear-gradient(135deg, var(--dorado), #C9A06A); color:#fff; border-radius:14px; padding:12px 14px;
+  font-family:'Bricolage Grotesque',sans-serif; font-size:21px; font-weight:800; line-height:1; text-align:center; letter-spacing:-.02em;}
+.promo .pt{font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; line-height:1.15;}
+.promo .pd{font-size:13.5px; opacity:.82; line-height:1.4; margin-top:3px;}
+.promo .pu{font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; color:var(--dorado-2); margin-top:7px;}
+.promoadmin{display:flex; gap:6px; margin-left:auto; flex:none;}
+.promoadmin button{background:rgba(247,239,228,.12); border:1.5px solid rgba(247,239,228,.3);
+  color:var(--crema); border-radius:9px; padding:6px 11px; font-size:12px; font-weight:600;}
+@media (hover:hover){ .promo:hover{transform:translateY(-2px); box-shadow:0 18px 40px -16px rgba(42,21,16,.8);} }
+
+/* ---------- cinta que corre ---------- */
+.cinta{overflow:hidden; white-space:nowrap; padding:12px 0; border-block:1px solid rgba(176,128,73,.35); margin:6px 0 10px;}
+.cinta div{display:inline-block; animation:corre 40s linear infinite; font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:600; color:var(--nuez); will-change:transform;}
+.cinta span{margin:0 24px;} .cinta span::after{content:'·'; margin-left:24px; color:var(--dorado);}
+@media (max-width:620px){ .cinta div{font-size:22px;} .cinta span{margin:0 16px;} .cinta span::after{margin-left:16px;} }
+
+/* ---------- FILTROS: buscador y cantidad de personas, pegados debajo de la barra ---------- */
+.filtros{position:sticky; z-index:26; margin-bottom:10px;
+  top:calc(env(safe-area-inset-top,0px) + var(--htop, 60px));
+  padding:6px 0 7px;}
+/* una sola tarjeta de vidrio con dos filas del mismo alto: el buscador y las cantidades */
+.filtros-in{display:flex; flex-direction:column; gap:8px; padding:9px 10px; border-radius:22px;}
+.search{position:relative; height:38px;}
+.search input{width:100%; height:38px; font:inherit; font-size:14px; padding:0 15px 0 38px; border-radius:999px;
+  border:1.5px solid rgba(255,255,255,.7); background:rgba(255,255,255,.62); color:var(--tostado); text-overflow:ellipsis;}
+.search input:focus{outline:none; border-color:var(--dorado);}
+.search.conx input{padding-right:40px;}
+.search .si{position:absolute; left:13px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--ink-faint);}
+.search .sx{position:absolute; right:4px; top:50%; transform:translateY(-50%); width:30px; height:30px;
+  border-radius:50%; border:none; background:var(--crema-2); color:var(--nuez); font-size:13px; line-height:1;}
+.frow{display:flex; align-items:center; min-width:0; height:38px;}
+.fchips{position:relative; flex:1; min-width:0; display:flex; gap:6px; align-items:center; height:38px;
+  overflow-x:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity; scrollbar-width:none; padding:0 14px 0 1px;
+  -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 22px), transparent);
+  mask-image:linear-gradient(to right, #000 calc(100% - 22px), transparent);}
+.fchips::-webkit-scrollbar{display:none;}
+/* todos los chips iguales: mismo alto, mismo relleno, sin ícono */
+.chip{flex:none; scroll-snap-align:start; white-space:nowrap; position:relative;
+  height:36px; padding:0 15px; font-size:13.5px; font-weight:700; line-height:1;
+  border:1.5px solid rgba(255,255,255,.7); background:rgba(255,255,255,.62); color:var(--nuez); border-radius:999px;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:color .25s ease, border-color .25s ease, background .25s ease, transform .15s, box-shadow .25s;}
+.chip:active{transform:scale(.95);}
+.chip[aria-pressed="true"]{background:linear-gradient(135deg, var(--nuez), var(--tostado)); border-color:transparent; color:var(--crema);
+  box-shadow:0 8px 18px -10px rgba(58,28,18,.6); animation:chipPop .28s cubic-bezier(.2,.8,.3,1);}
+@media (hover:hover){ .chip:hover{border-color:var(--dorado); transform:translateY(-1px);} }
+/* los grupos y eventos: pestañas de texto en el flujo, arriba de la grilla */
+.fgrupos{margin:4px 0 10px; border-bottom:1px solid rgba(176,128,73,.35);}
+.tabs{display:flex; gap:2px; overflow-x:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity; scrollbar-width:none; padding:0 14px 0 0;
+  -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 22px), transparent);
+  mask-image:linear-gradient(to right, #000 calc(100% - 22px), transparent);}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:none; scroll-snap-align:start; white-space:nowrap; position:relative; background:none; border:none; cursor:pointer;
+  padding:12px 10px 11px; font:inherit; font-size:14px; font-weight:700; color:var(--nuez); min-height:44px;
+  transition:color .2s;}
+.tab::after{content:''; position:absolute; left:10px; right:10px; bottom:-1px; height:2.5px; border-radius:2px; background:var(--dorado);
+  transform:scaleX(0); transition:transform .3s cubic-bezier(.2,.8,.2,1);}
+.tab[aria-pressed="true"]{color:var(--tostado);}
+.tab[aria-pressed="true"]::after{transform:scaleX(1);}
+.tab:active{opacity:.6;}
+@media (hover:hover){ .tab:hover{color:var(--tostado);} }
+@media (max-width:360px){ .tab{font-size:13px; padding:12px 8px 11px;} }
+
+/* ---------- layout ---------- */
+.layout{display:block; margin-block:6px 30px;}
+.layout .content{min-width:0; scroll-margin-top:150px;}
+
+/* ---------- secciones ---------- */
+section.cat{margin-bottom:26px; scroll-margin-top:170px;}
+.cat-top{display:flex; align-items:center; gap:8px; width:100%;}
+.cat-top .cat-head{flex:1; min-width:0;}
+.cat-head{display:flex; align-items:center; gap:10px; flex-wrap:nowrap; width:100%; min-height:44px;
+  background:none; border:none; padding:0; text-align:left; cursor:pointer; color:var(--tostado);}
+/* título y nota en una columna; el contador y la flecha, fijos a la derecha */
+.cat-head .tt{flex:1; min-width:0; display:flex; flex-direction:column; gap:1px;}
+.cat-head .cat-ico{width:26px; height:26px; flex:none; object-fit:contain;
+  filter:drop-shadow(0 6px 8px rgba(58,46,36,.25)); -webkit-filter:drop-shadow(0 6px 8px rgba(58,46,36,.25));
+  transition:transform .35s cubic-bezier(.2,.7,.3,1);}
+@media (hover:hover){ .cat-head:hover .cat-ico{transform:translateY(-2px) rotate(-6deg);} }
+.cat-head h2{font-family:'DM Serif Display','Cormorant Garamond',serif; font-weight:400; font-size:clamp(24px, 3.6vw, 36px); line-height:1.1;
+  position:relative; padding-bottom:3px; display:inline-block; max-width:100%; overflow-wrap:anywhere;}
+.cat-head h2::after{content:''; position:absolute; left:0; bottom:0; width:100%; height:2px; border-radius:2px;
+  background:var(--dorado); transform:scaleX(0); transform-origin:left;
+  transition:transform .65s cubic-bezier(.2,.7,.3,1) .18s;}
+.cat-top.in .cat-head h2::after{transform:scaleX(1);}
+.cat-head .note{font-size:13px; color:var(--nuez); line-height:1.3;}
+.cat-head .cnt{flex:none; font-size:12px; font-weight:700; color:var(--nuez); background:rgba(176,128,73,.18);
+  border-radius:999px; min-width:26px; height:26px; padding:0 9px; display:inline-grid; place-items:center;}
+.cat-head .chev{flex:none; width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,.6); border:1px solid var(--vidrio-b);
+  display:grid; place-items:center; transition:transform .2s;}
+.cat-head .chev svg{width:14px; height:14px; color:var(--nuez);}
+.cat-head[aria-expanded="false"] .chev{transform:rotate(-90deg);}
+.cat-head{transition:opacity .15s;}
+.cat-head:active{opacity:.6;}
+.rule{display:none;}
+@media (min-width:620px){ section.cat{margin-bottom:34px;} }
+
+/* ---------- tarjetas: vidrio con la foto redonda que sobresale ---------- */
+.grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:92px 10px; padding-top:86px;}
+@media (min-width:620px){ .grid{grid-template-columns:repeat(auto-fill,minmax(236px,1fr)); gap:110px 16px; padding-top:104px;} }
+
+.card{position:relative; display:flex; flex-direction:column; text-align:center; padding:78px 12px 12px;
+  background:var(--vidrio); border:1px solid var(--vidrio-b); border-radius:var(--radius); box-shadow:var(--sombra);
+  transition:transform .45s cubic-bezier(.2,.7,.3,1), box-shadow .3s ease, opacity .5s cubic-bezier(.2,.7,.3,1);
+  transform-style:preserve-3d; --mx:50%; --my:50%; --rx:0deg; --ry:0deg;}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .card{backdrop-filter:blur(14px) saturate(1.2); -webkit-backdrop-filter:blur(14px) saturate(1.2);}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .card{background:rgba(246,240,228,.94);} }
+.card:active{transform:scale(.982);}
+/* el brillo que sigue al puntero (solo con la tarjeta inclinada) */
+.card::after{content:''; position:absolute; inset:0; z-index:4; pointer-events:none; opacity:0;
+  border-radius:inherit; transition:opacity .25s ease;
+  background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.38), rgba(255,255,255,0) 62%);}
+@media (hover:hover){
+  .card:hover{transform:translateY(-6px); box-shadow:0 30px 50px -22px rgba(58,46,36,.55);}
+  .card:hover .ph{transform:perspective(700px) rotateX(-9deg) translateZ(20px) scale(1.03);
+    box-shadow:0 14px 22px -10px rgba(58,46,36,.6), 0 44px 54px -26px rgba(58,46,36,.65);}
+  .card.tilt{transform:perspective(900px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(-5px);
+    transition:transform .08s linear, box-shadow .3s ease; z-index:3;
+    box-shadow:0 30px 50px -22px rgba(58,46,36,.6), 0 2px 6px rgba(58,28,18,.06);}
+  /* la foto se inclina un poco más que la tarjeta y se despega de ella */
+  .card.tilt .ph{transform:perspective(700px) rotateX(calc(var(--rx) * 1.4 - 6deg)) rotateY(calc(var(--ry) * 1.4)) translateZ(20px) scale(1.03);
+    transition:transform .08s linear, box-shadow .3s ease;}
+  .card.tilt::after{opacity:1;}
+}
+.card.off{opacity:.45;}
+/* la foto del producto «en 3D»: cuadrada con esquinas redondeadas, apoyada sobre la
+   tarjeta y sobresaliendo por arriba, con una leve perspectiva, dos sombras y un brillo.
+   --tx/--ty los pone el celular al inclinarse (DeviceOrientation); en compu, el puntero. */
+.card .ph{width:150px; height:150px; border-radius:50%; overflow:hidden; margin:-152px auto 12px; position:relative;
+  background:var(--crema-2); flex:none; transform-style:preserve-3d;
+  transform:perspective(700px) rotateX(calc(-6deg + var(--tx,0deg))) rotateY(var(--ty,0deg));
+  box-shadow:0 10px 18px -10px rgba(58,46,36,.55), 0 34px 44px -26px rgba(58,46,36,.6);
+  transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;}
+.card .ph::before{content:''; position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:inherit;
+  background:linear-gradient(135deg, rgba(255,255,255,.28) 0%, rgba(255,255,255,.08) 38%, rgba(255,255,255,0) 60%);}
+@media (min-width:620px){ .card .ph{width:190px; height:190px; margin-top:-192px;} .card{padding:104px 16px 16px;} .grid{gap:128px 16px; padding-top:124px;} }
+@media (max-width:360px){ .card .ph{width:136px; height:136px; margin-top:-138px;} .grid{gap:84px 8px; padding-top:76px;} }
+.card .ph.clic{cursor:zoom-in;}
+.card .ph img{width:100%; height:100%; object-fit:cover; position:relative; z-index:1; display:block;
+  animation:phIdle 5s ease-in-out infinite alternate;}
+@keyframes phIdle{ from{transform:translateY(-2px) scale(1.02);} to{transform:translateY(2px) scale(1.05);} }
+/* el corazón de favoritos, arriba a la derecha de la tarjeta */
+.fav{position:absolute; top:8px; right:8px; z-index:5; width:34px; height:34px; border-radius:50%; border:1px solid var(--vidrio-b);
+  background:rgba(255,250,242,.7); color:var(--lino); font-size:17px; line-height:1; display:grid; place-items:center; padding:0 0 1px;
+  cursor:pointer; transition:transform .2s, color .2s, background .2s; -webkit-tap-highlight-color:transparent;}
+.fav[aria-pressed="true"]{color:var(--promo); background:#fff;}
+.fav.pop{animation:favPop .45s cubic-bezier(.2,.9,.3,1.4);}
+@keyframes favPop{ 0%{transform:scale(.8);} 45%{transform:scale(1.35) rotate(-8deg);} 100%{transform:none;} }
+@media (hover:hover){ .fav:hover{transform:scale(1.1); color:var(--promo);} }
+.tab.favtab{color:var(--promo);}
+/* chispas al agregar */
+.chispa{position:fixed; z-index:96; pointer-events:none; border-radius:50%; width:8px; height:8px;
+  font-size:11px; line-height:1; display:grid; place-items:center; color:var(--promo);}
+/* «si la encargás hoy, la tenés el …» */
+.entrega{display:inline-flex; align-items:center; gap:8px; margin:12px 0 0; padding:7px 13px 7px 9px; border-radius:999px;
+  background:rgba(255,250,242,.6); border:1px solid var(--vidrio-b); font-size:13px; color:var(--nuez);
+  opacity:0; animation:sube .9s .4s cubic-bezier(.2,.8,.2,1) forwards;}
+.entrega i{width:8px; height:8px; border-radius:50%; background:var(--dorado); flex:none; box-shadow:0 0 0 3px rgba(176,128,73,.22);}
+.entrega b{color:var(--tostado);}
+dialog.pedido .entrega{opacity:1; animation:none; margin:6px 0 0; display:flex;}
+/* abierto ahora, en la barra */
+.abierto{display:inline-flex; align-items:center; gap:6px; font-family:'Montserrat',sans-serif; font-size:10.5px; font-weight:600;
+  letter-spacing:.06em; color:var(--nuez); white-space:nowrap; flex:none;}
+.abierto i{width:8px; height:8px; border-radius:50%; background:var(--lino); flex:none;}
+.abierto.si i{background:#2F7A4A; box-shadow:0 0 0 3px rgba(47,122,74,.22); animation:abiertoPulso 2.4s ease-in-out infinite;}
+.abierto.no i{background:var(--promo); box-shadow:0 0 0 3px rgba(163,68,38,.18);}
+.abierto .det{display:none;}
+@media (min-width:700px){ .abierto .det{display:inline;} .abierto{font-size:11.5px;} }
+@keyframes abiertoPulso{ 0%,100%{box-shadow:0 0 0 3px rgba(47,122,74,.22);} 50%{box-shadow:0 0 0 6px rgba(47,122,74,0);} }
+/* sin foto: el dibujo de Canva sobre crema */
+.card .ph img.dib{object-fit:contain; padding:22px; z-index:1;
+  filter:drop-shadow(0 6px 8px rgba(58,46,36,.25)); -webkit-filter:drop-shadow(0 6px 8px rgba(58,46,36,.25));}
+.card .ph .mark{position:absolute; inset:0; display:grid; place-items:center; color:var(--lino);}
+.card .ph .mark svg{width:54px;}
+.phcount{position:absolute; left:50%; bottom:8px; transform:translateX(-50%); z-index:3; background:rgba(58,46,36,.75);
+  color:var(--crema); border-radius:999px; padding:3px 9px; font-size:10px; font-weight:700; white-space:nowrap; pointer-events:none;}
+/* el cartel de descuento va sobre la foto, arriba a la izquierda */
+.ph .offtag{right:auto; left:8px; top:8px;}
+.offtag{position:absolute; right:10px; top:-12px; z-index:3; background:var(--promo); color:#fff;
+  border-radius:999px; padding:4px 10px; font-size:11.5px; font-weight:800; letter-spacing:.02em;
+  box-shadow:0 8px 16px -8px rgba(163,68,38,.9);}
+.card .body{display:flex; flex-direction:column; gap:4px; flex:1; align-items:center;}
+.card .nm{font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; line-height:1.05; color:var(--tostado);}
+.card .ds{font-size:12.5px; color:var(--nuez); line-height:1.35;}
+.porc{display:inline-block; background:rgba(176,128,73,.18); color:var(--nuez);
+  font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
+  padding:4px 10px; border-radius:999px; margin:2px 0;}
+@media (min-width:620px){ .card .nm{font-size:26px;} .card .ds{font-size:13.5px;} }
+.incl{display:grid; grid-template-columns:1fr; gap:2px; padding:0; margin:4px 0 0; text-align:left;}
+.incl li{font-size:12px; color:var(--nuez); list-style:none; line-height:1.35;}
+.incl li b{color:var(--tostado); font-weight:700;}
+.relldet{width:100%; border-top:1px solid rgba(176,128,73,.25); padding-top:7px; margin-top:4px; text-align:left;}
+.relldet > summary{list-style:none; cursor:pointer; font-size:12.5px; font-weight:700;
+  color:var(--dorado); display:flex; align-items:center; justify-content:center; gap:6px; min-height:28px;}
+.relldet > summary::-webkit-details-marker{display:none;}
+.relldet > summary::after{content:''; width:7px; height:7px; border-right:2px solid currentColor;
+  border-bottom:2px solid currentColor; transform:rotate(45deg) translate(-2px,-2px); transition:transform .2s;}
+.relldet[open] > summary::after{transform:rotate(225deg) translate(-1px,-1px);}
+.relldet .rb{font-size:12.5px; color:var(--nuez); margin:8px 0 5px; line-height:1.4;}
+.relldet ul{margin:0 0 6px; padding-left:15px; font-size:12.5px; color:var(--nuez); line-height:1.55;}
+.relldet ul:last-child{margin-bottom:0;}
+.relldet .gr{font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:.14em; text-transform:uppercase; font-weight:600;
+  color:var(--dorado); margin:0 0 4px;}
+/* precios */
+.prices{margin-top:auto; padding-top:8px; display:flex; flex-direction:column; gap:2px; align-items:center; width:100%;}
+.prow{display:flex; align-items:baseline; justify-content:center; gap:8px; flex-wrap:wrap;}
+.prow .pl{font-family:'Montserrat',sans-serif; font-size:9px; color:var(--ink-faint); font-weight:600; letter-spacing:.12em; text-transform:uppercase;}
+.prow .pl:empty{display:none;}
+.prow .pv{font-size:24px; font-weight:800; letter-spacing:-.02em; display:flex; align-items:baseline; gap:7px; color:var(--tostado); line-height:1.1;}
+.prow .pv s{font-size:13px; font-weight:700; color:var(--ink-faint);}
+.prow .pv .now{color:var(--promo);}
+.prow.sec .pv{font-size:16px; color:var(--nuez); font-weight:700;}
+.prow.sec .pv s{font-size:12px;}
+@media (min-width:620px){ .prow .pv{font-size:26px;} }
+/* acciones */
+.card .act{padding-top:10px; width:100%;}
+.addrow{display:flex; gap:8px; align-items:center; justify-content:center;}
+.addrow .add{width:44px; height:44px; border-radius:50%; border:none; background:linear-gradient(135deg, var(--dorado), #C9A06A);
+  color:#fff; font-size:26px; line-height:1; display:grid; place-items:center; padding:0 0 2px; flex:none;
+  box-shadow:0 10px 18px -8px rgba(176,128,73,.9); transition:transform .2s, filter .2s;}
+.addrow .add span{display:none;}
+@media (hover:hover){ .addrow .add:hover{filter:brightness(1.08); transform:translateY(-2px);} }
+.addrow .add:active{transform:scale(1.2);}
+.addrow .qt{display:flex; align-items:center; justify-content:space-between; gap:4px;
+  background:linear-gradient(135deg, var(--nuez), var(--tostado)); border-radius:999px; padding:4px; min-width:112px;
+  box-shadow:0 10px 18px -8px rgba(58,46,36,.7);}
+.addrow .qt button{width:36px; height:36px; border:none; border-radius:50%; background:transparent;
+  color:var(--crema); font-size:19px; font-weight:700; line-height:1; display:grid; place-items:center;
+  transition:transform .12s, background .16s;}
+.addrow .qt button:hover{background:rgba(255,255,255,.16);}
+.addrow .qt button:active{transform:scale(.82);}
+.addrow .qt b{color:var(--crema); font-size:15px; font-variant-numeric:tabular-nums; min-width:18px; text-align:center;}
+.addrow .qt b.pulso{animation:latido .36s ease;}
+.addrow .btn.wa{width:44px; height:44px; padding:0; border-radius:50%; flex:none; min-height:44px;}
+.addrow .btn.wa .tx{display:none;}
+.addrow .btn.wa.sola{width:auto; padding:0 18px; border-radius:999px;}
+.addrow .btn.wa.sola .tx{display:inline;}
+.cardadmin{display:flex; gap:5px; padding:10px 0 0; flex-wrap:wrap; align-items:center; justify-content:center;}
+.cardadmin button{background:rgba(255,255,255,.6); border:1.5px solid var(--lino); color:var(--nuez);
+  border-radius:8px; padding:5px 9px; font-size:11.5px; font-weight:700; min-height:32px;}
+.cardadmin button:hover{border-color:var(--dorado); color:var(--tostado);}
+.cardadmin .mv{width:30px; padding:0; font-size:13px;}
+.cardadmin .del{border-color:transparent; color:var(--promo);}
+
+/* ---------- galerías: inspiración y fuera de molde ---------- */
+.inspi{margin:30px 0 26px;}
+.inspi-head{text-align:center; max-width:54ch; margin:0 auto 18px;}
+.inspi-head h2{font-size:clamp(28px, 4.4vw, 42px); line-height:1.1; position:relative; padding-bottom:8px;}
+.inspi-head h2::after{content:''; position:absolute; left:50%; bottom:0; height:2px; width:46px; margin-left:-23px;
+  border-radius:3px; background:var(--dorado); transform:scaleX(0); transition:transform .7s cubic-bezier(.2,.7,.3,1) .15s;}
+.inspi-head.in h2::after{transform:scaleX(1);}
+.inspi-head p{margin:9px 0 0; font-size:15px; color:var(--nuez);}
+.igrid{display:flex; gap:12px; overflow-x:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity; scrollbar-width:none; padding:6px 4px 14px;
+  -webkit-mask-image:linear-gradient(to right, transparent, #000 10px, #000 calc(100% - 20px), transparent);
+  mask-image:linear-gradient(to right, transparent, #000 10px, #000 calc(100% - 20px), transparent);}
+.igrid::-webkit-scrollbar{display:none;}
+.icard{position:relative; flex:none; width:62vw; max-width:260px; aspect-ratio:3/4; border-radius:22px; overflow:hidden;
+  background:var(--crema-2); border:1px solid var(--vidrio-b); scroll-snap-align:start; display:block;
+  box-shadow:var(--sombra); transition:transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .35s ease;}
+.icard img{width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.2,.7,.3,1);}
+.icard .cap{position:absolute; left:0; right:0; bottom:0; padding:22px 12px 11px;
+  background:linear-gradient(to top, rgba(58,46,36,.88), rgba(58,46,36,0)); color:var(--crema); font-size:13px; font-weight:700; line-height:1.25;}
+.icard .want{position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:flex-end; padding:9px; text-decoration:none;}
+.icard .want span{background:linear-gradient(135deg, var(--dorado), #C9A06A); color:#fff; font-size:12px; font-weight:700; padding:8px 13px; border-radius:999px;
+  box-shadow:0 10px 18px -8px rgba(176,128,73,.9);}
+@media (hover:hover){
+  .icard:hover{transform:translateY(-4px); box-shadow:0 18px 30px -16px rgba(58,28,18,.4);}
+  .icard:hover img{transform:scale(1.04);}
+}
+.icard.empty{border:2px dashed var(--lino); background:transparent; box-shadow:none;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;}
+.icard.empty svg{width:44px; color:var(--lino);}
+.icard.empty span{font-size:11.5px; font-weight:700; color:var(--ink-faint); letter-spacing:.06em; text-transform:uppercase;}
+@media (min-width:760px){
+  .igrid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; overflow:visible; padding:6px 0; -webkit-mask-image:none; mask-image:none;}
+  .icard{width:auto; max-width:none;}
+}
+.rarezas .inspi-head h2{color:var(--nuez);}
+
+/* ---------- bloques de vidrio: plan y café ---------- */
+.tortas{display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:center; padding:30px 32px; overflow:hidden; position:relative; margin:10px 0 24px;}
+.tortas .eyebrow{font-family:'Montserrat',sans-serif; font-size:10.5px; letter-spacing:.3em; text-transform:uppercase; color:var(--dorado); font-weight:600; margin-bottom:12px;}
+.tortas h2{font-size:clamp(30px, 4.4vw, 50px);}
+.tortas p{color:var(--nuez); font-size:16px; margin:12px 0 18px;}
+.tortas ul{margin:0 0 18px; padding-left:18px; color:var(--nuez); font-size:15px;}
+.tortas li{margin-bottom:5px;}
+.tortas .icos{position:relative; min-height:250px;}
+.tortas .icos img{position:absolute; width:var(--w,110px); filter:drop-shadow(0 18px 20px rgba(58,46,36,.35)); -webkit-filter:drop-shadow(0 18px 20px rgba(58,46,36,.35));
+  animation:levita var(--dur,6s) ease-in-out var(--delay,0s) infinite alternate; will-change:transform;}
+@media (max-width:820px){ .tortas{grid-template-columns:1fr; padding:24px 20px;} .tortas .icos{min-height:190px;} .tortas .icos img{width:calc(var(--w,110px) * .78);} }
+
+/* ---------- dónde y cuándo ---------- */
+.titulo{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:18px;}
+.titulo h2{font-size:clamp(30px, 4.4vw, 44px);}
+.datos{display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;}
+.dato{padding:20px; display:flex; gap:14px; align-items:center; text-decoration:none; color:inherit;}
+.dato img{width:46px; height:46px; object-fit:contain; flex:none; filter:drop-shadow(0 6px 8px rgba(58,46,36,.25));}
+.dato b{display:block; font-size:17px;} .dato span{color:var(--nuez); font-size:14px;}
+@media (max-width:720px){ .datos{grid-template-columns:1fr;} }
+
+/* ---------- pie ---------- */
+footer.foot{margin-top:34px; padding-block:26px 46px; text-align:center;}
+footer.foot .flogo{display:flex; justify-content:center; margin-bottom:6px;}
+footer.foot .flogo img{height:44px; width:auto;}
+footer.foot .fb{font-family:'DM Serif Display','Cormorant Garamond',serif; font-size:34px; color:var(--tostado); font-weight:400; line-height:1;}
+footer.foot .flogo + .fb, footer.foot .flogo + .fb + .fs{display:none;}
+footer.foot .flogo.sinlogo{display:none;} footer.foot .flogo.sinlogo + .fb, footer.foot .flogo.sinlogo + .fb + .fs{display:block;}
+footer.foot .fs{font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:.3em; text-transform:uppercase; color:var(--dorado); font-weight:600; margin-top:7px;}
+footer.foot .iglinks{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;}
+.iglink{display:inline-flex; align-items:center; gap:7px; text-decoration:none; font-size:14px; font-weight:700;
+  color:var(--tostado); border:1.5px solid var(--lino); background:rgba(255,255,255,.5); border-radius:999px; padding:9px 16px; min-height:44px;}
+.iglink:hover{border-color:var(--dorado);}
+.iglink svg{width:16px; height:16px;}
+.maplink{display:inline-flex; align-items:center; gap:6px; color:var(--nuez); font-weight:700;
+  text-decoration:underline; text-underline-offset:3px; text-decoration-color:var(--lino);}
+.maplink svg{width:15px; height:15px; flex:none;}
+.spacer{height:110px;}
+@media (max-width:619px){ .spacer{height:104px;} }
+body.admin .spacer{height:150px;}
+
+/* ---------- barra del carrito: píldora de vidrio pegada abajo ---------- */
+.cartbar{position:fixed; left:0; right:0; bottom:0; z-index:60; padding:8px 14px calc(8px + env(safe-area-inset-bottom,0px));}
+.cartbar .in{max-width:1100px; margin:0 auto; display:flex; gap:12px; align-items:center; padding:8px 8px 8px 18px; border-radius:999px;
+  background:rgba(58,46,36,.86); color:var(--crema); border:1px solid rgba(176,128,73,.45);
+  box-shadow:0 -6px 30px rgba(42,21,16,.25), 0 16px 34px -16px rgba(42,21,16,.6);}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .cartbar .in{background:rgba(58,46,36,.78); backdrop-filter:blur(14px) saturate(1.2); -webkit-backdrop-filter:blur(14px) saturate(1.2);}
+}
+.cartbar.entra .in{animation:barraSube .5s cubic-bezier(.2,.9,.3,1.2) both;}
+.cartbar.late .qn b{animation:latido .36s ease;}
+.cartbar .clogo{flex:none; display:none;}
+.cartbar .clogo img{height:26px; width:auto; display:block;}
+@media (min-width:620px){ .cartbar .clogo{display:block;} }
+.cartbar .qn{flex:1; min-width:0;}
+.cartbar .qn b{display:block; font-size:14px;}
+.cartbar .qn b em{font-style:normal; color:var(--dorado-2); margin-left:6px;}
+.cartbar .qn span{font-size:12.5px; opacity:.82;}
+.cartbar.late .qn b{animation:rebote .5s cubic-bezier(.2,.9,.3,1.4);}
+@keyframes rebote{ 0%{transform:scale(1);} 35%{transform:scale(1.22) translateY(-3px);} 70%{transform:scale(.96);} 100%{transform:none;} }
+/* la barrita que crece con cada producto (llena con cuatro) */
+.cartbar .prog{height:3px; border-radius:2px; background:rgba(255,255,255,.18); margin-top:5px; overflow:hidden;}
+.cartbar .prog i{display:block; height:100%; border-radius:2px; background:linear-gradient(90deg, var(--dorado), var(--dorado-2));
+  width:var(--p,0%); transition:width .6s cubic-bezier(.2,.8,.2,1);}
+.cartbar .btn{padding:11px 17px; font-size:14px;}
+/* el botón fijo de WhatsApp cuando el carrito está vacío (solo celular) */
+.cta-fixed{position:fixed; left:0; right:0; bottom:0; z-index:45; padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));
+  display:flex; justify-content:center;}
+@media (min-width:900px){ .cta-fixed.only-mobile{display:none;} }
+.cta-fixed .btn{width:100%; max-width:440px; box-shadow:0 10px 26px -8px rgba(31,122,61,.55); animation:breathe 4.5s ease-in-out infinite;}
+/* barra de administración */
+.adminbar{position:fixed; left:0; right:0; bottom:0; z-index:60; color:var(--crema);
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));
+  display:flex; gap:8px; align-items:center; flex-wrap:wrap; background:rgba(58,46,36,.92); border-top:1px solid rgba(176,128,73,.4);}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ .adminbar{backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);} }
+.adminbar .lbl{font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; opacity:.6; width:100%;}
+.adminbar button{background:transparent; border:1.5px solid rgba(255,255,255,.26); color:inherit;
+  border-radius:999px; padding:8px 14px; font-size:13px; font-weight:600; min-height:40px;}
+.adminbar button.pri{background:linear-gradient(135deg, var(--dorado), #C9A06A); border-color:transparent; color:#fff; font-weight:700;}
+.adminbar button.pri[disabled]{opacity:.45;}
+.adminbar .sp{margin-left:auto; font-size:11.5px; opacity:.6;}
+.toast{position:fixed; left:50%; transform:translateX(-50%); bottom:96px; z-index:90;
+  background:var(--tostado); color:var(--crema); padding:11px 20px; border-radius:999px;
+  font-size:14px; font-weight:600; box-shadow:var(--sombra); max-width:90vw; text-align:center;}
+
+/* ---------- diálogos ---------- */
+dialog{border:1px solid var(--vidrio-b); border-radius:26px; padding:0; background:rgba(255,251,244,.94); color:var(--tostado);
+  max-width:540px; width:calc(100% - 24px); box-shadow:0 18px 60px rgba(58,28,18,.3);}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){ dialog{backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);} }
+dialog::backdrop{background:rgba(42,30,22,.5); backdrop-filter:blur(4px);}
+dialog[open]{animation:entra .26s cubic-bezier(.2,.8,.3,1) both;}
+.dlg-h{padding:20px 22px 0; display:flex; align-items:baseline; gap:10px;}
+.dlg-h h3{font-size:26px; flex:1;}
+.dlg-b{padding:14px 22px 20px; display:flex; flex-direction:column; gap:13px; max-height:66vh; overflow-y:auto;}
+.dlg-f{padding:13px 22px calc(16px + env(safe-area-inset-bottom,0px)); border-top:1px solid rgba(176,128,73,.25); display:flex; gap:9px;}
+.dlg-f .btn{flex:1;}
+.fld{display:flex; flex-direction:column; gap:5px;}
+.fld > span{font-family:'Montserrat',sans-serif; font-size:9.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink-faint); font-weight:600;}
+.fld input, .fld textarea, .fld select{font:inherit; font-size:16px; padding:11px 13px; border-radius:13px;
+  border:1.5px solid var(--lino); background:#fff; color:var(--tostado); width:100%;}
+.fld input:focus, .fld textarea:focus, .fld select:focus{outline:none; border-color:var(--dorado);}
+.fld textarea{resize:vertical; min-height:64px;}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.checks{display:flex; flex-wrap:wrap; gap:7px;}
+.checks label{display:inline-flex; align-items:center; gap:6px; font-size:13.5px;
+  border:1.5px solid var(--lino); border-radius:999px; padding:8px 13px; cursor:pointer; min-height:40px;}
+.checks input{accent-color:var(--nuez);}
+.err{font-size:13px; color:var(--promo); font-weight:600; margin:0;}
+.chips{display:flex; gap:7px; flex-wrap:wrap;}
+/* editor de fotos */
+.fotolist{display:flex; flex-direction:column; gap:8px;}
+.fotorow{display:flex; align-items:center; gap:10px; padding:8px; border:1.5px solid var(--line); border-radius:12px; background:rgba(255,255,255,.6);}
+.fotorow img{width:54px; height:54px; object-fit:cover; border-radius:50%; flex:none; background:var(--surface-2);}
+.fotorow .fp{flex:1; min-width:0; font-size:12px; color:var(--nuez); word-break:break-all; line-height:1.35;}
+.fotorow .fb2{display:flex; gap:4px; flex:none;}
+.fotorow button{width:32px; height:32px; border-radius:8px; border:1.5px solid var(--lino); background:transparent; color:var(--nuez); font-size:13px; line-height:1;}
+.fotorow button.dl{color:var(--promo); border-color:transparent;}
+/* el pedido */
+.lineas{max-height:38vh; overflow-y:auto;}
+.ln{display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid var(--line);}
+.ln:last-child{border-bottom:none;}
+.ln .nb{flex:1; min-width:0; font-size:15px; font-weight:700; line-height:1.25;}
+.ln .nb small{display:block; font-weight:400; font-size:12.5px; color:var(--ink-faint);}
+.ln .qt{display:flex; align-items:center; gap:3px; border:1.5px solid var(--lino); border-radius:999px; padding:2px;}
+.ln .qt button{width:28px; height:28px; border:none; border-radius:50%; background:transparent; color:var(--nuez); font-size:16px; font-weight:700; line-height:1;}
+.ln .qt b{min-width:18px; text-align:center; font-size:14px;}
+.ln .sb{width:84px; text-align:right; font-weight:800; font-size:14.5px; font-variant-numeric:tabular-nums;}
+.ln .rm{width:28px; height:28px; border:none; background:none; color:var(--ink-faint); font-size:16px; line-height:1; border-radius:50%; flex:none;}
+.ln .rm:hover{background:var(--crema-2); color:var(--promo);}
+.total{display:flex; align-items:baseline; justify-content:space-between; margin-top:14px; padding-top:13px; border-top:2px solid var(--lino);}
+.total span{font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); font-weight:600;}
+.total b{font-size:28px; font-weight:800; letter-spacing:-.02em;}
+.avisosena{background:rgba(176,128,73,.14); border-radius:12px; padding:11px 14px; margin-top:13px; font-size:13px; color:var(--nuez); line-height:1.4;}
+.totlin{display:flex; justify-content:space-between; align-items:baseline; padding:3px 0; font-size:13.5px; color:var(--nuez);}
+.totlin.desc{color:#2E7D32; font-weight:700;}
+.cupon{display:flex; gap:8px; margin-top:11px;}
+.cupon input{flex:1; min-width:0; font:inherit; font-size:14px; padding:10px 13px; border:1.5px solid var(--lino); border-radius:999px;
+  background:#fff; color:var(--tostado); text-transform:uppercase; letter-spacing:.06em;}
+.cupon input::placeholder{text-transform:none; letter-spacing:0; color:var(--ink-faint);}
+.cupon input:focus{outline:none; border-color:var(--dorado);}
+.cupon button{flex:none; font:inherit; font-size:14px; font-weight:700; cursor:pointer; padding:10px 18px; border-radius:999px;
+  border:none; background:linear-gradient(135deg, var(--nuez), var(--tostado)); color:var(--crema);}
+dialog.cupdlg{width:min(420px,94vw);}
+dialog.cupdlg .cuptxt{margin:0 0 12px; font-size:14px; color:var(--nuez); line-height:1.45;}
+dialog.cupdlg .cupon{margin-top:0;}
+.dlg-f.cupf{display:grid; gap:8px;}
+.dlg-f.cupf .btn{width:100%;}
+.cupmsg{font-size:12.5px; margin-top:6px; line-height:1.35;}
+.cupmsg.ok{color:#2E7D32; font-weight:700;}
+.cupmsg.no{color:#B4432F;}
+dialog.pedido{max-height:92vh;}
+dialog.pedido .dlg-h{position:relative; padding-bottom:6px;}
+dialog.pedido .dlg-h h3{padding-right:40px;}
+.cerrarx{position:absolute; right:0; top:-2px; width:36px; height:36px; border-radius:50%;
+  border:1.5px solid var(--lino); background:#fff; color:var(--nuez); font-size:16px; line-height:1; display:grid; place-items:center; cursor:pointer;}
+.cerrarx:hover{border-color:var(--dorado);}
+dialog.pedido .dlg-b{padding-top:6px; padding-bottom:10px;}
+dialog.pedido .fld{margin-bottom:9px;}
+dialog.pedido .fld span{font-size:9.5px; margin-bottom:3px;}
+dialog.pedido .fld input, dialog.pedido .fld textarea{padding:8px 11px; font-size:14px; border-radius:11px;}
+dialog.pedido .fld textarea{min-height:42px;}
+dialog.pedido[open]{display:flex; flex-direction:column;}
+dialog.pedido .dlg-b{flex:1 1 auto; min-height:0; max-height:none; overflow-y:auto;}
+dialog.pedido .lineas{max-height:min(32vh, 240px); overflow-y:auto; overscroll-behavior:contain; padding-right:7px; scrollbar-width:thin; scrollbar-color:var(--lino) transparent;}
+dialog.pedido .lineas::-webkit-scrollbar{width:7px;}
+dialog.pedido .lineas::-webkit-scrollbar-thumb{background:var(--lino); border-radius:99px;}
+dialog.pedido .ln{padding:7px 0;}
+dialog.pedido .ln .nb{font-size:14px;}
+dialog.pedido .ln .nb small{font-size:11.5px;}
+dialog.pedido .total{margin-top:9px; padding-top:8px;}
+dialog.pedido .total b{font-size:22px;}
+dialog.pedido .avisosena{margin-top:8px; padding:8px 11px; font-size:11.5px; line-height:1.35;}
+dialog.pedido .segm{gap:6px;}
+dialog.pedido .segm button{padding:0 13px; font-size:13px; min-height:38px;}
+dialog.pedido .dlg-f{padding-top:10px;}
+dialog.pedido .btn.wa{padding:12px 18px;}
+/* chips de elección dentro de los diálogos (medio de pago, etc.): ancho a medida del texto, bajan de línea */
+.segm{display:flex; gap:7px; flex-wrap:wrap;}
+.segm button{flex:0 1 auto; min-width:0; max-width:100%; border:1.5px solid var(--lino); background:#fff; color:var(--tostado); border-radius:999px; padding:0 15px;
+  font:inherit; font-size:13.5px; font-weight:700; cursor:pointer; white-space:nowrap; min-height:40px; line-height:1;
+  display:inline-flex; align-items:center; transition:background .16s, color .16s, border-color .16s, transform .12s;}
+.segm button:active{transform:scale(.96);}
+.segm button.on{background:linear-gradient(135deg, var(--nuez), var(--tostado)); border-color:transparent; color:var(--crema);}
+
+/* ---------- visor de fotos ---------- */
+dialog.lb{position:fixed; inset:0; margin:auto; padding:0; border:none;
+  width:min(880px,94vw); max-width:94vw; height:max-content; max-height:92vh; border-radius:22px; overflow:hidden;
+  background:rgba(255,251,244,.96);}
+dialog.lb img{width:100%; max-height:74vh; object-fit:contain; background:var(--crema-2); display:block;}
+dialog.lb.lb-plano{position:fixed; z-index:120; left:50%; top:50%; transform:translate(-50%,-50%); margin:0; border:none; box-shadow:0 20px 60px rgba(42,21,16,.5);}
+@media (max-width:619px){
+  dialog.lb{width:94vw;}
+  dialog.lb img{max-height:68vh;}
+  .lbt{font-size:16px;}
+  .lbn{width:38px; height:38px; font-size:19px;}
+  .lbbar{padding:11px 13px calc(13px + env(safe-area-inset-bottom,0px)); gap:8px;}
+}
+.lbbar{display:flex; align-items:center; gap:10px; padding:13px 16px calc(15px + env(safe-area-inset-bottom,0px));}
+.lbt{flex:1; min-width:0; font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; line-height:1.2;}
+.lbc{font-size:13px; color:var(--ink-faint); font-weight:700; white-space:nowrap;}
+.lbn{flex:none; width:42px; height:42px; border-radius:50%; border:1.5px solid var(--lino); background:#fff; color:var(--tostado); font-size:21px; line-height:1;}
+.lbx{position:absolute; top:10px; right:10px; z-index:4; width:38px; height:38px; border-radius:50%; border:none; background:rgba(58,28,18,.75); color:var(--crema); font-size:16px; line-height:1;}
+
+/* ---------- restos del exportador PDF, sin uso ---------- */
+#imprimible{display:none;}
+.pdf-h{text-align:center; padding-bottom:16px; border-bottom:2.5px solid var(--line-strong);}
+.pdf-m{font-family:'Cormorant Garamond',serif; font-size:54px; font-weight:600; line-height:1; color:var(--brownie);}
+.pdf-s{font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--ink-soft); font-weight:700; margin-top:8px;}
+.pdf-t{font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:600; margin:24px 0 3px; color:var(--ink);}
+.pdf-n{font-size:15px; color:var(--ink-soft); margin:0 0 18px; font-style:italic;}
+.pdf-grid{display:grid; gap:14px;}
+.pdf-i{display:flex; gap:18px; border:1.5px solid var(--line); border-radius:14px; padding:16px; break-inside:avoid; page-break-inside:avoid; background:#fff;}
+.pdf-i img{width:160px; height:160px; object-fit:cover; border-radius:11px; flex:none;}
+.pdf-sf{width:160px; height:160px; border-radius:11px; flex:none; background:var(--surface-2);}
+.pdf-b{flex:1; min-width:0;}
+.pdf-nm{font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; line-height:1.14;}
+.pdf-p{display:inline-block; font-size:13px; font-weight:700; background:var(--accent-soft); color:var(--accent); border-radius:999px; padding:4px 12px; margin-top:7px;}
+.pdf-d{font-size:15px; color:var(--ink-soft); margin-top:7px; line-height:1.45;}
+.pdf-l{margin:8px 0 0; padding-left:18px; font-size:14px; color:var(--ink-soft); line-height:1.55; columns:2; column-gap:18px;}
+.pdf-pr{margin-top:11px; font-size:26px; font-weight:700; color:var(--accent); letter-spacing:-.02em;}
+.pdf-pr small{font-size:13px; color:var(--ink-faint); font-weight:700; letter-spacing:.07em; text-transform:uppercase; margin-right:5px;}
+.pdf-info{margin-top:26px; border:1.5px solid var(--line); border-radius:16px; padding:20px 22px; display:grid; grid-template-columns:repeat(3,1fr); gap:22px; break-inside:avoid; page-break-inside:avoid; background:#fff;}
+.pdf-info h4{font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--accent); font-weight:700; margin:0 0 9px; font-family:'Bricolage Grotesque',sans-serif;}
+.pdf-info ul{margin:0; padding-left:16px; font-size:13.5px; color:var(--ink-soft); line-height:1.7;}
+.pdf-info p{margin:0; font-size:13.5px; color:var(--ink-soft); line-height:1.5;}
+.pdf-plan{margin-top:12px; border-left:3px solid var(--caramel); padding-left:11px;}
+.pdf-plan b{display:block; font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--ink);}
+.pdf-plan span{display:block; font-size:12.5px; color:var(--ink-soft); line-height:1.45; margin-top:3px;}
+.pdf-f{margin-top:22px; padding-top:18px; border-top:1.5px solid var(--line); text-align:center; color:var(--ink-soft); line-height:1.7; break-inside:avoid;}
+.pdf-f .fm{font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:600; color:var(--brownie); line-height:1;}
+.pdf-f .fs{font-size:10px; letter-spacing:.3em; text-transform:uppercase; font-weight:700; margin:7px 0 12px;}
+.pdf-f .fd{font-size:14px; color:var(--ink); font-weight:700;}
+.pdf-f .fh{font-size:13.5px;}
+.pdf-f .fi{font-size:14px; margin-top:8px; color:var(--accent); font-weight:700;}
+
+/* ---------- celular primero ---------- */
+@media (hover:none){
+  .addrow .qt button:hover{background:transparent;}
+  .card::after{display:none;}
+  .btn:hover{transform:none;}
+}
+@media (max-width:619px){
+  #confeti{display:block;}
+}
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{ animation:none !important; transition:none !important; }
+  .rv, .hero h1 .ln, .hero p.lead, .hero .cta, .hero .taza, .entrega{opacity:1 !important; transform:none !important;}
+  .card::after{display:none;}
+  .card.tilt{transform:none !important;}
+  .card .ph, .card.tilt .ph, .card:hover .ph{transform:none !important;}
+  .card .ph img{animation:none !important; transform:none !important;}
+  .chispa{display:none !important;}
+  #fondo .foto{transform:scale(1.08);}
+  .cat-head h2::after, .inspi-head h2::after{transform:scaleX(1);}
+}
+@media print{
+  #fondo, #deco, .cinta, .filtros, .fgrupos, .cartbar, .cta-fixed, .adminbar, .hero .taza .ring, .card::after, .btn::after{display:none !important;}
+  .card, .glass, .tortas, .dato, .promo, header.top .navbar{box-shadow:none !important; background:#fff !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; color:var(--tostado);}
+  .rv{opacity:1 !important; transform:none !important; transition:none !important;}
+  .card, .card.tilt{transform:none !important;}
+  .card .ph{transform:none !important; box-shadow:none !important; animation:none !important;}
+  .card .ph img{animation:none !important; transform:none !important;}
+  .card .ph::before, .fav, .abierto, .entrega, .chispa, .cartbar .prog, .tab.favtab{display:none !important;}
+  .cat-head h2::after, .inspi-head h2::after{transform:scaleX(1);}
+  .igrid{display:grid; grid-template-columns:repeat(3,1fr); overflow:visible; mask-image:none; -webkit-mask-image:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- Catálogo de arranque. Si Firebase responde, manda lo que esté en la base. -->
+<script type="application/json" id="app-state">
+{
+  "brand":{"name":"Cake","sub":"Café y pastelería creativa","logo":"fotos/LOGO.jpeg",
+    "tagline":"Elegí para cuántas personas, mirá las opciones y escribinos. Reservás con el 50%.",
+    "whatsapp":"5493794009517","address":"Córdoba 417, Corrientes","hours":"Lun a Sáb · 7:30–13:30 · 17–20:30",
+    "instagram":"cakealpaso","instagram2":"caketentaciones"},
+  "settings":{"sena":"Seña del 50% para tomar el pedido","anticipacion":"72 horas de anticipación",
+    "bizcochuelo":"Bizcochuelo de vainilla incluido. Chocolate con costo extra.",
+    "coberturas":[],
+    "rellenos":["Crema de chocotorta","Crema moka","Crema y frutas de estación","Dulce de leche con trozos de chocolate","Dulce de leche con Oreos","Dulce de leche con merenguitos"],
+    "pagos":["Efectivo","Transferencia","Tarjeta de crédito"],
+    "planNombre":"Plan Cake",
+    "planDesc":"Pagalo en cuotas sin tarjeta, desde el mes que lo pedís hasta el mes de tu evento. Armamos el plan que se adapte a vos.",
+    "cafeTitulo":"¿Conocés nuestro café?",
+    "cafeTexto":"Desayunos, meriendas, dulce y salado, todos los días en Córdoba 417.",
+    "menuUrl":"cafe.html"},
+  "anuncios":[],
+  "inspiracion":[
+    {"id":"i1","foto":"fotos/inspiracion%201.jpeg","titulo":"","activo":true},
+    {"id":"i2","foto":"fotos/inspiracion%202.jpeg","titulo":"","activo":true},
+    {"id":"i3","foto":"fotos/inspiracion%203.jpeg","titulo":"","activo":true},
+    {"id":"i4","foto":"fotos/inspiracion%204.jpeg","titulo":"","activo":true},
+    {"id":"i5","foto":"fotos/inspiracion%205.jpeg","titulo":"","activo":true},
+    {"id":"i6","foto":"fotos/inspiracion%206.jpeg","titulo":"","activo":true},
+    {"id":"i7","foto":"fotos/inspiracion%207.jpeg","titulo":"","activo":true},
+    {"id":"i8","foto":"fotos/inspiracion%208.jpeg","titulo":"","activo":true},
+    {"id":"i9","foto":"fotos/inspiracion%209.jpeg","titulo":"","activo":true},
+    {"id":"i10","foto":"fotos/inspiracion%2010.jpeg","titulo":"","activo":true},
+    {"id":"i11","foto":"fotos/inspiracion%2011.jpeg","titulo":"","activo":true},
+    {"id":"i12","foto":"fotos/inspiracion%2012.jpeg","titulo":"","activo":true}
+  ],
+  "rarezas":[],
+  "promos":[],
+  "groups":[
+    {"id":"tortas","name":"Una torta"},
+    {"id":"mesa","name":"Para la mesa dulce"},
+    {"id":"empresas","name":"Para tu empresa"},
+    {"id":"combos","name":"Combos"},
+    {"id":"evento","name":"Un evento"}
+  ],
+  "categories":[
+    {"id":"crema","name":"Tortas clásicas","short":"Clásicas","group":"tortas","note":"Cobertura de crema"},
+    {"id":"ganache","name":"Tortas personalizadas","short":"Personalizadas","group":"tortas","note":"Ganacheadas y forradas · 3 capas de relleno y 4 cortes de bizcochuelo"},
+    {"id":"pisos","name":"Tortas de dos pisos","short":"Dos pisos","group":"tortas","note":"Para quince, casamientos y festejos grandes"},
+    {"id":"tortaspostres","name":"Tortas postres","short":"Tortas postres","group":"tortas","note":""},
+    {"id":"docena","name":"Por docena","short":"Por docena","group":"mesa","note":"100% personalizados con pasta para forrar tortas, láminas comestibles y chocolates"},
+    {"id":"bomboneria","name":"Bombonería","short":"Bombonería","group":"mesa","note":"Bombones artesanales en caja, con tarjeta para dedicar"},
+    {"id":"mesas","name":"Combos de mesa dulce","short":"Combos","group":"mesa","note":"Sin torta · 100% personalizadas con pasta, lámina comestible y chocolate"},
+    {"id":"postres","name":"Postres","short":"Postres","group":"mesa","note":""},
+    {"id":"empresas","name":"Cake corporativo","short":"Empresas","group":"empresas","note":"Desayunos, coffee breaks y regalos para oficinas"},
+    {"id":"combos","name":"Combos","short":"Clásicos y premium","group":"combos","note":"Torta y mesa dulce en un solo pedido · O mini postres sin torta"},
+    {"id":"combosevento","name":"Combos por evento","short":"Por evento","group":"combos","note":"Armados para quince, comunión, confirmación, bautismo y casamiento"}
+  ],
+  "events":[
+    {"id":"infantil","name":"Cumpleaños infantil","desc":"Mandanos la foto del personaje","tag":"","activo":false},
+    {"id":"quince","name":"15 años","desc":"Combo completo, en cuotas","tag":"Precio especial","activo":true},
+    {"id":"comunion","name":"Comunión y bautismo","desc":"Torta y mesa dulce","tag":"","activo":true},
+    {"id":"cumple","name":"Cumpleaños","desc":"Desde 2 hasta 45 porciones","tag":"","activo":false},
+    {"id":"evento","name":"Casamientos","desc":"Torta de bodas y mesa dulce","tag":"","activo":true}
+  ],
+  "products":[
+    {"id":"p1","cat":"crema","name":"Mini cake","desc":"10 cm · 1 capa de relleno · 2 cortes de bizcochuelo","pmin":2,"pmax":3,"price":20000,"plabel":"","p2label":"","eventos":["cumple"],"fotos":["fotos/Mini%20cake%20(2).jpeg","fotos/Mini%20cake.jpeg"],"activo":true},
+    {"id":"p2","cat":"crema","name":"Torta chica","desc":"15 cm · 2 capas de relleno · 3 cortes de bizcochuelo","pmin":8,"pmax":10,"price":61000,"plabel":"","p2label":"","eventos":["cumple","infantil"],"photo":"fotos/Torta%20chica%20crema.jpeg","activo":true},
+    {"id":"p3","cat":"crema","name":"Torta mediana","desc":"16 cm · 3 capas de relleno · 4 cortes de bizcochuelo","pmin":15,"pmax":20,"price":80000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"fotos/Torta%20mediana%20crema.jpeg","activo":true},
+    {"id":"p4","cat":"crema","name":"Torta grande","desc":"21 cm · 3 capas de relleno · 4 cortes de bizcochuelo","pmin":25,"pmax":30,"price":110000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion","evento"],"photo":"fotos/Torta%20grande%20crema.jpeg","activo":true},
+    {"id":"p5","cat":"ganache","name":"Torta chica","desc":"16 cm de diámetro","pmin":15,"pmax":20,"price":110000,"plabel":"","p2label":"","eventos":["infantil","cumple"],"photo":"fotos/Torta%20chica%20personalizada.jpeg","activo":true},
+    {"id":"p6","cat":"ganache","name":"Torta mediana","desc":"21 cm de diámetro","pmin":25,"pmax":30,"price":140000,"plabel":"","p2label":"","eventos":["infantil","cumple","quince"],"photo":"fotos/Torta%20mediana%20personalizada.jpeg","activo":true},
+    {"id":"p7","cat":"ganache","name":"Torta grande","desc":"25 cm de diámetro","pmin":40,"pmax":45,"price":200000,"plabel":"","p2label":"","eventos":["infantil","quince","comunion","evento"],"photo":"fotos/Torta%20grande%20personalizada.jpeg","activo":true},
+    {"id":"ps1","cat":"pisos","name":"Torta de dos pisos","desc":"Dos tortas apiladas, ganacheadas o forradas. El diseño, los colores y la decoración se definen con vos.","pmin":40,"pmax":60,"price":0,"plabel":"","p2label":"","eventos":["quince","evento","comunion"],"photo":"fotos/Torta%20de%20dos%20pisos.jpeg","activo":true},
+    {"id":"c1","cat":"postres","name":"Chocotorta","desc":"Capas de galletitas de chocolate con relleno de crema de chocotorta: dulce de leche y crema chantilly. Se personaliza con el nombre y la edad en chocolate, y chocolatines de colores a elección.","pmin":15,"pmax":25,"price":46000,"plabel":"15 porciones","price2":63000,"p2label":"25 porciones","eventos":["cumple","infantil"],"photo":"fotos/Chocotorta.jpeg","activo":true},
+    {"id":"d1","cat":"postres","name":"Cheesecake New York con frutos rojos","desc":"Base de galletitas, cheesecake cremoso y cobertura de frutos rojos.","price":40000,"plabel":"20 cm","price2":55000,"p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/Cheesecake%20NY.jpeg","activo":true},
+    {"id":"d10","cat":"postres","name":"Cheesecake New York de pistacho","desc":"Base de galletitas, cheesecake cremoso con pasta de pistachos y topping de pasta de pistachos Lucianos con pistachos triturados.","pmin":10,"pmax":12,"price":60000,"plabel":"20 cm","p2label":"","eventos":["cumple","evento"],"activo":true},
+    {"id":"d2","cat":"postres","name":"Lemon pie","desc":"Base de masa, crema de limón y merengue.","price":35000,"plabel":"20 cm","price2":46000,"p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/Lemon%20pie.jpeg","fotos/Lemon%20pie%20(2).jpeg"],"activo":true},
+    {"id":"d3","cat":"postres","name":"Rogel","desc":"Capas finas de masa con dulce de leche y merengue.","price":46000,"plabel":"20 cm","price2":63000,"p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/Rogel.jpeg","fotos/Rogel%202.jpeg"],"activo":true},
+    {"id":"d6","cat":"postres","name":"Havannet","desc":"Base de masa, relleno de dulce de leche y cobertura de chocolate blanco o negro.","price":46000,"plabel":"20 cm","price2":58000,"p2label":"26 cm","eventos":["cumple"],"photo":"fotos/Havannet.jpeg","activo":true},
+    {"id":"d7","cat":"postres","name":"Coco y dulce de leche","desc":"Base de masa rellena de dulce de leche, con cobertura de craquelado de coco.","price":35000,"plabel":"20 cm","price2":46000,"p2label":"26 cm","eventos":["cumple"],"fotos":["fotos/Coco%20y%20dulce%20de%20leche.jpeg","fotos/Coco%20y%20dulce%20de%20leche%202.jpeg"],"activo":true},
+    {"id":"d8","cat":"postres","name":"Brownie","desc":"Base de brownie con capa de dulce de leche y crema, decorado con frutas o chocolate en rama.","price":45000,"plabel":"20 cm","price2":60000,"p2label":"26 cm","eventos":["cumple"],"photo":"fotos/Brownie.jpeg","activo":true},
+
+    {"id":"d9","cat":"postres","name":"Tarta frutal","desc":"Base de masa, relleno de dulce de leche, crema chantilly y frutas a elección.","price":40000,"antes":46000,"plabel":"20 cm","price2":58000,"p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/Frutales.jpeg","fotos/Frutales%20(2).jpeg","fotos/Frutales%20(3).jpeg","fotos/Frutales%204.jpeg"],"activo":true},
+    {"id":"tp1","cat":"tortaspostres","name":"Red velvet","desc":"Bizcochuelo red velvet suave y húmedo, relleno con frosting de queso crema.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/red%20velvet.jpeg","activo":true},
+    {"id":"tp2","cat":"tortaspostres","name":"Matilda","desc":"Bizcochuelo de chocolate, cubierto con ganache de chocolate semiamargo y dulce de leche, crema Bariloche.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/WhatsApp%20Image%202026-09-18%20at%202.25.14%20PM%20(1).jpeg","activo":true},
+    {"id":"tp3","cat":"tortaspostres","name":"Chajá","desc":"Bizcochuelo de vainilla, dulce de leche, crema, merengues y durazno.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"fotos":["fotos/WhatsApp%20Image%202026-09-18%20at%202.25.17%20PM%20(1).jpeg","fotos/WhatsApp%20Image%202026-09-18%20at%202.16.13%20PM%20(1).jpeg"],"activo":true},
+    {"id":"tp4","cat":"tortaspostres","name":"Mousse de chocolate","desc":"Bizcochuelo de chocolate con mousse de chocolate.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/Mousse%20de%20chocolate.jpeg","activo":true},
+    {"id":"tp5","cat":"tortaspostres","name":"Milhojas","desc":"Capas de hojaldre rellenas con dulce de leche.","price":0,"plabel":"20 cm","p2label":"26 cm","eventos":["cumple","evento"],"photo":"fotos/milojas.jpeg","activo":true},
+    {"id":"dz9","cat":"docena","name":"Donitas","desc":"","price":40250,"plabel":"Docena","price2":20125,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz6","cat":"docena","name":"Cakepops","desc":"","price":46000,"plabel":"Docena","price2":23000,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz7","cat":"docena","name":"Oreos","desc":"","price":46000,"plabel":"Docena","price2":23000,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz8","cat":"docena","name":"Chocolinas","desc":"","price":46000,"plabel":"Docena","price2":23000,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz1","cat":"docena","name":"Cupcakes","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz2","cat":"docena","name":"Galletas","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz10","cat":"docena","name":"Galletas 3D","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz3","cat":"docena","name":"Paletas","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz4","cat":"docena","name":"Alfajores personalizados","desc":"","price":51750,"plabel":"Docena","price2":25875,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"dz5","cat":"docena","name":"Icepops","desc":"","price":66700,"plabel":"Docena","price2":33350,"p2label":"Media docena","eventos":["quince","comunion","evento"],"activo":true},
+    {"id":"md1","cat":"mesas","name":"Combo mesa dulce chica","desc":"Sin torta. Personalizada con pasta, lámina comestible y chocolate.","pmin":8,"pmax":12,"price":75000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"","activo":true,"incluye":["Oreos · 3 u","Galletas · 3 u","Cupcakes · 3 u","Donas · 3 u"]},
+    {"id":"md2","cat":"mesas","name":"Combo mesa dulce mediana","desc":"Sin torta. Personalizada con pasta, lámina comestible y chocolate.","pmin":12,"pmax":18,"price":104000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"","activo":true,"incluye":["Galletas · 6 u","Donas · 6 u","Cupcakes · 3 u","Oreos · 3 u"]},
+    {"id":"md3","cat":"mesas","name":"Combo mesa dulce grande","desc":"Sin torta. Personalizada con pasta, lámina comestible y chocolate.","pmin":25,"pmax":35,"price":219000,"plabel":"","p2label":"","eventos":["cumple","infantil","quince","comunion","evento"],"photo":"","activo":true,"incluye":["Cupcakes · 6 u","Galletas · 6 u","Oreos · 6 u","Paletas · 6 u","Donas · 12 u","Mini maicena · 24 u"]},
+    {"id":"bb1","cat":"bomboneria","name":"Bombonería","desc":"Bombones artesanales en caja. Incluye tarjeta para dedicar.","price":15000,"plabel":"Caja chica","price2":30000,"p2label":"Caja grande","eventos":[],"activo":true},
+    {"id":"m2","cat":"empresas","name":"Desayunos empresariales","desc":"Para oficinas, capacitaciones y coffee breaks. Armamos la propuesta según la cantidad de personas.","price":0,"plabel":"","p2label":"","eventos":[],"photo":"fotos/desayunos%20empresariales.jpeg","activo":true},
+    {"id":"m3","cat":"empresas","name":"Presentes empresariales","desc":"Para clientes, proveedores y el equipo. Cajas y regalos personalizados con el logo de tu empresa.","price":0,"plabel":"","p2label":"","eventos":[],"activo":true},
+    {"id":"m4","cat":"empresas","name":"Box empresariales dulces","desc":"Caja armada para regalar, lista para entregar. Se personaliza con el logo de tu empresa y una tarjeta con tu mensaje.","price":0,"plabel":"","p2label":"","eventos":[],"activo":true},
+    {"id":"m5","cat":"empresas","name":"Box empresariales salados","desc":"La versión salada, para desayunos de trabajo y reuniones. También se personaliza con el logo y la tarjeta.","price":0,"plabel":"","p2label":"","eventos":[],"activo":true},
+    {"id":"k1","cat":"combosevento","name":"Combo 15 años","desc":"Torta y mesa dulce completa. También en cuotas.","pmin":40,"pmax":45,"price":420000,"plabel":"","p2label":"","eventos":["quince"],"photo":"fotos/Combo%2015.jpeg","activo":true,"incluye":["Torta · 45 porciones","Cupcakes · 12 u","Galletas · 12 u","Paletas · 12 u","Oreos · 12 u","Donas · 12 u","Mini maicena · 24 u"]},
+    {"id":"k2","cat":"combosevento","name":"Combo comunión, confirmación y bautismo","desc":"Torta y mesa dulce para 30 personas.","pmin":30,"pmax":30,"price":200000,"plabel":"","p2label":"","eventos":["comunion"],"fotos":["fotos/combo%20comunion.jpeg","fotos/combo%20comunion%20(2).jpeg","fotos/combo%20comunion%20(3).jpeg"],"activo":true,"incluye":["Torta · 30 porciones","Galletas · 12 u","Cupcakes · 6 u","Donas · 12 u"]},
+    {"id":"k3","cat":"combos","name":"Combo chico","desc":"Torta y mesa dulce.","pmin":20,"pmax":20,"price":224000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"","activo":true,"incluye":["Torta · 20 porciones","Cupcakes · 6 u","Galletas · 6 u","Paletas · 6 u","Donas · 6 u"]},
+    {"id":"k4","cat":"combos","name":"Combo mediano","desc":"Torta y mesa dulce.","pmin":30,"pmax":30,"price":259000,"plabel":"","p2label":"","eventos":["cumple","infantil","comunion"],"photo":"","activo":true,"incluye":["Torta · 30 porciones","Cupcakes · 6 u","Paletas · 6 u","Galletas · 6 u","Donas · 6 u","Oreos · 6 u","Mini maicena · 12 u"]},
+    {"id":"k5","cat":"combos","name":"Combo grande","desc":"Torta y mesa dulce.","pmin":45,"pmax":45,"price":448000,"plabel":"","p2label":"","eventos":["cumple","infantil","quince","comunion","evento"],"photo":"","activo":true,"incluye":["Torta · 45 porciones","Cupcakes · 12 u","Galletas · 12 u","Paletas · 12 u","Oreos · 12 u","Donas · 12 u","Mini maicena · 24 u"]},
+    {"id":"k6","cat":"combos","name":"Combo premium · 50 unidades","desc":"Mini postres en porción individual. Sin torta.","pmin":25,"pmax":50,"price":200000,"plabel":"","p2label":"","eventos":["quince","comunion","evento","cumple"],"activo":true,"incluye":["Mini pastelería · 50 u","Mini maicena · 24 u de regalo"],"elegir":5,"opciones":["Mini rogel","Mini brownie con dulce de leche, crema y merengue","Shots","Tartitas frutales","Mini chocotorta","Mini cheesecake","Mini havannet","Mini ricota","Mini coco"]},
+    {"id":"k7","cat":"combosevento","name":"Combo casamiento","desc":"Torta de bodas y mesa dulce. Se arma con vos según la cantidad de invitados y la paleta del casamiento.","price":0,"plabel":"","p2label":"","eventos":["evento"],"activo":true}
+  ]
+}
+</script>
+
+<div id="fondo" aria-hidden="true"><div class="foto"></div><div class="velo"></div><i></i><i></i></div>
+<div id="deco" aria-hidden="true"></div>
+<div id="app"><div id="root"></div></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===========================================================
+     CONFIGURACIÓN DE FIREBASE
+     Pegá acá la Web API Key: Firebase → ⚙ Configuración del proyecto
+     → pestaña General → "Clave de API web".
+     =========================================================== */
+  var FB_API_KEY = "AIzaSyCylVUH074zX9MO2trFOk3OINFLxKX4XgE";
+  var DB_BASE    = "https://cake-c9bfd-default-rtdb.firebaseio.com";
+  var DB_NODE    = "/catalogo.json";
+
+  /* Mientras esté en false, la página usa SOLO el catálogo que está más abajo
+     en este archivo y no le hace caso a Firebase. Ponelo en true cuando la
+     base ya tenga los datos al día y quieras editar desde el panel. */
+  var USAR_BASE  = true;
+
+  /* ---------- estado ---------- */
+  function normalize(d){
+    d = d || {};
+    d.brand = d.brand || {}; d.settings = d.settings || {};
+    d.settings.rellenos = d.settings.rellenos || [];
+    d.settings.coberturas = d.settings.coberturas || [];
+    d.settings.pagos = d.settings.pagos || [];
+    d.anuncios = (d.anuncios || []).filter(Boolean);
+    d.inspiracion = (d.inspiracion || []).filter(Boolean);
+    d.rarezas = (d.rarezas || []).filter(Boolean);
+    d.promos = (d.promos || []).filter(Boolean);
+    d.groups = (d.groups || []).filter(Boolean);
+    d.categories = (d.categories || []).filter(Boolean);
+    d.events = (d.events || []).filter(Boolean);
+    d.products = (d.products || []).filter(Boolean);
+    return d;
+  }
+  var state = normalize(JSON.parse(document.getElementById('app-state').textContent));
+  var root  = document.getElementById('root');
+  var filt  = { people:null, cat:null, event:null, q:'' };
+  var closed = {};
+  var admin = { token:null, email:null, dirty:false };
+  try{
+    var sv = sessionStorage.getItem('cake-adm');
+    if(sv){ var o = JSON.parse(sv); admin.token = o.t; admin.email = o.e; }
+  }catch(e){}
+
+  /* ---------- iconos ---------- */
+  var CHEV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+  var WAICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.8 5-1.3A10 10 0 1 0 12 2Zm5.8 14.2c-.2.7-1.2 1.3-2 1.4-.5.1-1.2.1-3.8-.9-3.2-1.3-5.2-4.6-5.4-4.8-.2-.2-1.3-1.7-1.3-3.3S6.2 6.3 6.5 6c.3-.3.6-.4.8-.4h.6c.2 0 .5 0 .7.5l1 2.4c.1.2 0 .4-.1.6l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.4 1.8 2.2 1.3 1.1 2.3 1.5 2.6 1.6.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l2.2 1.1c.3.1.5.2.6.4.1.2.1.8-.1 1.4Z"/></svg>';
+  var IGICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="5.2"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>';
+  var PINICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>';
+  var LOCKICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10.5" rx="2.5"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>';
+  var SEARCHICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>';
+
+  var ART = {
+    cupcake:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M30 56h40l-5 30a4 4 0 0 1-4 3H39a4 4 0 0 1-4-3Z"/><path d="M40 59v28M50 59v29M60 59v28"/><path d="M30 56c-4 0-7-3-7-7s3-7 7-7c0-6 5-11 11-11 2-4 6-6 10-5 3-3 8-3 11 0 5-1 9 3 9 8 4 1 6 5 5 9-1 5-5 8-9 8"/><path d="M50 26v-7M50 19c-2-1-3-3-2-5 2-1 4 0 4 2 0-2 2-3 4-2 1 2 0 4-2 5Z"/></svg>',
+    porcion:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 76 50 30l32 46Z"/><path d="M28 62h44M23 69h54"/><path d="M50 30c-3-2-4-5-3-8 3-1 6 1 6 4 1-3 4-4 6-2 1 3-2 6-6 6Z"/></svg>',
+    pisos:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M16 86h68a3 3 0 0 0 3-3V68H13v15a3 3 0 0 0 3 3Z"/><path d="M13 68c4-4 7 3 11-1s7 3 11-1 7 3 11-1 7 3 11-1 7 3 11-1 7 3 11-1"/><path d="M26 68V52h48v16"/><path d="M26 52c3-4 6 2 9-1s6 2 9-1 6 2 9-1 6 2 9-1 6 2 9-1"/><path d="M36 52V38h28v14"/><path d="M36 38c2.5-3 5 1.5 7.5-1s5 1.5 7.5-1 5 1.5 7.5-1"/><path d="M50 38V28M50 28c-3-1-5-3-4-6 2-1 5 1 5 3 1-2 3-3 5-2 1 2-1 5-4 5Z"/></svg>',
+    monito:'<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'
+      /* pie de torta */
+      + '<ellipse cx="50" cy="93" rx="16" ry="2.8"/>'
+      + '<path d="M46.5 90.5c1.2-3 1.2-5.5 1.2-7.5M53.5 90.5c-1.2-3-1.2-5.5-1.2-7.5"/>'
+      + '<ellipse cx="50" cy="83" rx="32" ry="4.6"/>'
+      /* cuerpo */
+      + '<path d="M21 82V53M79 82V53"/>'
+      + '<ellipse cx="50" cy="53" rx="29" ry="6"/>'
+      /* merengue arriba y abajo */
+      + '<path d="M21 57.5q3.6 6 7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0"/>'
+      + '<path d="M21 77.5q3.6 6 7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0t7.25 0"/>'
+      /* moño */
+      + '<circle cx="50" cy="40" r="3.1"/>'
+      + '<path d="M47.4 38.3c-7.5-8.4-16-5.2-13.8 1.1 1.6 4.6 9 4.1 13.8-1.1Z"/>'
+      + '<path d="M52.6 38.3c7.5-8.4 16-5.2 13.8 1.1-1.6 4.6-9 4.1-13.8-1.1Z"/>'
+      + '<path d="M47.8 43c-1.4 5.5-2.3 10-3.2 15.5M52.2 43c1.4 5.5 2.3 10 3.2 15.5"/>'
+      /* corazones */
+      + '<path d="M32 64c-1.3-2-4.4-.9-4.4 1.6 0 2.5 4.4 5 4.4 5s4.4-2.5 4.4-5c0-2.5-3.1-3.6-4.4-1.6Z"/>'
+      + '<path d="M68 64c-1.3-2-4.4-.9-4.4 1.6 0 2.5 4.4 5 4.4 5s4.4-2.5 4.4-5c0-2.5-3.1-3.6-4.4-1.6Z"/>'
+      + '<path d="M50 67c-1.3-2-4.4-.9-4.4 1.6 0 2.5 4.4 5 4.4 5s4.4-2.5 4.4-5c0-2.5-3.1-3.6-4.4-1.6Z"/>'
+      + '</svg>'
+  };
+  /* los dibujos de Canva repartidos por el fondo (carpeta iconos, al lado de index.html):
+     10 en computadora, 6 en celular, pegados a los bordes para no ensuciar el texto.
+     [dibujo, left %, top %, ancho px, opacidad, duración s, retardo s, giro °, ¿en celular?, left móvil %, top móvil %] */
+  var BG_ICONOS = [
+    ['galletas',        3,  12, 70, .45, 9.5,  0,  -12, true,  -3,  8],
+    ['alfajores-x8',   90,  16, 72, .42, 11,  -3,   14, true,  84, 14],
+    ['tartas-postres',  3,  56, 64, .45, 10,  -5,   -8, true,  -2, 52],
+    ['mesa-dulce',     46,   8, 50, .36, 12,  -2,   10, false],
+    ['brownie',        30,  84, 56, .40, 9,   -6,  -20, true,  -2, 82],
+    ['lemonie',        78,  78, 62, .42, 11,  -1,    6, true,  80, 86],
+    ['tarta-pistacho', 94,  48, 60, .42, 10,  -4,   10, false],
+    ['torta-encargo',  62,  40, 58, .36, 12,  -7,   -6, false],
+    ['pastafrola',     14,  34, 54, .36, 9.5, -2,    8, false],
+    ['box-grande',     52,  90, 52, .38, 11,  -8,   -4, true,  40, 92]
+  ];
+  (function(){
+    var el = document.getElementById('deco');
+    if(!el) return;
+    el.innerHTML = BG_ICONOS.map(function(g){
+      var st = '--l:' + g[1] + '%;--t:' + g[2] + '%;--w:' + g[3] + 'px;--o:' + g[4] + ';--dur:' + g[5] + 's;'
+        + '--delay:' + g[6] + 's;--rot:' + g[7] + 'deg;'
+        + (g[8] ? '--lm:' + g[9] + '%;--tm:' + g[10] + '%;' : '');
+      return '<img class="bgi' + (g[8] ? ' m' : '') + '" src="iconos/' + g[0] + '.png" alt="" aria-hidden="true"'
+        + ' loading="lazy" decoding="async" style="' + st + '" onerror="this.remove()">';
+    }).join('');
+  })();
+
+  /* el dibujo de cada grupo de filtros (carpeta iconos) */
+  var ICONO_GRUPO = { '':'torta', tortas:'torta', mesa:'mesa-dulce', empresas:'box-grande', combos:'cupcake', evento:'torta-encargo' };
+  function chipIco(n){ return '<img class="ci" src="iconos/' + n + '.png" alt="" loading="lazy" decoding="async" onerror="this.remove()">'; }
+
+  /* ---------- utilidades ---------- */
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function money(n){ return '$' + Number(n||0).toLocaleString('es-AR'); }
+  function uid(){ return 'x' + Math.random().toString(36).slice(2,8) + Date.now().toString(36).slice(-3); }
+  function today(){ var d=new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+  /* Todas las listas de «qué incluye» se muestran en el mismo orden,
+     sin importar cómo estén cargadas. Lo que no esté acá va al final. */
+  var ORDEN_INCL = ['torta','mini pastelería','mini pasteleria','cupcakes','galletas',
+                    'oreos','paletas','donas','mini maicena','minimaicena'];
+  function ordenIncluye(lista){
+    return lista.slice().map(function(x, i){
+      var et = String(x).split('·')[0].trim().toLowerCase();
+      var k = ORDEN_INCL.indexOf(et);
+      return { x:x, k:(k < 0 ? 900 + i : k) };
+    }).sort(function(a, b){ return a.k - b.k; })
+      .map(function(o){ return o.x; });
+  }
+
+  function porcTxt(p){ if(!p.pmin) return '';
+    if(p.pmax && p.pmax!==p.pmin) return p.pmin + ' a ' + p.pmax + ' porciones';
+    return p.pmin + (p.pmin===1?' porción':' porciones'); }
+  function fmtDate(d){ if(!d) return ''; var a=d.split('-'); return a[2] + '/' + a[1]; }
+  function photosOf(p){ if(p.fotos && p.fotos.length) return p.fotos; return p.photo ? [p.photo] : []; }
+  function findById(id){ for(var i=0;i<state.products.length;i++) if(state.products[i].id===id) return state.products[i]; return null; }
+  function idxById(id){ for(var i=0;i<state.products.length;i++) if(state.products[i].id===id) return i; return -1; }
+  function toast(m, ms){ var t=document.createElement('div'); t.className='toast'; t.textContent=m;
+    document.body.appendChild(t); setTimeout(function(){ t.remove(); }, ms||2800); }
+  function norm(s){ return String(s||'').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,''); }
+  function touch(){ admin.dirty = true; }
+
+  /* ---------- promos ---------- */
+  function livePromos(){ var t = today();
+    return state.promos.filter(function(p){ return p.activo && (!p.hasta || p.hasta >= t); }); }
+  function promoFor(prod){ var ps = livePromos();
+    for(var i=0;i<ps.length;i++){ if((ps[i].cats||[]).indexOf(prod.cat) > -1) return ps[i]; } return null; }
+  function withOff(v, pr){ return pr ? Math.round(v*(1-pr.pct/100)/100)*100 : v; }
+
+  /* ---------- enlaces ---------- */
+  function waBase(){ return 'https://wa.me/' + state.brand.whatsapp; }
+  function mapsLink(){ return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(state.brand.address); }
+  function addrLink(cls){ return '<a class="' + cls + '" target="_blank" rel="noopener" href="' + esc(mapsLink()) + '">'
+      + PINICON + esc(state.brand.address) + '</a>'; }
+  function igLinks(){
+    var b = state.brand, out = [];
+    /* en la web va solo la cuenta principal; la segunda queda en los datos por si se vuelve a usar */
+    [b.instagram].forEach(function(u){
+      if(!u) return;
+      var h = String(u).replace(/^@/,'').trim();
+      out.push('<a class="iglink" target="_blank" rel="noopener" href="https://instagram.com/' + esc(h) + '">'
+        + IGICON + '@' + esc(h) + '</a>');
+    });
+    return out.join('');
+  }
+  /* ===========================================================
+     CARRITO
+     =========================================================== */
+  var carrito = {};   /* { "idProducto|variante": cantidad } */
+  var tocado = null, barraVisible = false, totalMostrado = 0;
+
+  try{ carrito = JSON.parse(localStorage.getItem('cake-carrito') || '{}') || {}; }catch(e){ carrito = {}; }
+  function guardarCarrito(){ try{ localStorage.setItem('cake-carrito', JSON.stringify(carrito)); }catch(e){} }
+
+  function unitario(p, v){
+    var base = (v === 1 ? p.price2 : p.price) || 0;
+    return withOff(base, promoFor(p));
+  }
+  function etiquetaVar(p, v){
+    return (v === 1 ? (p.p2label || 'Grande') : (p.plabel || porcTxt(p) || ''));
+  }
+  function lineasCarrito(){
+    var out = [];
+    Object.keys(carrito).forEach(function(k){
+      var a = k.split('|'), p = findById(a[0]), v = Number(a[1]) || 0, q = carrito[k];
+      if(p && q > 0 && (v === 1 ? p.price2 : p.price)){
+        out.push({ k:k, p:p, v:v, q:q, unit:unitario(p, v), sub:unitario(p, v) * q });
+      }
+    });
+    return out;
+  }
+  function cantCarrito(){ return lineasCarrito().reduce(function(a,l){ return a + l.q; }, 0); }
+  function totalCarrito(){ return lineasCarrito().reduce(function(a,l){ return a + l.sub; }, 0); }
+
+  /* ====== códigos de descuento ======
+     La clave es el código tal como lo publicás, en mayúsculas.
+     'hasta' es el último día en que funciona: después de esa fecha el código
+     deja de aplicar solo, sin que tengas que tocar nada.                     */
+  var CUPONES = {
+    'MESDEMAMA': { pct:10, hasta:'2026-10-19', texto:'10% por pedir desde el catálogo' }
+  };
+  function buscarCupon(cod){
+    var c = CUPONES[String(cod || '').trim().toUpperCase()];
+    if(!c) return null;
+    if(c.hasta && new Date().toISOString().slice(0, 10) > c.hasta) return null;
+    return c;
+  }
+  function descuentoCarrito(cod){
+    var c = buscarCupon(cod);
+    return c ? Math.round(totalCarrito() * c.pct / 100) : 0;
+  }
+  function sumarCarrito(k, d){
+    var q = (carrito[k] || 0) + d;
+    if(q <= 0) delete carrito[k]; else carrito[k] = q;
+    guardarCarrito();
+  }
+  function enCarrito(p){
+    var n = 0;
+    Object.keys(carrito).forEach(function(k){ if(k.split('|')[0] === p.id) n += carrito[k]; });
+    return n;
+  }
+
+  function textoPedidoCarrito(d){
+    d = d || {};
+    var s = state.settings;
+    var m = 'Hola! Te hago un pedido desde el catálogo:\n\n';
+    lineasCarrito().forEach(function(l){
+      var et = etiquetaVar(l.p, l.v);
+      m += '• ' + l.q + ' × ' + l.p.name + (et ? ' (' + et + ')' : '') + ' — ' + money(l.sub) + '\n';
+    });
+    var cup = buscarCupon(d.cupon), desc = cup ? descuentoCarrito(d.cupon) : 0;
+    if(cup){
+      m += '\nSubtotal: ' + money(totalCarrito());
+      m += '\nCódigo ' + String(d.cupon).trim().toUpperCase()
+        +  ' (−' + cup.pct + '%): −' + money(desc) + '\n';
+      m += 'Total estimado: ' + money(totalCarrito() - desc) + '\n';
+    } else {
+      m += '\nTotal estimado: ' + money(totalCarrito()) + '\n';
+    }
+    if(d.fecha) m += '\nFecha del evento: ' + fmtDate(d.fecha);
+    if(d.pago)  m += '\nMedio de pago: ' + d.pago;
+    if(d.nota)  m += '\n\nAclaraciones: ' + d.nota;
+    m += '\n\n(' + s.sena + ' · ' + s.anticipacion + ')';
+    return m;
+  }
+
+  function waLink(p, cod){
+    var pr = promoFor(p), c = buscarCupon(cod);
+    var m = 'Hola! Te escribo desde el catálogo. Me interesa: ' + p.name;
+    var pt = porcTxt(p); if(pt) m += ' (' + pt + ')';
+    if(pr) m += '. Vi que está con ' + pr.badge;
+    m += '. ¿Me pasás disponibilidad y presupuesto?';
+    if(c) m += '\n\nTengo el código ' + String(cod).trim().toUpperCase()
+            +  ' (−' + c.pct + '%).';
+    return waBase() + '?text=' + encodeURIComponent(m);
+  }
+
+  /* Antes de mandar un pedido suelto le damos la misma chance que en el carrito:
+     poner el código, o decir que no tiene y seguir. */
+  function dlgCuponProducto(p){
+    var d = document.createElement('dialog');
+    d.className = 'pedido cupdlg';
+    d.innerHTML = '<div class="dlg-h"><h3>¿Tenés un código?</h3>'
+      + '<button class="cerrarx" data-cerrar aria-label="Cerrar">✕</button></div><div class="dlg-b">'
+      + '<p class="cuptxt">Si viste un código de descuento en nuestras redes, escribilo acá '
+      + 'y lo sumamos al pedido.</p>'
+      + '<div class="cupon"><input id="p-cup" type="text" autocomplete="off" spellcheck="false"'
+      + ' placeholder="Código de descuento"><button type="button" id="p-cupb">Aplicar</button></div>'
+      + '<div id="p-cupmsg" class="cupmsg"></div></div>'
+      + '<div class="dlg-f cupf">'
+      + '<button class="btn wa" data-ir>' + WAICON + 'Pedir por WhatsApp</button>'
+      + '<button class="btn ghost" data-sin>No tengo ningún código</button></div>';
+
+    document.body.appendChild(d);
+    var inp = d.querySelector('#p-cup'), msg = d.querySelector('#p-cupmsg');
+    var revisar = function(){
+      var cod = inp.value.trim(), c = buscarCupon(cod);
+      if(!cod){ msg.className = 'cupmsg'; msg.textContent = ''; return; }
+      if(c){ msg.className = 'cupmsg ok'; msg.textContent = '¡Listo! ' + c.texto + '.'; }
+      else  { msg.className = 'cupmsg no'; msg.textContent = 'Ese código no existe o ya venció.'; }
+    };
+    var ir = function(cod){
+      window.open(waLink(p, cod), '_blank', 'noopener');
+      d.close(); d.remove();
+    };
+    d.querySelector('#p-cupb').onclick = revisar;
+    inp.addEventListener('keydown', function(ev){
+      if(ev.key === 'Enter'){ ev.preventDefault(); revisar(); }
+    });
+    d.querySelector('[data-ir]').onclick  = function(){ revisar(); ir(inp.value.trim()); };
+    d.querySelector('[data-sin]').onclick = function(){ ir(''); };
+    d.querySelector('[data-cerrar]').onclick = function(){ d.close(); d.remove(); };
+    d.addEventListener('close', function(){ d.remove(); });
+    d.showModal();
+    setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 60);
+  }
+
+  /* ---------- filtros ---------- */
+  function visible(p){
+    if(!p.activo && !admin.token) return false;
+    if(soloFavs && !favs[p.id]) return false;    /* la pestaña ♥ Favoritos */
+    if(filt.q){
+      var q = norm(filt.q);
+      if(norm(p.name).indexOf(q) === -1 && norm(p.desc).indexOf(q) === -1) return false;
+      return true;                       /* el buscador ignora los demás filtros */
+    }
+    if(filt.cat && p.cat !== filt.cat) return false;
+    if(filt.event && (p.eventos||[]).indexOf(filt.event) === -1) return false;
+    if(filt.people != null){
+      var lo=p.pmin||0, hi=Math.max(p.pmax||0,p.pmin||0);
+      if(!(filt.people>=lo && filt.people<=hi)) return false;
+    }
+    return true;
+  }
+  var PEOPLE=[{l:'10',v:10},{l:'20',v:20},{l:'30',v:30},{l:'45',v:45}];
+
+  /* ===========================================================
+     FAVORITOS (♥), FECHA DE ENTREGA Y «ABIERTO AHORA»
+     =========================================================== */
+  var favs = {};
+  try{ favs = JSON.parse(localStorage.getItem('cake-tortas-favs') || '{}') || {}; }catch(e){ favs = {}; }
+  var soloFavs = false;
+  function guardarFavs(){ try{ localStorage.setItem('cake-tortas-favs', JSON.stringify(favs)); }catch(e){} }
+  function cantFavs(){
+    return Object.keys(favs).filter(function(id){ return favs[id] && findById(id); }).length;
+  }
+
+  /* «Si la encargás hoy, la tenés el jueves 29»: hoy + la anticipación del JSON (72 h → 3 días),
+     y si cae domingo pasa al lunes. Se calcula cada vez que se dibuja. */
+  var DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  function fechaEntrega(){
+    var txt = String((state.settings && state.settings.anticipacion) || '');
+    var m = /(\d+)\s*h/i.exec(txt), dias = m ? Math.max(1, Math.ceil(Number(m[1]) / 24)) : 3;
+    var hoy = new Date(), d = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + dias);
+    if(d.getDay() === 0) d.setDate(d.getDate() + 1);
+    var s = 'el ' + DIAS[d.getDay()] + ' ' + d.getDate();
+    if(d.getMonth() !== hoy.getMonth()) s += ' de ' + MESES[d.getMonth()];
+    return s;
+  }
+  function entregaHTML(){
+    return '<div class="entrega"><i></i><span>Si la encargás hoy, la tenés <b>' + esc(fechaEntrega()) + '</b></span></div>';
+  }
+
+  /* Abierto / cerrado según brand.hours y la hora del teléfono. Se leen los rangos «7:30–13:30»
+     del texto; si no se puede, valen los de siempre. Domingo cerrado salvo que el texto diga «Dom». */
+  function horariosDelDia(){
+    var txt = String((state.brand && state.brand.hours) || '');
+    var re = /(\d{1,2})(?:[:.](\d{2}))?\s*[–\-a]+\s*(\d{1,2})(?:[:.](\d{2}))?/g, r, rangos = [];
+    while((r = re.exec(txt))){
+      rangos.push([Number(r[1]) * 60 + Number(r[2] || 0), Number(r[3]) * 60 + Number(r[4] || 0)]);
+    }
+    if(!rangos.length) rangos = [[450, 810], [1020, 1230]];
+    var domingo = /\bdom/i.test(txt) && !/lun\s*a\s*s[aá]b/i.test(txt);
+    return { rangos: rangos, domingo: domingo };
+  }
+  function hhmm(min){ return Math.floor(min / 60) + ':' + String(min % 60).padStart(2, '0'); }
+  function estadoAbierto(){
+    var hz = horariosDelDia(), ahora = new Date(), dia = ahora.getDay(), min = ahora.getHours() * 60 + ahora.getMinutes();
+    var abre = function(d){ return d !== 0 || hz.domingo; };
+    if(abre(dia)){
+      for(var i = 0; i < hz.rangos.length; i++){
+        var a = hz.rangos[i];
+        if(min >= a[0] && min < a[1]) return { si:true, txt:'Abierto', det:'cierra ' + hhmm(a[1]) };
+        if(min < a[0]) return { si:false, txt:'Cerrado', det:'abre ' + hhmm(a[0]) };
+      }
+    }
+    /* ya cerró por hoy (o es domingo): buscar el próximo día que abre */
+    var d2 = (dia + 1) % 7, saltos = 1;
+    while(!abre(d2) && saltos < 7){ d2 = (d2 + 1) % 7; saltos++; }
+    var cuando = saltos === 1 ? 'mañana' : 'el ' + DIAS[d2];
+    return { si:false, txt:'Cerrado', det:'abre ' + cuando + ' ' + hhmm(hz.rangos[0][0]) };
+  }
+  function abiertoHTML(){
+    var e = estadoAbierto();
+    return '<span class="abierto ' + (e.si ? 'si' : 'no') + '" title="' + esc(state.brand.hours || '') + '"><i></i>'
+      + esc(e.txt) + '<span class="det"> · ' + esc(e.det) + '</span></span>';
+  }
+  function pintarAbierto(){
+    var el = root.querySelector('.abierto'); if(!el) return;
+    var e = estadoAbierto();
+    el.className = 'abierto ' + (e.si ? 'si' : 'no');
+    el.innerHTML = '<i></i>' + esc(e.txt) + '<span class="det"> · ' + esc(e.det) + '</span>';
+  }
+  setInterval(pintarAbierto, 60000);
+
+  /* chispas doradas y crema (con algún ♥) que salen de un botón y se apagan en 600 ms */
+  function chispas(el, grande){
+    if(!el || sinMovimiento || !el.getBoundingClientRect) return;
+    var r = el.getBoundingClientRect(); if(!r.width) return;
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    var n = grande ? 26 : 12, COL = ['#B08049', '#D9B98A', '#F6F0E4', '#C9A06A', '#E8CBA3'];
+    for(var i = 0; i < n; i++){
+      var s = document.createElement('span');
+      s.className = 'chispa';
+      var corazon = (i % 5 === 0);
+      if(corazon){ s.textContent = '♥'; s.style.width = s.style.height = 'auto'; s.style.background = 'none'; }
+      else { s.style.background = COL[i % COL.length]; var w = 5 + Math.random() * 5; s.style.width = s.style.height = w + 'px'; }
+      s.style.left = (cx - 4) + 'px'; s.style.top = (cy - 4) + 'px';
+      document.body.appendChild(s);
+      var ang = Math.random() * Math.PI * 2, dist = (grande ? 70 : 38) + Math.random() * (grande ? 90 : 46);
+      var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - (grande ? 30 : 14);
+      var fin = (function(el){ return function(){ if(el.parentNode) el.remove(); }; })(s);
+      if(s.animate){
+        s.animate([
+          { transform:'translate(0,0) scale(.6)', opacity:1 },
+          { transform:'translate(' + (dx * .6) + 'px,' + (dy * .6) + 'px) scale(1.15)', opacity:1, offset:.45 },
+          { transform:'translate(' + dx + 'px,' + (dy + 18) + 'px) scale(.3)', opacity:0 }
+        ], { duration: grande ? 900 : 600, easing:'cubic-bezier(.2,.7,.3,1)' }).onfinish = fin;
+      }
+      setTimeout(fin, grande ? 1100 : 800);
+    }
+  }
+
+  /* ===========================================================
+     RENDER
+     =========================================================== */
+  /* se prende al cargar y al cambiar de filtro; se apaga después de dibujar */
+  var animEntrada = true;
+  var filtrosAbiertos = false;   /* el plegable de filtros en celular */
+  var irAResultados   = false;   /* después de tocar un filtro, bajar a los resultados */
+  var claseGrid = function(){ return 'grid' + (animEntrada ? ' anim' : ''); };
+
+  function render(){
+    gruposVistos = {};
+    var b=state.brand, s=state.settings;
+    var shown = state.products.filter(visible);
+    var isAdm = !!admin.token;
+    var h='';
+
+    /* --- barra superior: píldora de vidrio con el logo final --- */
+    h += '<header class="top"><div class="wrap"><nav class="navbar glass">'
+      + '<a class="logo-cake" href="#top" aria-label="Cake"><img src="logo/logo-cake.svg" alt="Cake" onerror="this.parentNode.classList.add(\'sinlogo\')"></a>'
+      + '<div class="brand"><span class="nm">' + esc(b.name) + '</span><span class="sub">' + esc(b.sub) + '</span></div>'
+      + '<div class="links"><a href="#g-tortas">Tortas</a><a href="#g-mesa">Mesas dulces</a><a href="#g-empresas">Empresas</a>'
+      + (s.menuUrl ? '<a href="' + esc(s.menuUrl) + '">Café</a>' : '') + '</div>'
+      + abiertoHTML()
+      + '<a class="btn oro sm top-wa" target="_blank" rel="noopener" href="' + esc(waBase()) + '" aria-label="Pedir por WhatsApp">'
+      + WAICON + '<span class="tx">Pedir por WhatsApp</span></a>'
+      + '<button class="adm-btn' + (isAdm?' on':'') + '" data-adm title="'
+      + (isAdm ? 'Sesión de administración iniciada' : 'Administración') + '" aria-label="Administración">'
+      + LOCKICON + '</button>'
+      + '</nav></div></header>';
+
+    h += '<div class="wrap" id="top">';
+
+    /* anuncios: franja de vidrio arriba del hero */
+    var an = state.anuncios.filter(function(a){ return a.activo || isAdm; });
+    if(an.length){
+      h += '<div class="anuncios">';
+      an.forEach(function(a){
+        h += '<div class="anuncio glass"' + (a.activo?'':' style="opacity:.5"') + '><span class="dot"></span>'
+          + '<span>' + esc(a.texto) + '</span>'
+          + (isAdm ? '<button class="ax" data-anedit="' + esc(a.id) + '">editar</button>' : '') + '</div>';
+      });
+      h += '</div>';
+    }
+
+    /* --- hero: título grande y la foto redonda de una torta o postre al azar ---
+       Se elige una vez por carga de página (no cambia al filtrar o al sumar al carrito). */
+    var CATS_HERO = ['crema', 'ganache', 'pisos', 'tortaspostres', 'postres'];
+    var estrella = heroId ? findById(heroId) : null;
+    if(!estrella || !estrella.activo || !photosOf(estrella).length){
+      var candidatos = state.products.filter(function(p){
+        return CATS_HERO.indexOf(p.cat) !== -1 && p.activo && photosOf(p).length; });
+      estrella = candidatos.length ? candidatos[Math.floor(Math.random() * candidatos.length)] : null;
+      if(!estrella){
+        estrella = findById('p4');
+        if(!estrella || !photosOf(estrella).length || !estrella.activo){
+          estrella = state.products.filter(function(p){ return p.cat === 'crema' && p.activo && photosOf(p).length; })[0]
+            || state.products.filter(function(p){ return p.activo && photosOf(p).length; })[0] || null;
+        }
+      }
+      heroId = estrella ? estrella.id : null;
+    }
+    var fotoEstrella = estrella ? photosOf(estrella)[0] : 'fotos/Torta%20grande%20crema.jpeg';
+    var catEstrella = estrella ? (state.categories.filter(function(c){ return c.id === estrella.cat; })[0] || {}) : {};
+    h += '<section class="hero">'
+      + '<div><div class="eyebrow">' + esc(b.address) + '</div>'
+      /* Para cambiar el título, editá la línea de abajo. */
+      + '<h1><span class="ln l1">Diez años acompañando</span><span class="ln l2"><em>momentos importantes</em></span></h1>'
+      + entregaHTML()
+      + '<p class="lead">' + esc(b.tagline) + '</p>'
+      + '<div class="cta"><a class="btn" href="#catalogo">Ver las tortas</a>'
+      + (s.menuUrl ? '<a class="btn oro" href="' + esc(s.menuUrl) + '">Ver el menú del café</a>' : '') + '</div>'
+      + '</div>'
+      + '<div class="taza"><div class="ring"></div>'
+      + '<div class="ph' + (estrella && photosOf(estrella).length ? ' clic" data-gal="' + esc(estrella.id) : '') + '">'
+      + '<img src="' + esc(fotoEstrella) + '" alt="' + esc(estrella ? estrella.name : 'Torta') + '" onerror="this.remove()"></div>'
+      + (estrella ? '<div class="tag"><small>' + esc(porcTxt(estrella) || catEstrella.short || catEstrella.name || 'Por encargo') + '</small>'
+          + esc(estrella.name) + ' · ' + (estrella.price ? money(withOff(estrella.price, promoFor(estrella))) : 'A consultar') + '</div>' : '')
+      + '</div></section>';
+
+    var lp = isAdm ? state.promos : livePromos();
+    if(lp.length){
+      h += '<div class="promos">';
+      lp.forEach(function(pr){
+        var vivo = pr.activo && (!pr.hasta || pr.hasta >= today());
+        h += '<div class="promo' + (vivo?'':' off') + '"><div class="pbadge">' + esc(pr.badge) + '</div>'
+          + '<div style="flex:1;min-width:0"><div class="pt">' + esc(pr.titulo) + '</div>'
+          + (pr.desc ? '<div class="pd">' + esc(pr.desc) + '</div>' : '')
+          + (pr.hasta ? '<div class="pu">Hasta el ' + esc(fmtDate(pr.hasta)) + (vivo?'':' · vencida') + '</div>' : '')
+          + '</div>'
+          + (isAdm ? '<div class="promoadmin"><button data-pedit="' + esc(pr.id) + '">Editar</button>'
+              + '<button data-pdel="' + esc(pr.id) + '">Borrar</button></div>' : '')
+          + '</div>';
+      });
+      h += '</div>';
+    }
+
+    /* --- la cinta que corre, con las categorías --- */
+    var cintaHtml = state.categories.map(function(c){ return '<span>' + esc(c.name) + '</span>'; }).join('');
+    h += '</div><div class="cinta" aria-hidden="true"><div>' + cintaHtml + cintaHtml + '</div></div>';
+
+    /* --- filtros: buscador y cantidad de personas pegados; grupos y eventos debajo --- */
+    h += '<div class="filtros"><div class="wrap"><div class="filtros-in glass">' + filtrosHTML() + '</div></div></div>';
+    h += '<div class="wrap">' + gruposHTML();
+    h += '<div class="layout"><div class="content" id="catalogo">';
+
+    if(filt.q){
+      h += '<section class="cat"><div class="cat-top"><button class="cat-head" data-sec="busqueda" aria-expanded="true">'
+        + '<span class="tt"><h2>Resultados</h2><span class="note">buscando “' + esc(filt.q) + '”</span></span>'
+        + '<span class="cnt tnum">' + shown.length + '</span></button></div><div class="rule"></div>'
+        + '<div class="' + claseGrid() + '">';
+      shown.forEach(function(p,i){ h += cardHTML(p, Math.min(i,9)); });
+      h += '</div></section>';
+      if(!shown.length) h += '<p class="hint">No encontramos nada con ese nombre.</p>';
+    } else {
+      var n=0;
+      state.categories.forEach(function(c){
+        var items = shown.filter(function(p){ return p.cat===c.id; });
+        if(!items.length) return;
+        h += secHTML(c, items, n); n += items.length;
+      });
+      if(!shown.length){
+        h += '<section class="cat"><p class="hint">No hay opciones para ese filtro. Probá con otra cantidad, o escribinos y lo armamos a medida.</p></section>';
+      }
+    }
+    h += '</div></div>';   /* cierra .content y .layout */
+
+    if(!filt.q){ h += inspiHTML(); h += rarezasHTML(); }
+
+    /* --- el plan y cómo encargar: bloque de vidrio --- */
+    h += '<section class="tortas glass" id="plan">'
+      + '<div><div class="eyebrow">Cómo encargar</div>'
+      + '<h2>' + esc(s.planNombre || 'Reservá tu fecha') + '</h2>'
+      + '<p>' + esc(s.planDesc || '') + '</p>'
+      + '<ul><li>' + esc(s.anticipacion) + '</li><li>' + esc(s.sena) + '</li>'
+      + ((s.pagos||[]).length ? '<li>Pagás con ' + esc(s.pagos.join(', ').toLowerCase()) + '</li>' : '')
+      + '<li>Contactanos para más asesoramiento</li></ul>'
+      + '<a class="btn oro" target="_blank" rel="noopener" href="' + esc(waBase()) + '">' + WAICON + 'Consultar por WhatsApp</a></div>'
+      + '<div class="icos">'
+      + '<img src="iconos/torta-encargo.png" alt="" style="--w:150px; left:8%; top:4%; --dur:6s" onerror="this.remove()">'
+      + '<img src="iconos/cupcake.png" alt="" style="--w:90px; right:14%; top:0; --dur:5s; --delay:-2s" onerror="this.remove()">'
+      + '<img src="iconos/box.png" alt="" style="--w:100px; left:4%; bottom:0; --dur:7s; --delay:-1s" onerror="this.remove()">'
+      + '<img src="iconos/mesa-dulce.png" alt="" style="--w:130px; right:4%; bottom:4%; --dur:5.5s; --delay:-3s" onerror="this.remove()">'
+      + '</div></section>';
+
+    /* --- el café: bloque de vidrio con los dibujos levitando --- */
+    h += '<section class="tortas glass" id="cafe">'
+      + '<div><div class="eyebrow">Todos los días</div>'
+      + '<h2>' + esc(s.cafeTitulo || '¿Conocés nuestro café?') + '</h2>'
+      + '<p>' + esc(s.cafeTexto || '') + '</p>'
+      + (s.menuUrl
+          ? '<a class="btn" href="' + esc(s.menuUrl) + '">Ver el menú del café</a>'
+          : (isAdm ? '<p class="hint">Falta cargar el link del menú en <b>Datos</b>.</p>'
+                   : '<p class="hint">Menú disponible en el local.</p>'))
+      + '</div>'
+      + '<div class="icos">'
+      + '<img src="iconos/capuchino.png" alt="" style="--w:140px; left:10%; top:6%; --dur:6s" onerror="this.remove()">'
+      + '<img src="iconos/croissant.png" alt="" style="--w:110px; right:10%; top:0; --dur:5s; --delay:-2s" onerror="this.remove()">'
+      + '<img src="iconos/alfajor.png" alt="" style="--w:100px; left:30%; bottom:0; --dur:7s; --delay:-1s" onerror="this.remove()">'
+      + '</div></section>';
+
+    /* --- dónde y cuándo --- */
+    h += '<section id="donde"><div class="titulo"><h2>Dónde y cuándo</h2></div><div class="datos">'
+      + '<a class="dato glass" href="' + esc(mapsLink()) + '" target="_blank" rel="noopener">'
+      + '<img src="iconos/box-grande.png" alt="" onerror="this.remove()"><div><b>' + esc(b.address) + '</b><span>Cómo llegar</span></div></a>'
+      + '<div class="dato glass"><img src="iconos/capuchino.png" alt="" onerror="this.remove()">'
+      + '<div><b>Horarios</b><span>' + esc(b.hours) + '</span></div></div>'
+      + '<div class="dato glass"><img src="iconos/torta.png" alt="" onerror="this.remove()">'
+      + '<div><b>Pedidos por encargo</b><span>' + esc(s.anticipacion) + ' · ' + esc(s.sena) + '</span></div></div>'
+      + '</div></section>';
+    h += '</div>';   /* cierra .wrap */
+
+    h += '<footer class="foot"><div class="wrap">'
+      + '<div class="flogo"><img src="logo/logo-cake.svg" alt="Cake" onerror="this.parentNode.classList.add(\'sinlogo\')"></div>'
+      + '<div class="fb">' + esc(b.name) + '</div>'
+      + '<div class="fs">' + esc(b.sub) + '</div>'
+      + '<div style="margin-top:16px">' + addrLink('maplink') + '</div><div style="margin-top:6px">' + esc(b.hours) + '</div>'
+      + '<div class="iglinks">' + igLinks() + '</div></div></footer>';
+    h += '<div class="spacer"></div>';
+
+    if(isAdm){
+      h += '<div class="adminbar"><span class="lbl">Administración · ' + esc(admin.email||'') + '</span>'
+        + '<button data-act="newp">+ Producto</button>'
+        + '<button data-act="promo">+ Promo</button>'
+        + '<button data-act="anuncio">+ Anuncio</button>'
+        + '<button data-act="datos">Datos</button>'
+        + '<button data-act="salir">Salir</button>'
+        + '<span class="sp">' + (admin.dirty ? 'Cambios sin guardar' : 'Todo guardado') + '</span>'
+        + '<button class="pri" data-act="guardar">Guardar</button></div>';
+    } else {
+      var nq = cantCarrito();
+      if(nq > 0){
+        h += '<div class="cartbar' + (barraVisible ? (tocado ? ' late' : '') : ' entra') + '">'
+          + '<div class="in">'
+          + '<div class="clogo"><img src="logo/logo-cake-blanco.svg" alt="" onerror="this.parentNode.remove()"></div>'
+          + '<div class="qn">'
+          + '<b>' + nq + (nq === 1 ? ' producto' : ' productos') + (nq >= 3 ? '<em>¡Qué fiesta!</em>' : '') + '</b>'
+          + '<span>Total estimado ' + money(totalCarrito()) + '</span>'
+          + '<div class="prog"><i style="--p:' + Math.min(100, Math.round(nq / 4 * 100)) + '%"></i></div></div>'
+          + '<button class="btn oro" data-verpedido>Armar el pedido</button></div></div>';
+      } else {
+        h += '<div class="cta-fixed only-mobile"><a class="btn wa" target="_blank" rel="noopener" href="' + esc(waBase()) + '">'
+          + WAICON + 'Asesoramiento y pedidos personalizados</a></div>';
+      }
+    }
+
+    var sy = window.scrollY;
+    root.innerHTML = h;
+    document.body.classList.toggle('admin', isAdm);
+    wire();
+    revelar();   /* las tarjetas y secciones aparecen al entrar en pantalla */
+    /* Al tocar un filtro bajamos a los resultados solo en celular, donde los
+       filtros están arriba del contenido. En computadora el panel está al
+       costado, así que mover la página sería moverle el panel de lugar. */
+    if(irAResultados){
+      irAResultados = false;
+      var sec = root.querySelector('section.cat');
+      var hdr = root.querySelector('header.top'), fil = root.querySelector('.filtros');
+      var alto = (hdr ? hdr.offsetHeight : 60) + (fil ? fil.offsetHeight : 0) + 8;
+      var y = sec ? (sec.getBoundingClientRect().top + window.scrollY - alto) : 0;
+      try{ window.scrollTo({ top:Math.max(0, y), behavior: sinMovimiento ? 'auto' : 'smooth' }); }
+      catch(e){ window.scrollTo(0, Math.max(0, y)); }
+    } else {
+      irAResultados = false;
+      if(sy) window.scrollTo(0, sy); /* no saltar al principio al editar o filtrar */
+    }
+    animEntrada = false;             /* la entrada escalonada corre una sola vez */
+    tocado = null;
+    barraVisible = (!isAdm && cantCarrito() > 0);
+    animarTotal();
+  }
+
+  /* --- el total contando --- */
+  function animarTotal(){
+    var el = document.querySelector('.cartbar .qn span');
+    var hasta = totalCarrito();
+    if(!el){ totalMostrado = hasta; return; }
+    var desde = totalMostrado;
+    if(desde === hasta || sinMovimiento){
+      el.textContent = 'Total estimado ' + money(hasta);
+      totalMostrado = hasta; return;
+    }
+    var t0 = performance.now(), dur = 520;
+    (function paso(t){
+      var k = Math.min(1, (t - t0) / dur);
+      var e = 1 - Math.pow(1 - k, 3);
+      var v = Math.round((desde + (hasta - desde) * e) / 100) * 100;
+      el.textContent = 'Total estimado ' + money(k < 1 ? v : hasta);
+      if(k < 1) requestAnimationFrame(paso); else totalMostrado = hasta;
+    })(t0);
+  }
+
+  /* --- la tortita volando al carrito --- */
+  function volarTortita(card){
+    if(!card || sinMovimiento) return;
+    var ph = card.querySelector('.ph') || card;
+    var r = ph.getBoundingClientRect();
+    if(!r.width) return;
+
+    var ancho = Math.min(r.width * .6, 80), alto = ancho;
+    var x0 = r.left + r.width / 2 - ancho / 2;
+    var y0 = r.top  + r.height / 2 - alto / 2;
+
+    var el = document.createElement('div');
+    el.className = 'volador';
+    el.innerHTML = ART.monito;
+    el.style.left = x0 + 'px'; el.style.top = y0 + 'px';
+    el.style.width = ancho + 'px'; el.style.height = alto + 'px';
+    document.body.appendChild(el);
+
+    requestAnimationFrame(function(){
+      var dest = document.querySelector('.cartbar .btn');
+      var dr = dest ? dest.getBoundingClientRect()
+                    : { left: window.innerWidth - 100, top: window.innerHeight - 56, width:70, height:42 };
+      var dx = (dr.left + dr.width / 2)  - (x0 + ancho / 2);
+      var dy = (dr.top  + dr.height / 2) - (y0 + alto / 2);
+      var fin = function(){ if(el.parentNode) el.remove(); };
+      if(!el.animate){ fin(); return; }
+      el.animate([
+        { transform:'translate(0,0) scale(.5) rotate(-6deg)', opacity:0 },
+        { transform:'translate(' + (dx * .12) + 'px,' + (dy * .05 - 26) + 'px) scale(1.06) rotate(4deg)',
+          opacity:1, offset:.22 },
+        { transform:'translate(' + (dx * .5) + 'px,' + (dy * .4 - 58) + 'px) scale(.78) rotate(-5deg)',
+          opacity:1, offset:.58 },
+        { transform:'translate(' + dx + 'px,' + dy + 'px) scale(.16) rotate(8deg)', opacity:0 }
+      ], { duration:780, easing:'cubic-bezier(.36,.06,.3,1)' }).onfinish = fin;
+      setTimeout(fin, 1200);
+    });
+  }
+
+  /* --- agregar, eligiendo el tamaño cuando hay dos --- */
+  function agregar(p, card){
+    if(!p || !p.price) return;
+    var meter = function(v){
+      tocado = p.id;
+      sumarCarrito(p.id + '|' + v, 1);
+      render();
+      volarTortita(card);
+      if(navigator.vibrate) try{ navigator.vibrate(12); }catch(x){}
+    };
+    if(!p.price2){ meter(0); return; }
+
+    var pr = promoFor(p);
+    var op = [[0, etiquetaVar(p,0), p.price], [1, etiquetaVar(p,1), p.price2]];
+    var d = dialog('¿Cuál llevás?',
+      '<p class="hint">' + esc(p.name) + '</p><div class="chips" style="margin-top:12px">'
+      + op.map(function(o){
+          return '<button class="chip" data-v="' + o[0] + '" style="flex:1;justify-content:center">'
+            + esc(o[1]) + ' · ' + money(withOff(o[2], pr)) + '</button>'; }).join('')
+      + '</div>',
+      function(){ return true; }, 'Cerrar');
+    d.querySelectorAll('[data-v]').forEach(function(bt){
+      bt.onclick = function(){ d.close(); d.remove(); meter(Number(bt.getAttribute('data-v'))); };
+    });
+  }
+
+  /* --- el detalle del pedido --- */
+  function dlgPedidoCarrito(prev){
+    prev = prev || {};
+    var ls = lineasCarrito();
+    if(!ls.length) return;
+    var s = state.settings;
+    var PAGOS = (s.pagos || []).concat(s.planNombre ? [s.planNombre] : []);
+
+    var d = document.createElement('dialog');
+    d.className = 'pedido';
+    d.innerHTML = '<div class="dlg-h"><h3>Tu pedido</h3>'
+      + '<button class="cerrarx" data-cerrar aria-label="Cerrar">✕</button></div><div class="dlg-b">'
+      + '<div class="lineas">' + ls.map(function(l){
+          var et = etiquetaVar(l.p, l.v);
+          return '<div class="ln"><div class="nb">' + esc(l.p.name)
+            + (et ? '<small>' + esc(et) + '</small>' : '') + '</div>'
+            + '<div class="qt"><button data-m="' + esc(l.k) + '">−</button><b>' + l.q + '</b>'
+            + '<button data-p="' + esc(l.k) + '">+</button></div>'
+            + '<div class="sb tnum">' + money(l.sub) + '</div>'
+            + '<button class="rm" data-x="' + esc(l.k) + '" aria-label="Sacar">✕</button></div>';
+        }).join('') + '</div>'
+      + '<div id="c-tot"></div>'
+      + '<div class="cupon"><input id="c-cup" type="text" autocomplete="off" spellcheck="false"'
+      + ' placeholder="¿Tenés un código?" value="' + esc(prev.cupon || '') + '">'
+      + '<button type="button" id="c-cupb">Aplicar</button></div>'
+      + '<div id="c-cupmsg" class="cupmsg"></div>'
+      + '<div class="avisosena">' + esc(s.sena) + ' · ' + esc(s.anticipacion) + '</div>'
+      + entregaHTML()
+      + '<label class="fld" style="margin-top:14px"><span>¿Para qué fecha es?</span>'
+      + '<input type="date" id="c-f" value="' + esc(prev.fecha || '') + '"></label>'
+      + '<div class="fld"><span>Medio de pago</span><div class="segm pagos">'
+      + PAGOS.map(function(x){
+          return '<button type="button" data-pago="' + esc(x) + '"'
+            + ((prev.pago || PAGOS[0]) === x ? ' class="on"' : '') + '>' + esc(x) + '</button>'; }).join('')
+      + '</div></div>'
+      + '<label class="fld"><span>Aclaraciones (opcional)</span>'
+      + '<textarea id="c-n" placeholder="Nombre y edad en la torta, colores, personaje…">'
+      + esc(prev.nota || '') + '</textarea></label>'
+      + '</div>'
+      + '<div class="dlg-f"><button class="btn wa" data-enviar style="width:100%">'
+      + WAICON + 'Enviar pedido por WhatsApp</button></div>';
+
+    document.body.appendChild(d);
+    var leer = function(){
+      var pg = d.querySelector('.segm.pagos button.on');
+      return { fecha:d.querySelector('#c-f').value,
+               pago: pg ? pg.getAttribute('data-pago') : '',
+               cupon:d.querySelector('#c-cup').value.trim(),
+               nota:d.querySelector('#c-n').value.trim() };
+    };
+
+    /* el total se vuelve a dibujar cada vez que se aplica o se saca un código */
+    var pintarTotal = function(cod){
+      var c = buscarCupon(cod), t = totalCarrito(), desc = c ? descuentoCarrito(cod) : 0;
+      var h = '';
+      if(c){
+        h += '<div class="totlin"><span>Subtotal</span><b class="tnum">' + money(t) + '</b></div>'
+          +  '<div class="totlin desc"><span>' + esc(String(cod).trim().toUpperCase())
+          +  ' · −' + c.pct + '%</span><b class="tnum">−' + money(desc) + '</b></div>';
+      }
+      h += '<div class="total"><span>Total estimado</span><b class="tnum">'
+        +  money(t - desc) + '</b></div>';
+      d.querySelector('#c-tot').innerHTML = h;
+    };
+    var aplicarCupon = function(){
+      var cod = d.querySelector('#c-cup').value.trim();
+      var msg = d.querySelector('#c-cupmsg'), c = buscarCupon(cod);
+      if(!cod){ msg.className = 'cupmsg'; msg.textContent = ''; pintarTotal(''); return; }
+      if(c){ msg.className = 'cupmsg ok'; msg.textContent = '¡Listo! ' + c.texto + '.'; }
+      else  { msg.className = 'cupmsg no'; msg.textContent = 'Ese código no existe o ya venció.'; }
+      pintarTotal(cod);
+    };
+    pintarTotal(prev.cupon || '');
+    if(prev.cupon) aplicarCupon();
+    d.querySelector('#c-cupb').onclick = aplicarCupon;
+    d.querySelector('#c-cup').addEventListener('keydown', function(ev){
+      if(ev.key === 'Enter'){ ev.preventDefault(); aplicarCupon(); }
+    });
+    d.querySelectorAll('[data-pago]').forEach(function(bt){
+      bt.onclick = function(){
+        d.querySelectorAll('[data-pago]').forEach(function(o){ o.classList.remove('on'); });
+        bt.classList.add('on');
+      };
+    });
+    var recargar = function(){
+      var v = leer(); d.close(); d.remove();
+      render();
+      if(cantCarrito() > 0) dlgPedidoCarrito(v);
+    };
+
+    d.querySelector('[data-cerrar]').onclick = function(){ d.close(); d.remove(); };
+    d.querySelector('[data-enviar]').onclick = function(){
+      window.open(waBase() + '?text=' + encodeURIComponent(textoPedidoCarrito(leer())), '_blank', 'noopener');
+      chispas(d.querySelector('[data-enviar]'), true);
+      confeti();
+    };
+    d.querySelectorAll('[data-p]').forEach(function(bt){
+      bt.onclick = function(){ chispas(bt); sumarCarrito(bt.getAttribute('data-p'), 1); recargar(); }; });
+    d.querySelectorAll('[data-m]').forEach(function(bt){
+      bt.onclick = function(){ sumarCarrito(bt.getAttribute('data-m'), -1); recargar(); }; });
+    d.querySelectorAll('[data-x]').forEach(function(bt){
+      bt.onclick = function(){ delete carrito[bt.getAttribute('data-x')]; guardarCarrito(); recargar(); }; });
+    d.addEventListener('close', function(){ d.remove(); });
+    d.showModal();
+  }
+
+  /* la tira pegada: el buscador arriba y los chips de cantidad de personas debajo */
+  function filtrosHTML(){
+    var buscador = '<div class="search' + (filt.q ? ' conx' : '') + '">'
+      + SEARCHICON.replace('<svg ','<svg class="si" ')
+      + '<input type="search" placeholder="Buscar una torta, un postre…" value="' + esc(filt.q) + '" data-q>'
+      + (filt.q ? '<button class="sx" data-qx aria-label="Limpiar">✕</button>' : '') + '</div>';
+    /* la fila de cantidades: chips iguales, sin ícono, deslizables si no entran */
+    var personas = '<div class="frow" aria-label="¿Cuántos son?"><div class="fchips">'
+      + '<button class="chip" data-people="" aria-pressed="' + (filt.people==null) + '">Ver todo</button>'
+      + PEOPLE.map(function(o){ return '<button class="chip" data-people="' + o.v + '" aria-pressed="'
+          + (filt.people===o.v) + '">Para ' + esc(o.l) + '</button>'; }).join('')
+      + '</div></div>';
+    return buscador + personas;
+  }
+
+  /* los grupos y eventos: pestañas de texto en el flujo, arriba de la grilla (sin íconos) */
+  function gruposHTML(){
+    var nf = cantFavs();
+    if(!nf) soloFavs = false;
+    var h = '<div class="fgrupos"><div class="tabs">'
+      + '<button class="tab" data-cat="" data-event="" aria-pressed="' + (filt.cat==null && filt.event==null && !soloFavs) + '">Todo</button>'
+      /* la pestaña ♥ Favoritos aparece solo cuando hay alguno guardado */
+      + (nf ? '<button class="tab favtab" data-fav aria-pressed="' + soloFavs + '">♥ Favoritos (' + nf + ')</button>' : '');
+    (state.groups||[]).forEach(function(g){
+      if(g.id === 'evento'){
+        h += state.events.filter(function(e){ return e.activo; }).map(function(e){
+          return '<button class="tab" data-event="' + esc(e.id) + '" aria-pressed="' + (filt.event===e.id) + '">'
+            + esc(e.name) + '</button>'; }).join('');
+      } else {
+        h += state.categories.filter(function(c){ return c.group === g.id; }).map(function(c){
+          return '<button class="tab" data-cat="' + esc(c.id) + '" aria-pressed="' + (filt.cat===c.id) + '">'
+            + esc(c.short||c.name) + '</button>'; }).join('');
+      }
+    });
+    return h + '</div></div>';
+  }
+
+  /* el dibujo chiquito que va al lado del título de cada categoría (carpeta iconos) */
+  var ICONO_CAT = { crema:'torta', ganache:'torta-encargo', pisos:'torta-encargo', tortaspostres:'tartas-postres',
+    docena:'galletas', bomboneria:'box', mesas:'mesa-dulce', postres:'tarta-clasica', empresas:'box-grande',
+    combos:'cupcake', combosevento:'torta-encargo' };
+  function iconoCatNombre(id){ return ICONO_CAT[id] || ''; }
+  function iconoCat(id){
+    var n = ICONO_CAT[id];
+    return n ? '<img class="cat-ico" src="iconos/' + n + '.png" alt="" loading="lazy" decoding="async" onerror="this.remove()">' : '';
+  }
+
+  /* la primera sección de cada grupo lleva el ancla del grupo (#g-tortas, #g-mesa…) */
+  var gruposVistos = {};
+  /* la torta del hero: se sortea una vez por carga de página */
+  var heroId = null;
+  function secHTML(c, items, startIdx){
+    var open = !closed[c.id];
+    var ancla = '';
+    if(c.group && !gruposVistos[c.group]){ gruposVistos[c.group] = true; ancla = ' id="g-' + esc(c.group) + '"'; }
+    var h = '<section class="cat"' + ancla + ' data-cat-id="' + esc(c.id) + '"><div class="cat-top">'
+      + '<button class="cat-head" data-sec="' + esc(c.id) + '" aria-expanded="' + open + '">'
+      + iconoCat(c.id)
+      + '<span class="tt"><h2>' + esc(c.name) + '</h2>'
+      + (c.note ? '<span class="note">' + esc(c.note) + '</span>' : '') + '</span>'
+      + '<span class="cnt tnum">' + items.length + '</span>'
+      + '<span class="chev">' + CHEV + '</span>'
+      + '</button>'
+      + '</div><div class="rule"></div>'
+      + '<div class="' + claseGrid() + '"' + (open ? '' : ' hidden') + '>';
+    items.forEach(function(p,i){ h += cardHTML(p, Math.min((startIdx||0)+i,9)); });
+    return h + '</div></section>';
+  }
+
+  /* Si una foto de la galería no existe, la tarjeta se saca sola.
+     Si al final no quedó ninguna, se muestran los recuadros punteados. */
+  function vacias(){
+    var h = '';
+    for(var i=0;i<4;i++){ h += '<div class="icard empty">' + ART.monito + '<span>Acá van tus fotos</span></div>'; }
+    return h;
+  }
+  window.cakeSinFoto = function(img){
+    var c = img.parentNode;
+    var grid = c ? c.parentNode : null;
+    if(c && grid) grid.removeChild(c);
+    if(grid && !grid.children.length) grid.innerHTML = vacias();
+  };
+
+  /* ===========================================================
+     FOTOS EXTRA AUTOMÁTICAS
+     Si un producto tiene "Torta.jpeg", la página busca sola
+     "Torta 2.jpeg", "Torta 3.jpeg"… y también "Torta (2).jpeg",
+     que es como las numera Windows. Las que encuentra las suma.
+     =========================================================== */
+  function baseDeFoto(u){
+    var m = String(u).match(/^(.*?)(\.[a-z0-9]+)$/i);
+    if(!m) return null;
+    return { base: m[1].replace(/(?:%20|\s)*(?:\(\d+\)|\d+)$/, ''), ext: m[2] };
+  }
+  function probarFoto(url, cb){
+    var i = new Image();
+    i.onload  = function(){ cb(true); };
+    i.onerror = function(){ cb(false); };
+    i.src = url;
+  }
+  /* Galerías automáticas: busca "prefijo 1", "prefijo 2"… hasta que falta uno.
+     Sirve para «Modelos de inspiración» y para «Fuera de molde». */
+  function autoGaleria(prefijos, listo){
+    var out = [], exts = ['.jpeg', '.jpg', '.png'], vacios = 0;
+
+    (function porNumero(n){
+      if(n > 24 || vacios >= 4){ listo(out); return; }
+
+      /* n = 0 es el archivo sin número: "fuera de molde.jpeg" */
+      var cands = [];
+      prefijos.forEach(function(pf){
+        exts.forEach(function(e){
+          if(n === 0) cands.push('fotos/' + encodeURIComponent(pf) + e);
+          else {
+            cands.push('fotos/' + encodeURIComponent(pf + ' ' + n) + e);
+            cands.push('fotos/' + encodeURIComponent(pf + ' (' + n + ')') + e);
+          }
+        });
+      });
+
+      var k = 0;
+      (function probar(){
+        if(k >= cands.length){ vacios++; porNumero(n + 1); return; }
+        var u = cands[k++];
+        probarFoto(u, function(ok){
+          if(ok){
+            vacios = 0;
+            if(out.indexOf(u) === -1) out.push(u);
+            porNumero(n + 1);
+          } else probar();
+        });
+      })();
+    })(0);
+  }
+
+  function cargarGalerias(listo){
+    var falta = 2, hubo = false;
+    var fin = function(){ if(--falta === 0 && hubo) listo(); };
+
+    autoGaleria(['inspiracion', 'inspiración', 'modelo'], function(fs){
+      if(fs.length){
+        state.inspiracion = fs.map(function(f, i){
+          return { id:'i' + (i+1), foto:f, titulo:'', activo:true }; });
+        hubo = true;
+      }
+      fin();
+    });
+
+    autoGaleria(['fuera de molde', 'rara'], function(fs){
+      if(fs.length){
+        state.rarezas = fs.map(function(f, i){
+          return { id:'r' + (i+1), foto:f, titulo:'', activo:true }; });
+        hubo = true;
+      }
+      fin();
+    });
+  }
+
+  /* el nombre del archivo puede estar en minúscula o sin tildes */
+  function sinTildes(s){
+    return String(s).normalize ? String(s).normalize('NFD').replace(/[̀-ͯ]/g, '') : String(s);
+  }
+  function variantesNombre(n){
+    var a = [n, n.toLowerCase(), sinTildes(n), sinTildes(n).toLowerCase()];
+    return a.filter(function(v, i){ return a.indexOf(v) === i; });
+  }
+
+  /* Parte una ruta en carpeta + nombre + extensión, ya sin codificar */
+  function partesRuta(u){
+    var d; try{ d = decodeURIComponent(String(u)); }catch(e){ d = String(u); }
+    var i = d.lastIndexOf('/');
+    var dir = i < 0 ? 'fotos/' : d.slice(0, i + 1);
+    var f   = i < 0 ? d : d.slice(i + 1);
+    var j   = f.lastIndexOf('.');
+    return { dir:dir, base:(j < 0 ? f : f.slice(0, j)), ext:(j < 0 ? '.jpeg' : f.slice(j)) };
+  }
+  function armarRuta(dir, base, ext){ return dir + encodeURIComponent(base + ext); }
+
+  /* prueba una lista de candidatos y devuelve el primero que exista */
+  function primeraQueCarga(lista, cb){
+    var i = 0;
+    (function paso(){
+      if(i >= lista.length){ cb(null); return; }
+      var u = lista[i++];
+      probarFoto(u, function(ok){ if(ok) cb(u); else paso(); });
+    })();
+  }
+
+  function autoFotos(listo){
+    var pend = 0, hubo = false;
+
+    /* Solo salimos a buscar fotos de los productos que no tienen ninguna.
+       Los que ya están resueltos arriba se dibujan bien de entrada y no
+       generan ni una consulta de más. */
+    (state.products || []).filter(function(p){ return !photosOf(p).length; })
+      .forEach(function(p){
+      pend++;
+      var conf = photosOf(p), antes = conf.join('|'), lista = [];
+
+      var terminar = function(){
+        p.fotos = lista; delete p.photo;
+        if(lista.join('|') !== antes) hubo = true;
+        if(--pend === 0 && hubo) listo();
+      };
+
+      /* con la primera ya resuelta, busca 2, 3, 4… tolerando huecos */
+      var extender = function(){
+        var q = partesRuta(lista[0]);
+        var raiz = q.base.replace(/\s*(?:\(\d+\)|\d+)$/, '');
+        var fallas = 0;
+        (function siguiente(n){
+          if(n > 10 || fallas > 2){ terminar(); return; }
+          var cands = [];
+          variantesNombre(raiz).forEach(function(b){
+            cands.push(armarRuta(q.dir, b + ' ' + n, q.ext));
+            cands.push(armarRuta(q.dir, b + ' (' + n + ')', q.ext));
+          });
+          primeraQueCarga(cands, function(u){
+            if(u){ fallas = 0; if(lista.indexOf(u) === -1) lista.push(u); }
+            else fallas++;
+            siguiente(n + 1);
+          });
+        })(2);
+      };
+
+      /* 1 · verificamos las cargadas a mano, probando mayúsculas y tildes */
+      var i = 0;
+      (function verificar(){
+        if(i < conf.length){
+          var q = partesRuta(conf[i++]);
+          var cands = variantesNombre(q.base).map(function(b){
+            return armarRuta(q.dir, b, q.ext); });
+          primeraQueCarga(cands, function(u){
+            if(u && lista.indexOf(u) === -1) lista.push(u);
+            verificar();
+          });
+          return;
+        }
+        if(lista.length){ extender(); return; }
+
+        /* 2 · si no quedó ninguna, buscamos por el nombre del producto */
+        var cands = [];
+        ['.jpeg', '.jpg', '.png'].forEach(function(e){
+          variantesNombre(p.name).forEach(function(b){
+            cands.push(armarRuta('fotos/', b, e));
+          });
+        });
+        ['.jpeg', '.jpg'].forEach(function(e){
+          variantesNombre(p.name).forEach(function(b){
+            cands.push(armarRuta('fotos/', b + ' (2)', e));
+          });
+        });
+        primeraQueCarga(cands, function(u){
+          if(u){ lista.push(u); extender(); } else terminar();
+        });
+      })();
+    });
+  }
+
+  function filaPDF(p){
+    var pr = promoFor(p), fs = photosOf(p);
+    var h = '<div class="pdf-i">'
+      + (fs.length ? '<img src="' + esc(fs[0]) + '" alt="">' : '<div class="pdf-sf"></div>')
+      + '<div class="pdf-b"><div class="pdf-nm">' + esc(p.name) + '</div>'
+      + (porcTxt(p) ? '<div class="pdf-p">' + esc(porcTxt(p)) + '</div>' : '')
+      + (p.desc ? '<div class="pdf-d">' + esc(p.desc) + '</div>' : '');
+    if(p.incluye && p.incluye.length){
+      h += '<ul class="pdf-l">' + ordenIncluye(p.incluye).map(function(x){
+        return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+    }
+    if(p.opciones && p.opciones.length){
+      h += '<div class="pdf-d"><b>'
+        + (p.elegir ? p.elegir + ' gustos a elección: ' : 'Gustos: ') + '</b>'
+        + esc(p.opciones.join(' · ')) + '</div>';
+    }
+    if(p.price){
+      h += '<div class="pdf-pr">'
+        + (p.plabel ? '<small>' + esc(p.plabel) + '</small>' : '') + money(withOff(p.price, pr));
+      if(p.price2) h += '&nbsp;&nbsp;·&nbsp;&nbsp;'
+        + (p.p2label ? '<small>' + esc(p.p2label) + '</small>' : '') + money(withOff(p.price2, pr));
+      h += '</div>';
+    } else {
+      h += '<div class="pdf-pr" style="font-size:14px">Consultar</div>';
+    }
+    return h + '</div></div>';
+  }
+
+  function exportarPDF(titulo, nota, lista){
+    var b = state.brand, s = state.settings;
+    var h = '<div class="pdf-h"><div class="pdf-m">Cake</div>'
+      + '<div class="pdf-s">Café y pastelería</div></div>'
+      + '<h1 class="pdf-t">' + esc(titulo) + '</h1>'
+      + (nota ? '<p class="pdf-n">' + esc(nota) + '</p>' : '')
+      + '<div class="pdf-grid">' + lista.map(filaPDF).join('') + '</div>'
+
+      /* el mismo bloque de información que está en la página */
+      + '<div class="pdf-info">'
+      + '<div><h4>Cómo encargar</h4><ul>'
+      + '<li>' + esc(s.anticipacion) + '</li>'
+      + '<li>' + esc(s.sena) + '</li>'
+      + '<li>Contactanos para más asesoramiento</li></ul></div>'
+
+      + '<div><h4>Formas de pago</h4><ul>'
+      + (s.pagos || []).map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('')
+      + '</ul>'
+      + (s.planNombre
+          ? '<div class="pdf-plan"><b>' + esc(s.planNombre) + '</b>'
+            + '<span>' + esc(s.planDesc || '') + '</span></div>' : '')
+      + '</div>'
+
+      + '<div><h4>' + esc(s.cafeTitulo || '¿Conocés nuestro café?') + '</h4>'
+      + '<p>' + esc(s.cafeTexto || '') + '</p></div>'
+      + '</div>'
+
+      + '<div class="pdf-f">'
+      + '<div class="fm">Cake</div>'
+      + '<div class="fs">Café y pastelería</div>'
+      + '<div class="fd">' + esc(b.address) + '</div>'
+      + '<div class="fh">' + esc(b.hours) + '</div>'
+      + '<div class="fi">@' + esc(b.instagram)
+      + (b.instagram2 ? ' · @' + esc(b.instagram2) : '')
+      + ' · ' + esc(String(b.whatsapp).replace(/^549/, '')) + '</div>'
+      + '</div>';
+    return h;
+  }
+
+  function inspiHTML(){
+    var list = (state.inspiracion||[]).filter(function(x){ return x.activo; });
+    var h = '<section class="inspi"><div class="inspi-head"><h2>¿Todavía no sabés qué querés?</h2>'
+      + '<p>Mirá algunos modelos que hicimos. Mandanos el que más te guste y lo adaptamos a tu fecha, tu sabor y tu cantidad de porciones.</p></div>';
+    h += '<div class="igrid" id="igrid">';
+    if(!list.length){
+      h += vacias();
+    } else {
+      list.forEach(function(it){
+        var msg = 'Hola! Vi un modelo en la galería' + (it.titulo ? ' (' + it.titulo + ')' : '')
+          + ' y me gustaría algo así. ¿Me pasás presupuesto?';
+        h += '<div class="icard">'
+          + (it.foto ? '<img src="' + esc(it.foto) + '" alt="' + esc(it.titulo||'Modelo')
+              + '" loading="lazy" onerror="cakeSinFoto(this)">' : '')
+          + (it.titulo ? '<div class="cap">' + esc(it.titulo) + '</div>' : '')
+          + '<a class="want" target="_blank" rel="noopener" href="' + esc(waBase() + '?text=' + encodeURIComponent(msg))
+          + '"><span>Quiero algo así</span></a></div>';
+      });
+    }
+    return h + '</div></section>';
+  }
+
+  /* --- Fuera de molde: las tortas raras, las que no entran en ninguna categoría --- */
+  function rarezasHTML(){
+    var list = (state.rarezas||[]).filter(function(x){ return x.activo; });
+    var isAdm = !!admin.token;
+    if(!list.length && !isAdm) return '';
+    var h = '<section class="inspi rarezas"><div class="inspi-head"><h2>Fuera de molde</h2>'
+      + '<p>Las que nos pidieron y nos animamos a hacer. Si lo que tenés en la cabeza no se parece '
+      + 'a nada de lo de arriba, es exactamente lo que nos gusta que nos pidan.</p></div>';
+    h += '<div class="igrid" id="rgrid">';
+    if(!list.length){
+      h += vacias();
+    } else {
+      list.forEach(function(it){
+        var msg = 'Hola! Vi una torta en «Fuera de molde»' + (it.titulo ? ' (' + it.titulo + ')' : '')
+          + ' y quiero algo así de distinto. ¿Me pasás presupuesto?';
+        h += '<div class="icard">'
+          + (it.foto ? '<img src="' + esc(it.foto) + '" alt="' + esc(it.titulo||'Torta')
+              + '" loading="lazy" onerror="cakeSinFoto(this)">' : '')
+          + (it.titulo ? '<div class="cap">' + esc(it.titulo) + '</div>' : '')
+          + '<a class="want" target="_blank" rel="noopener" href="' + esc(waBase() + '?text=' + encodeURIComponent(msg))
+          + '"><span>Quiero una así</span></a></div>';
+      });
+    }
+    return h + '</div></section>';
+  }
+
+  function cardHTML(p, idx){
+    var pr = promoFor(p), fs = photosOf(p), isAdm = !!admin.token;
+    var h = '<article class="card' + (p.activo?'':' off') + '" style="animation-delay:' + (idx*55) + 'ms">';
+    /* la foto «en 3D» que sobresale; sin foto, el dibujo de Canva de la categoría.
+       El cartel de descuento y el «n fotos» van sobre la foto. */
+    h += '<div class="ph' + (fs.length ? ' clic" data-gal="' + esc(p.id) + '"' : '"') + '>'
+      + (fs.length
+          ? '<img src="' + esc(fs[0]) + '" alt="' + esc(p.name) + '" loading="lazy" onerror="this.remove()">'
+          : '<img class="dib" src="iconos/' + (iconoCatNombre(p.cat) || 'torta') + '.png" alt="" loading="lazy" onerror="this.remove()">')
+      + (fs.length > 1 ? '<span class="phcount tnum">' + fs.length + ' fotos</span>' : '')
+      + (pr ? '<span class="offtag">' + esc(pr.badge) + '</span>'
+            : (precioAntes(p) ? '<span class="offtag">' + esc(badgeAntes(p)) + '</span>' : ''))
+      + '</div>'
+      + (isAdm ? '' : '<button class="fav" type="button" data-fav-id="' + esc(p.id) + '" aria-pressed="' + (!!favs[p.id])
+          + '" aria-label="Guardar en favoritos" title="Favorito">♥</button>');
+    h += '<div class="body"><div class="nm">' + esc(p.name) + '</div>';
+    if(porcTxt(p)) h += '<span class="porc">' + esc(porcTxt(p)) + '</span>';
+    if(p.desc) h += '<div class="ds">' + esc(p.desc) + '</div>';
+    if(p.cat==='crema' || p.cat==='ganache'){
+      var sx = state.settings;
+      h += '<details class="relldet"><summary>Bizcochuelo y rellenos</summary>'
+        + '<p class="rb">' + esc(sx.bizcochuelo) + '</p>'
+        + ((sx.coberturas || []).length
+            ? '<p class="gr">Coberturas</p><ul>'
+              + sx.coberturas.map(function(r){ return '<li>' + esc(r) + '</li>'; }).join('')
+              + '</ul>' : '')
+        + '<ul>'
+        + (sx.rellenos || []).map(function(r){ return '<li>' + esc(r) + '</li>'; }).join('')
+        + '</ul></details>';
+    }
+    if(p.incluye && p.incluye.length){
+      h += '<details class="relldet"><summary>Qué incluye</summary>'
+        + '<ul class="incl">' + ordenIncluye(p.incluye).map(function(i){ var a=String(i).split('·');
+        return '<li>' + (a.length>1 ? '<b>' + esc(a[0].trim()) + '</b> ' + esc(a.slice(1).join('·').trim()) : esc(i)) + '</li>';
+      }).join('') + '</ul></details>';
+    }
+    if(p.opciones && p.opciones.length){
+      h += '<details class="relldet"><summary>'
+        + (p.elegir ? p.elegir + ' gustos a elección' : 'Gustos a elección') + '</summary>'
+        + '<ul>' + p.opciones.map(function(o){ return '<li>' + esc(o) + '</li>'; }).join('')
+        + '</ul></details>';
+    }
+    if(p.price){
+      h += '<div class="prices">' + priceRow(p.price, p.plabel, pr, false, precioAntes(p));
+      if(p.price2) h += priceRow(p.price2, p.p2label||'Grande', pr, true);
+      h += '</div>';
+    } else {
+      h += '<div class="prices"><div class="prow"><span class="pv" style="font-size:16px">A consultar</span></div></div>';
+    }
+    h += '</div>';
+    var enC = enCarrito(p);
+    h += '<div class="act"><div class="addrow">'
+      + (p.price && !isAdm
+          ? (enC > 0
+              ? '<div class="qt"><button data-menosp="' + esc(p.id) + '" aria-label="Quitar uno">−</button>'
+                + '<b' + (tocado === p.id ? ' class="pulso"' : '') + '>' + enC + '</b>'
+                + '<button data-add="' + esc(p.id) + '" aria-label="Agregar uno">+</button></div>'
+              : '<button class="add" data-add="' + esc(p.id) + '" aria-label="Agregar">+</button>')
+          : '')
+      /* con precio pasa primero por el código; sin precio va derecho a consultar */
+      + (p.price
+          ? '<button class="btn wa' + (isAdm ? ' sola' : '') + '" data-pedir="' + esc(p.id) + '" aria-label="Pedir por WhatsApp" title="Pedir por WhatsApp">' + WAICON
+            + '<span class="tx">Pedir por WhatsApp</span></button>'
+          : '<a class="btn wa sola" target="_blank" rel="noopener" href="' + esc(waLink(p)) + '">'
+            + WAICON + '<span class="tx">Consultar</span></a>')
+      + '</div></div>';
+    if(isAdm){
+      h += '<div class="cardadmin">'
+        + '<button data-edit="' + esc(p.id) + '">Editar</button>'
+        + '<button data-fotos="' + esc(p.id) + '">Fotos</button>'
+        + '<button data-toggle="' + esc(p.id) + '">' + (p.activo?'Ocultar':'Mostrar') + '</button>'
+        + '<button class="mv" data-up="' + esc(p.id) + '" title="Subir">↑</button>'
+        + '<button class="mv" data-down="' + esc(p.id) + '" title="Bajar">↓</button>'
+        + '<button class="del" data-del="' + esc(p.id) + '">Borrar</button></div>';
+    }
+    return h + '</article>';
+  }
+
+  /* 'antes' es el precio viejo de un producto puntual: se muestra tachado
+     al lado del nuevo, igual que cuando hay una promo de categoría. */
+  function priceRow(v, label, pr, sec, antes){
+    var h = '<div class="prow' + (sec?' sec':'') + '"><span class="pl">' + esc(label||'') + '</span><span class="pv tnum">';
+    if(pr)          h += '<s>' + money(v) + '</s><span class="now">' + money(withOff(v,pr)) + '</span>';
+    else if(antes)  h += '<s>' + money(antes) + '</s><span class="now">' + money(v) + '</span>';
+    else            h += money(v);
+    return h + '</span></div>';
+  }
+  function precioAntes(p){
+    return (!promoFor(p) && p.antes && p.antes > p.price) ? p.antes : 0;
+  }
+  /* el cartelito: si el producto trae 'badge' se usa ese texto; si no,
+     se calcula el porcentaje real entre el precio viejo y el nuevo. */
+  function badgeAntes(p){
+    var a = precioAntes(p); if(!a) return '';
+    if(p.badge) return p.badge;
+    return Math.round((1 - p.price / a) * 100) + '% OFF';
+  }
+
+  /* ===========================================================
+     VISOR DE FOTOS
+     =========================================================== */
+  var lb = null, lbScroll = 0;
+  function closeLb(){
+    if(lb){ lb.close(); lb.remove(); lb = null; }
+    window.scrollTo(0, lbScroll);
+  }
+  function openGal(id){
+    var p = findById(id); if(!p) return;
+    var fs = photosOf(p); if(!fs.length) return;
+    var i = 0;
+    lbScroll = window.scrollY;
+    lb = document.createElement('dialog'); lb.className = 'lb';
+
+    /* El visor se arma UNA sola vez. Para cambiar de foto solo se le cambia
+       la dirección a la imagen: si se redibujara entero, el navegador
+       descartaría la imagen y se vería el parpadeo blanco de la recarga. */
+    lb.innerHTML = '<button class="lbx" data-x aria-label="Cerrar">✕</button>'
+      + '<img alt="' + esc(p.name) + '">'
+      + '<div class="lbbar"><div class="lbt">' + esc(p.name) + '</div>'
+      + (fs.length > 1 ? '<span class="lbc tnum"></span>'
+          + '<button class="lbn" data-p aria-label="Anterior">‹</button>'
+          + '<button class="lbn" data-n aria-label="Siguiente">›</button>' : '')
+      + '</div>';
+
+    var lbImg = lb.querySelector('img'), lbCnt = lb.querySelector('.lbc');
+
+    /* deja las otras fotos listas en memoria, para que el cambio sea inmediato */
+    fs.forEach(function(u){ var x = new Image(); x.src = u; });
+
+    function paint(){
+      lbImg.src = fs[i];
+      if(lbCnt) lbCnt.textContent = (i + 1) + ' / ' + fs.length;
+    }
+    lb.querySelector('[data-x]').onclick = closeLb;
+    var pv = lb.querySelector('[data-p]'), nx = lb.querySelector('[data-n]');
+    if(pv) pv.onclick = function(){ i = (i-1+fs.length)%fs.length; paint(); };
+    if(nx) nx.onclick = function(){ i = (i+1)%fs.length; paint(); };
+    paint();
+    lb.addEventListener('close', function(){
+      if(lb){ lb.remove(); lb=null; }
+      document.body.style.overflow = '';
+      window.scrollTo(0, lbScroll);
+    });
+    lb.addEventListener('click', function(ev){ if(ev.target===lb) closeLb(); });
+
+    /* el teclado va en el documento, no en el visor: al cambiar de foto se
+       redibuja por dentro y el foco se perdería después de la primera tecla */
+    function alTeclear(ev){
+      if(!lb) return;
+      if(ev.key === 'Escape'){ closeLb(); return; }
+      if(fs.length < 2) return;
+      if(ev.key === 'ArrowRight'){ ev.preventDefault(); i = (i+1)%fs.length; paint(); }
+      if(ev.key === 'ArrowLeft'){  ev.preventDefault(); i = (i-1+fs.length)%fs.length; paint(); }
+    }
+    document.addEventListener('keydown', alTeclear);
+    lb.addEventListener('close', function(){ document.removeEventListener('keydown', alTeclear); });
+
+    /* pasar fotos deslizando con el dedo */
+    var x0 = null;
+    lb.addEventListener('touchstart', function(ev){ x0 = ev.touches[0].clientX; }, { passive:true });
+    lb.addEventListener('touchend', function(ev){
+      if(x0 === null || fs.length < 2) return;
+      var dx = ev.changedTouches[0].clientX - x0; x0 = null;
+      if(Math.abs(dx) > 45){ i = (i + (dx < 0 ? 1 : -1) + fs.length) % fs.length; paint(); }
+    }, { passive:true });
+
+    document.body.appendChild(lb);
+
+    /* si el navegador del celular es viejo y no soporta showModal, lo abrimos a mano */
+    if(typeof lb.showModal === 'function'){
+      try{ lb.showModal(); }
+      catch(e){ lb.setAttribute('open',''); lb.classList.add('lb-plano'); }
+    } else {
+      lb.setAttribute('open','');
+      lb.classList.add('lb-plano');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  /* ===========================================================
+     DIÁLOGOS
+     =========================================================== */
+  function dialog(title, body, onSave, saveLabel){
+    var d = document.createElement('dialog');
+    d.innerHTML = '<div class="dlg-h"><h3>' + esc(title) + '</h3></div><div class="dlg-b">' + body + '</div>'
+      + '<div class="dlg-f"><button class="btn ghost" data-x="c">Cancelar</button>'
+      + '<button class="btn" data-x="s">' + esc(saveLabel||'Guardar') + '</button></div>';
+    document.body.appendChild(d);
+    d.querySelector('[data-x="c"]').onclick = function(){ d.close(); d.remove(); };
+    d.querySelector('[data-x="s"]').onclick = function(){ if(onSave(d)!==false){ d.close(); d.remove(); render(); } };
+    d.addEventListener('close', function(){ d.remove(); });
+    d.showModal(); return d;
+  }
+
+  function shrink(file, max, cb){
+    var fr = new FileReader();
+    fr.onload = function(){
+      var img = new Image();
+      img.onload = function(){
+        var w=img.width, hh=img.height, M=max||900;
+        if(w>M||hh>M){ var r=Math.min(M/w,M/hh); w=Math.round(w*r); hh=Math.round(hh*r); }
+        var cv=document.createElement('canvas'); cv.width=w; cv.height=hh;
+        var cx=cv.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,w,hh); cx.drawImage(img,0,0,w,hh);
+        cb(cv.toDataURL('image/jpeg', 0.72));
+      };
+      img.onerror = function(){ cb(null); };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  }
+
+  /* --------- login --------- */
+  function openLogin(){
+    if(admin.token){
+      dialog('Sesión iniciada', '<p class="hint">Entraste como <b>' + esc(admin.email||'') + '</b>.</p>',
+        function(){ return true; }, 'Cerrar');
+      return;
+    }
+    var body = '<label class="fld"><span>Correo</span><input id="lg-e" type="email" autocomplete="username"></label>'
+      + '<label class="fld"><span>Contraseña</span><input id="lg-p" type="password" autocomplete="current-password"></label>'
+      + '<p class="err" id="lg-err" hidden></p>'
+      + '<p class="hint">Solo para la administración de Cake.</p>';
+    var d = dialog('Entrar', body, function(dd){
+      var e = dd.querySelector('#lg-e').value.trim();
+      var p = dd.querySelector('#lg-p').value;
+      var err = dd.querySelector('#lg-err');
+      if(!e || !p){ err.hidden=false; err.textContent='Completá los dos campos.'; return false; }
+      if(FB_API_KEY.indexOf('PEGAR') === 0){
+        err.hidden=false; err.textContent='Falta cargar la API Key de Firebase en el código.'; return false;
+      }
+      err.hidden=false; err.textContent='Entrando…';
+      fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + FB_API_KEY, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ email:e, password:p, returnSecureToken:true })
+      }).then(function(r){ return r.json(); }).then(function(j){
+        if(j.idToken){
+          admin.token = j.idToken; admin.email = j.email;
+          try{ sessionStorage.setItem('cake-adm', JSON.stringify({t:j.idToken, e:j.email})); }catch(x){}
+          d.close(); d.remove(); render();
+          toast('Listo. Ya podés editar.');
+        } else {
+          err.textContent = 'No pudimos entrar. Revisá el correo y la contraseña.';
+        }
+      }).catch(function(){ err.textContent = 'Sin conexión con Firebase.'; });
+      return false;
+    }, 'Entrar');
+  }
+
+  function salir(){
+    if(admin.dirty && !confirm('Tenés cambios sin guardar. ¿Salir igual?')) return;
+    admin.token = null; admin.email = null; admin.dirty = false;
+    try{ sessionStorage.removeItem('cake-adm'); }catch(e){}
+    render(); toast('Sesión cerrada.');
+  }
+
+  /* --------- guardar en Firebase --------- */
+  function guardar(){
+    if(!admin.token) return;
+    toast('Guardando…', 1500);
+    fetch(DB_BASE + DB_NODE + '?auth=' + encodeURIComponent(admin.token), {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(state)
+    }).then(function(r){
+      if(r.ok){ admin.dirty = false; render(); toast('Guardado. Ya se ve en la web.'); }
+      else if(r.status === 401 || r.status === 403){
+        toast('La sesión venció o no tenés permiso. Entrá de nuevo.', 4000);
+        admin.token = null; try{ sessionStorage.removeItem('cake-adm'); }catch(e){} render();
+      }
+      else toast('No se pudo guardar (' + r.status + ').', 4000);
+    }).catch(function(){ toast('Sin conexión. No se guardó.', 4000); });
+  }
+
+  /* --------- producto --------- */
+  function openProduct(id){
+    var isNew = !id;
+    var p = id ? findById(id) : {id:uid(), cat:state.categories[0].id, name:'', desc:'',
+      price:0, plabel:'', p2label:'', eventos:[], fotos:[], activo:true};
+    var body = '<label class="fld"><span>Nombre</span><input id="f-name" value="' + esc(p.name) + '"></label>'
+      + '<label class="fld"><span>Sección</span><select id="f-cat">'
+      + state.categories.map(function(c){ return '<option value="' + esc(c.id) + '"' + (c.id===p.cat?' selected':'') + '>' + esc(c.name) + '</option>'; }).join('')
+      + '</select></label>'
+      + '<label class="fld"><span>Descripción</span><textarea id="f-desc">' + esc(p.desc) + '</textarea></label>'
+      + '<div class="row2"><label class="fld"><span>Porciones desde</span><input id="f-pmin" type="number" inputmode="numeric" value="' + (p.pmin||'') + '"></label>'
+      + '<label class="fld"><span>Hasta</span><input id="f-pmax" type="number" inputmode="numeric" value="' + (p.pmax||'') + '"></label></div>'
+      + '<div class="row2"><label class="fld"><span>Precio</span><input id="f-price" type="number" inputmode="numeric" value="' + (p.price||'') + '"></label>'
+      + '<label class="fld"><span>Etiqueta</span><input id="f-plabel" placeholder="20 cm" value="' + esc(p.plabel) + '"></label></div>'
+      + '<div class="row2"><label class="fld"><span>2° precio</span><input id="f-price2" type="number" inputmode="numeric" value="' + (p.price2||'') + '"></label>'
+      + '<label class="fld"><span>Etiqueta 2</span><input id="f-p2label" placeholder="26 cm" value="' + esc(p.p2label) + '"></label></div>'
+      + '<div class="fld"><span>Aparece en</span><div class="checks" id="f-evs">'
+      + state.events.map(function(e){ return '<label><input type="checkbox" value="' + esc(e.id) + '"'
+          + ((p.eventos||[]).indexOf(e.id)>-1?' checked':'') + '> ' + esc(e.name) + '</label>'; }).join('')
+      + '</div></div>'
+      + '<label class="fld"><span>Visible en la web</span><select id="f-act">'
+      + '<option value="1"' + (p.activo?' selected':'') + '>Sí</option>'
+      + '<option value="0"' + (p.activo?'':' selected') + '>No, oculto</option></select></label>'
+      + '<p class="hint">Dejá el precio en 0 para que el botón diga “Consultar”.</p>';
+    dialog(isNew?'Nuevo producto':'Editar producto', body, function(dd){
+      var nm = dd.querySelector('#f-name').value.trim();
+      if(!nm){ alert('Poné un nombre.'); return false; }
+      p.name = nm;
+      p.cat = dd.querySelector('#f-cat').value;
+      p.desc = dd.querySelector('#f-desc').value.trim();
+      p.pmin = Number(dd.querySelector('#f-pmin').value) || null;
+      p.pmax = Number(dd.querySelector('#f-pmax').value) || null;
+      p.price = Number(dd.querySelector('#f-price').value) || 0;
+      p.plabel = dd.querySelector('#f-plabel').value.trim();
+      p.price2 = Number(dd.querySelector('#f-price2').value) || null;
+      p.p2label = dd.querySelector('#f-p2label').value.trim();
+      p.eventos = Array.prototype.slice.call(dd.querySelectorAll('#f-evs input:checked')).map(function(i){ return i.value; });
+      p.activo = dd.querySelector('#f-act').value === '1';
+      if(isNew) state.products.push(p);
+      touch();
+    });
+  }
+
+  /* --------- fotos del producto --------- */
+  function openFotos(id){
+    var p = findById(id); if(!p) return;
+    var fs = photosOf(p).slice();
+    var d = dialog('Fotos · ' + p.name, '<div id="fl"></div>'
+      + '<div class="fld"><span>Subir una foto</span><input id="f-file" type="file" accept="image/*">'
+      + '<p class="hint">Se achica sola. Queda guardada en la base de datos.</p></div>'
+      + '<label class="fld"><span>O escribir el nombre del archivo</span>'
+      + '<input id="f-path" placeholder="fotos/Rogel.jpeg"></label>'
+      + '<button class="btn ghost" id="f-addpath" style="align-self:flex-start">Agregar por nombre</button>',
+      function(){
+        if(fs.length === 1){ p.photo = fs[0]; delete p.fotos; }
+        else if(fs.length > 1){ p.fotos = fs; delete p.photo; }
+        else { delete p.photo; delete p.fotos; }
+        touch();
+      });
+
+    function paint(){
+      var box = d.querySelector('#fl');
+      if(!fs.length){ box.innerHTML = '<p class="hint">Sin fotos todavía.</p>'; return; }
+      box.innerHTML = '<div class="fotolist">' + fs.map(function(f,i){
+        return '<div class="fotorow"><img src="' + esc(f) + '" alt="" onerror="this.style.visibility=\'hidden\'">'
+          + '<span class="fp">' + esc(f.length > 60 ? 'Foto subida a la base' : decodeURIComponent(f)) + '</span>'
+          + '<span class="fb2">'
+          + '<button data-mu="' + i + '" title="Subir">↑</button>'
+          + '<button data-md="' + i + '" title="Bajar">↓</button>'
+          + '<button class="dl" data-dl="' + i + '" title="Quitar">✕</button></span></div>';
+      }).join('') + '</div>';
+      box.querySelectorAll('[data-mu]').forEach(function(el){
+        el.onclick = function(){ var i=+el.getAttribute('data-mu'); if(i>0){ var t=fs[i]; fs[i]=fs[i-1]; fs[i-1]=t; paint(); } }; });
+      box.querySelectorAll('[data-md]').forEach(function(el){
+        el.onclick = function(){ var i=+el.getAttribute('data-md'); if(i<fs.length-1){ var t=fs[i]; fs[i]=fs[i+1]; fs[i+1]=t; paint(); } }; });
+      box.querySelectorAll('[data-dl]').forEach(function(el){
+        el.onclick = function(){ fs.splice(+el.getAttribute('data-dl'),1); paint(); }; });
+    }
+    paint();
+
+    d.querySelector('#f-file').onchange = function(ev){
+      var f = ev.target.files && ev.target.files[0]; if(!f) return;
+      shrink(f, 900, function(durl){
+        if(!durl){ alert('No pudimos leer esa imagen.'); return; }
+        fs.push(durl); paint(); ev.target.value='';
+      });
+    };
+    d.querySelector('#f-addpath').onclick = function(){
+      var v = d.querySelector('#f-path').value.trim();
+      if(!v) return;
+      fs.push(v.indexOf('fotos/')===0 ? v.replace(/ /g,'%20') : 'fotos/' + v.replace(/ /g,'%20'));
+      d.querySelector('#f-path').value=''; paint();
+    };
+  }
+
+  /* --------- promo --------- */
+  function openPromo(id){
+    var isNew = !id, pr = null;
+    state.promos.forEach(function(x){ if(x.id===id) pr = x; });
+    if(isNew) pr = {id:uid(), badge:'10% OFF', titulo:'', desc:'', pct:10, cats:[], hasta:'', activo:true};
+    var body = '<label class="fld"><span>Título</span><input id="q-t" placeholder="Tortas clásicas con 10% de descuento" value="' + esc(pr.titulo) + '"></label>'
+      + '<label class="fld"><span>Detalle</span><textarea id="q-d">' + esc(pr.desc) + '</textarea></label>'
+      + '<div class="row2"><label class="fld"><span>Cartel</span><input id="q-b" placeholder="10% OFF" value="' + esc(pr.badge) + '"></label>'
+      + '<label class="fld"><span>Descuento %</span><input id="q-p" type="number" inputmode="numeric" value="' + (pr.pct||'') + '"></label></div>'
+      + '<label class="fld"><span>Válida hasta</span><input id="q-h" type="date" value="' + esc(pr.hasta) + '"></label>'
+      + '<div class="fld"><span>Se aplica a</span><div class="checks" id="q-c">'
+      + state.categories.map(function(c){ return '<label><input type="checkbox" value="' + esc(c.id) + '"'
+          + ((pr.cats||[]).indexOf(c.id)>-1?' checked':'') + '> ' + esc(c.name) + '</label>'; }).join('')
+      + '</div></div>'
+      + '<label class="fld"><span>Activa</span><select id="q-a">'
+      + '<option value="1"' + (pr.activo?' selected':'') + '>Sí</option>'
+      + '<option value="0"' + (pr.activo?'':' selected') + '>No</option></select></label>'
+      + '<p class="hint">El precio tachado aparece solo. Pasada la fecha, la promo se oculta sola.</p>';
+    dialog(isNew?'Nueva promo':'Editar promo', body, function(dd){
+      var t = dd.querySelector('#q-t').value.trim();
+      if(!t){ alert('Poné un título.'); return false; }
+      pr.titulo=t; pr.desc=dd.querySelector('#q-d').value.trim();
+      pr.badge=dd.querySelector('#q-b').value.trim()||'PROMO';
+      pr.pct=Number(dd.querySelector('#q-p').value)||0;
+      pr.hasta=dd.querySelector('#q-h').value;
+      pr.cats=Array.prototype.slice.call(dd.querySelectorAll('#q-c input:checked')).map(function(i){ return i.value; });
+      pr.activo = dd.querySelector('#q-a').value === '1';
+      if(isNew) state.promos.push(pr);
+      touch();
+    });
+  }
+
+  /* --------- anuncio --------- */
+  function openAnuncio(id){
+    var isNew = !id, a = null;
+    state.anuncios.forEach(function(x){ if(x.id===id) a = x; });
+    if(isNew) a = {id:uid(), texto:'', activo:true};
+    var body = '<label class="fld"><span>Texto</span><input id="n-t" maxlength="90" placeholder="Cerrado el lunes 12 por feriado" value="' + esc(a.texto) + '"></label>'
+      + '<label class="fld"><span>Mostrar</span><select id="n-a">'
+      + '<option value="1"' + (a.activo?' selected':'') + '>Sí</option>'
+      + '<option value="0"' + (a.activo?'':' selected') + '>No</option></select></label>'
+      + '<p class="hint">Va arriba de todo, en una línea. Cuanto más corto, mejor.</p>'
+      + (isNew ? '' : '<button class="btn danger" id="n-del" style="margin-top:4px">Borrar este anuncio</button>');
+    var d = dialog(isNew?'Nuevo anuncio':'Editar anuncio', body, function(dd){
+      var t = dd.querySelector('#n-t').value.trim();
+      if(!t){ alert('Escribí el texto.'); return false; }
+      a.texto = t; a.activo = dd.querySelector('#n-a').value === '1';
+      if(isNew) state.anuncios.push(a);
+      touch();
+    });
+    var db = d.querySelector('#n-del');
+    if(db) db.onclick = function(){
+      state.anuncios = state.anuncios.filter(function(x){ return x.id!==a.id; });
+      touch(); d.close(); d.remove(); render();
+    };
+  }
+
+  /* --------- datos generales --------- */
+  function openDatos(){
+    var b=state.brand, s=state.settings;
+    var body = '<div class="row2"><label class="fld"><span>Nombre</span><input id="s-nm" value="' + esc(b.name) + '"></label>'
+      + '<label class="fld"><span>Bajada</span><input id="s-sb" value="' + esc(b.sub) + '"></label></div>'
+      + '<label class="fld"><span>WhatsApp</span><input id="s-wa" value="' + esc(b.whatsapp) + '"></label>'
+      + '<div class="row2"><label class="fld"><span>Instagram 1</span><input id="s-ig" value="' + esc(b.instagram) + '"></label>'
+      + '<label class="fld"><span>Instagram 2</span><input id="s-ig2" value="' + esc(b.instagram2||'') + '"></label></div>'
+      + '<label class="fld"><span>Dirección</span><input id="s-ad" value="' + esc(b.address) + '"></label>'
+      + '<label class="fld"><span>Horarios</span><input id="s-ho" value="' + esc(b.hours) + '"></label>'
+      + '<label class="fld"><span>Presentación</span><textarea id="s-tg">' + esc(b.tagline) + '</textarea></label>'
+      + '<label class="fld"><span>Anticipación</span><input id="s-an" value="' + esc(s.anticipacion) + '"></label>'
+      + '<label class="fld"><span>Seña</span><input id="s-se" value="' + esc(s.sena) + '"></label>'
+      + '<label class="fld"><span>Bizcochuelo</span><input id="s-bi" value="' + esc(s.bizcochuelo) + '"></label>'
+      + '<label class="fld"><span>Coberturas (una por línea)</span><textarea id="s-co" style="min-height:80px">' + esc((s.coberturas||[]).join('\n')) + '</textarea></label>'
+      + '<label class="fld"><span>Rellenos (uno por línea)</span><textarea id="s-re" style="min-height:80px">' + esc(s.rellenos.join('\n')) + '</textarea></label>'
+      + '<label class="fld"><span>Formas de pago (una por línea)</span><textarea id="s-pg">' + esc(s.pagos.join('\n')) + '</textarea></label>'
+      + '<label class="fld"><span>Nombre del plan</span><input id="s-pn" value="' + esc(s.planNombre||'') + '"></label>'
+      + '<label class="fld"><span>Cómo funciona el plan</span><textarea id="s-pd">' + esc(s.planDesc||'') + '</textarea></label>'
+      + '<label class="fld"><span>Título del bloque del café</span><input id="s-ct" value="' + esc(s.cafeTitulo||'') + '"></label>'
+      + '<label class="fld"><span>Texto del café</span><textarea id="s-cx">' + esc(s.cafeTexto||'') + '</textarea></label>'
+      + '<label class="fld"><span>Link del menú</span><input id="s-mu" placeholder="https://…" value="' + esc(s.menuUrl||'') + '"></label>';
+    dialog('Datos y textos', body, function(dd){
+      b.name=dd.querySelector('#s-nm').value.trim()||b.name; b.sub=dd.querySelector('#s-sb').value.trim();
+      b.whatsapp=dd.querySelector('#s-wa').value.trim(); b.instagram=dd.querySelector('#s-ig').value.trim();
+      b.instagram2=dd.querySelector('#s-ig2').value.trim();
+      b.address=dd.querySelector('#s-ad').value.trim(); b.hours=dd.querySelector('#s-ho').value.trim();
+      b.tagline=dd.querySelector('#s-tg').value.trim(); s.anticipacion=dd.querySelector('#s-an').value.trim();
+      s.sena=dd.querySelector('#s-se').value.trim(); s.bizcochuelo=dd.querySelector('#s-bi').value.trim();
+      s.coberturas=dd.querySelector('#s-co').value.split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+      s.rellenos=dd.querySelector('#s-re').value.split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+      s.pagos=dd.querySelector('#s-pg').value.split('\n').map(function(x){ return x.trim(); }).filter(Boolean);
+      s.planNombre=dd.querySelector('#s-pn').value.trim();
+      s.planDesc=dd.querySelector('#s-pd').value.trim();
+      s.cafeTitulo=dd.querySelector('#s-ct').value.trim();
+      s.cafeTexto=dd.querySelector('#s-cx').value.trim();
+      s.menuUrl=dd.querySelector('#s-mu').value.trim();
+      touch();
+    });
+  }
+
+  /* --------- mover producto --------- */
+  function mover(id, dir){
+    var i = idxById(id); if(i < 0) return;
+    var p = state.products[i], j = -1;
+    for(var k = i + dir; k >= 0 && k < state.products.length; k += dir){
+      if(state.products[k].cat === p.cat){ j = k; break; }
+    }
+    if(j < 0) return;
+    state.products[i] = state.products[j]; state.products[j] = p;
+    touch(); render();
+  }
+
+  /* ===========================================================
+     EVENTOS
+     =========================================================== */
+  function wire(){
+    var q = root.querySelectorAll('[data-q]');
+    q.forEach(function(el){
+      el.oninput = function(){
+        var v = el.value;
+        clearTimeout(el._t);
+        el._t = setTimeout(function(){
+          filt.q = v; animEntrada = true; render();
+          var f = root.querySelector('[data-q]');
+          if(f){ f.focus(); f.setSelectionRange(f.value.length, f.value.length); }
+        }, 260);
+      };
+    });
+    root.querySelectorAll('[data-qx]').forEach(function(el){
+      el.onclick = function(){ filt.q=''; animEntrada = true; render(); }; });
+
+    root.querySelectorAll('[data-gal]').forEach(function(el){
+      el.onclick = function(){ openGal(el.getAttribute('data-gal')); }; });
+    root.querySelectorAll('[data-people]').forEach(function(el){
+      el.onclick = function(){ var v=el.getAttribute('data-people'); filt.people = v===''?null:Number(v);
+        animEntrada = true; irAResultados = true; render(); }; });
+    root.querySelectorAll('[data-cat]').forEach(function(el){
+      el.onclick = function(){ var v=el.getAttribute('data-cat'); filt.cat = v===''?null:v; filt.event=null;
+        animEntrada = true; irAResultados = true; render(); }; });
+    root.querySelectorAll('[data-event]:not([data-cat])').forEach(function(el){
+      el.onclick = function(){ var id=el.getAttribute('data-event');
+        filt.event = (filt.event===id)?null:id; filt.cat=null;
+        animEntrada = true; irAResultados = true; render(); }; });
+    /* la pestaña ♥ Favoritos: filtra a los guardados sin tocar los demás filtros */
+    root.querySelectorAll('[data-fav]').forEach(function(el){
+      el.onclick = function(){ soloFavs = !soloFavs; animEntrada = true; irAResultados = true; render(); }; });
+    /* el corazón de cada tarjeta */
+    root.querySelectorAll('[data-fav-id]').forEach(function(el){
+      el.onclick = function(ev){
+        ev.stopPropagation();
+        var id = el.getAttribute('data-fav-id'), antes = cantFavs();
+        if(favs[id]) delete favs[id]; else favs[id] = true;
+        guardarFavs();
+        el.setAttribute('aria-pressed', String(!!favs[id]));
+        el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+        if(favs[id]) chispas(el);
+        if(navigator.vibrate) try{ navigator.vibrate(8); }catch(x){}
+        var ahora = cantFavs(), tab = root.querySelector('.tab.favtab');
+        /* si la pestaña ya existe solo se actualiza el número; si aparece o desaparece, se redibuja */
+        if(tab && ahora && !soloFavs){ tab.textContent = '♥ Favoritos (' + ahora + ')'; }
+        else if((antes === 0) !== (ahora === 0) || soloFavs){ setTimeout(function(){ render(); }, 380); }
+      };
+    });
+    root.querySelectorAll('[data-sec]').forEach(function(el){
+      el.onclick = function(){ var id=el.getAttribute('data-sec');
+        if(closed[id]) delete closed[id]; else closed[id]=true; animEntrada = true; render(); }; });
+
+    var det = root.querySelector('details.filtros');
+    if(det) det.addEventListener('toggle', function(){ filtrosAbiertos = det.open; });
+
+    var ab = root.querySelector('[data-adm]'); if(ab) ab.onclick = openLogin;
+
+    root.querySelectorAll('[data-pedir]').forEach(function(el){
+      el.onclick = function(){
+        var p = findById(el.getAttribute('data-pedir'));
+        if(p) dlgCuponProducto(p);
+      };
+    });
+
+    /* ---- carrito ---- */
+    root.querySelectorAll('[data-add]').forEach(function(el){
+      el.onclick = function(){
+        chispas(el);
+        agregar(findById(el.getAttribute('data-add')), el.closest('.card'));
+      };
+    });
+    root.querySelectorAll('[data-menosp]').forEach(function(el){
+      el.onclick = function(){
+        var id = el.getAttribute('data-menosp');
+        var ks = Object.keys(carrito).filter(function(k){ return k.split('|')[0] === id; });
+        if(!ks.length) return;
+        tocado = id;
+        sumarCarrito(ks[ks.length - 1], -1);
+        render();
+      };
+    });
+    root.querySelectorAll('[data-verpedido]').forEach(function(el){
+      el.onclick = function(){ dlgPedidoCarrito({}); };
+    });
+
+    if(!admin.token) return;
+
+    root.querySelectorAll('[data-edit]').forEach(function(el){
+      el.onclick = function(){ openProduct(el.getAttribute('data-edit')); }; });
+    root.querySelectorAll('[data-fotos]').forEach(function(el){
+      el.onclick = function(){ openFotos(el.getAttribute('data-fotos')); }; });
+    root.querySelectorAll('[data-toggle]').forEach(function(el){
+      el.onclick = function(){ var p=findById(el.getAttribute('data-toggle')); p.activo=!p.activo; touch(); render(); }; });
+    root.querySelectorAll('[data-up]').forEach(function(el){
+      el.onclick = function(){ mover(el.getAttribute('data-up'), -1); }; });
+    root.querySelectorAll('[data-down]').forEach(function(el){
+      el.onclick = function(){ mover(el.getAttribute('data-down'), 1); }; });
+    root.querySelectorAll('[data-del]').forEach(function(el){
+      el.onclick = function(){
+        var p = findById(el.getAttribute('data-del'));
+        if(!confirm('¿Borrar "' + p.name + '"? Si solo querés sacarlo un tiempo, usá Ocultar.')) return;
+        state.products = state.products.filter(function(x){ return x.id!==p.id; });
+        touch(); render();
+      }; });
+    root.querySelectorAll('[data-pedit]').forEach(function(el){
+      el.onclick = function(){ openPromo(el.getAttribute('data-pedit')); }; });
+    root.querySelectorAll('[data-pdel]').forEach(function(el){
+      el.onclick = function(){ if(!confirm('¿Borrar esta promo?')) return;
+        var id = el.getAttribute('data-pdel');
+        state.promos = state.promos.filter(function(x){ return x.id!==id; });
+        touch(); render(); }; });
+    root.querySelectorAll('[data-anedit]').forEach(function(el){
+      el.onclick = function(){ openAnuncio(el.getAttribute('data-anedit')); }; });
+    root.querySelectorAll('[data-act]').forEach(function(el){
+      el.onclick = function(){
+        var a = el.getAttribute('data-act');
+        if(a==='newp') openProduct(null);
+        else if(a==='promo') openPromo(null);
+        else if(a==='anuncio') openAnuncio(null);
+        else if(a==='datos') openDatos();
+        else if(a==='guardar') guardar();
+        else if(a==='salir') salir();
+      }; });
+  }
+
+  window.addEventListener('beforeunload', function(ev){
+    if(admin.dirty){ ev.preventDefault(); ev.returnValue = ''; }
+  });
+
+  /* ===========================================================
+     ARRANQUE
+     =========================================================== */
+  /* ===========================================================
+     ENCABEZADO QUE SE ACHICA Y CONFETI AL HACER EL PEDIDO
+     =========================================================== */
+  var sinMovimiento = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var ticking = false;
+  window.addEventListener('scroll', function(){
+    if(ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      document.body.classList.toggle('compacto', window.scrollY > 70);
+      /* parallax leve de los íconos del hero: bajan más despacio que la página */
+      if(!sinMovimiento){
+        var hi = root.querySelector('.hero-icos');
+        if(hi) hi.style.setProperty('--py', Math.min(30, window.scrollY * .14).toFixed(1) + 'px');
+      }
+      ticking = false;
+    });
+  }, { passive:true });
+
+  /* ===========================================================
+     APARICIÓN AL HACER SCROLL
+     Tarjetas, títulos de sección y galería entran con un fade y una
+     subida corta, escalonados por grupo. Si el navegador no tiene
+     IntersectionObserver, se muestran directo. Nada queda invisible:
+     a los 1,6 s se fuerza lo que todavía no apareció.
+     =========================================================== */
+  var observador = null;
+  function revelar(){
+    var grupos = [];
+    root.querySelectorAll('.grid').forEach(function(g){ grupos.push(g.querySelectorAll('.card')); });
+    root.querySelectorAll('.igrid').forEach(function(g){ grupos.push(g.querySelectorAll('.icard')); });
+    root.querySelectorAll('.datos').forEach(function(g){ grupos.push(g.querySelectorAll('.dato')); });
+    grupos.push(root.querySelectorAll('.cat-top, .inspi-head, .tortas, .titulo, .promo'));
+
+    var todos = [];
+    grupos.forEach(function(lista){
+      Array.prototype.forEach.call(lista, function(el, i){
+        if(el.classList.contains('rv')) return;
+        el.classList.add('rv');
+        el.style.setProperty('--rvd', (Math.min(i, 8) * 60) + 'ms');
+        todos.push(el);
+      });
+    });
+    if(!todos.length) return;
+
+    var mostrar = function(el){ el.classList.add('in'); };
+    if(sinMovimiento || !('IntersectionObserver' in window)){
+      todos.forEach(mostrar); return;
+    }
+    if(!observador){
+      observador = new IntersectionObserver(function(entradas){
+        entradas.forEach(function(e){
+          if(e.isIntersecting){ mostrar(e.target); observador.unobserve(e.target); }
+        });
+      }, { rootMargin:'0px 0px -8% 0px', threshold:0.08 });
+    }
+    todos.forEach(function(el){ observador.observe(el); });
+    /* red de seguridad: lo que esté arriba del todo o no se mida bien, igual aparece */
+    setTimeout(function(){
+      todos.forEach(function(el){
+        if(!el.classList.contains('in')){
+          var r = el.getBoundingClientRect();
+          if(r.top < window.innerHeight * 1.2) mostrar(el);
+        }
+      });
+    }, 1600);
+  }
+
+  /* ===========================================================
+     TARJETAS EN 3D
+     Un solo par de manejadores en #root: la tarjeta bajo el puntero
+     se inclina hasta 6° y el brillo sigue al cursor. Solo con mouse.
+     =========================================================== */
+  (function(){
+    var conMouse = window.matchMedia && window.matchMedia('(hover:hover)').matches;
+    if(!conMouse || sinMovimiento) return;
+    var activa = null;
+    root.addEventListener('pointermove', function(ev){
+      if(ev.pointerType && ev.pointerType !== 'mouse') return;
+      var card = ev.target.closest ? ev.target.closest('.card') : null;
+      if(activa && activa !== card){ soltar(activa); activa = null; }
+      if(!card) return;
+      var r = card.getBoundingClientRect();
+      if(!r.width || !r.height) return;
+      var px = (ev.clientX - r.left) / r.width, py = (ev.clientY - r.top) / r.height;
+      card.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+      card.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+      card.style.setProperty('--ry', ((px - .5) * 12).toFixed(2) + 'deg');
+      card.style.setProperty('--rx', ((.5 - py) * 12).toFixed(2) + 'deg');
+      if(!card.classList.contains('tilt')) card.classList.add('tilt');
+      activa = card;
+    });
+    function soltar(card){
+      card.classList.remove('tilt');
+      card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg');
+    }
+    root.addEventListener('pointerleave', function(){ if(activa){ soltar(activa); activa = null; } });
+    root.addEventListener('pointerout', function(ev){
+      if(!activa) return;
+      var hacia = ev.relatedTarget;
+      if(!hacia || !activa.contains(hacia)){ soltar(activa); activa = null; }
+    });
+  })();
+
+  /* ===========================================================
+     LAS FOTOS SIGUEN LA INCLINACIÓN DEL CELULAR
+     Sin pedir permisos: si el teléfono no manda el evento, quedan quietas.
+     Se escriben dos variables (--tx/--ty) en <html> y todas las fotos las heredan.
+     =========================================================== */
+  (function(){
+    var conMouse = window.matchMedia && window.matchMedia('(hover:hover)').matches;
+    if(conMouse || sinMovimiento || !('DeviceOrientationEvent' in window)) return;
+    var objX = 0, objY = 0, curX = 0, curY = 0, pedido = false, base = null;
+    var clamp = function(v, m){ return Math.max(-m, Math.min(m, v)); };
+    function paso(){
+      pedido = false;
+      curX += (objX - curX) * .12; curY += (objY - curY) * .12;
+      document.documentElement.style.setProperty('--tx', curX.toFixed(2) + 'deg');
+      document.documentElement.style.setProperty('--ty', curY.toFixed(2) + 'deg');
+      if(Math.abs(objX - curX) > .05 || Math.abs(objY - curY) > .05){ pedido = true; requestAnimationFrame(paso); }
+    }
+    window.addEventListener('deviceorientation', function(ev){
+      if(ev.beta == null || ev.gamma == null) return;
+      if(base === null) base = ev.beta;                 /* la posición en que se tomó el teléfono es el cero */
+      objX = clamp((ev.beta - base) * .18, 6);          /* adelante/atrás */
+      objY = clamp(ev.gamma * .2, 6);                   /* izquierda/derecha */
+      if(!pedido){ pedido = true; requestAnimationFrame(paso); }
+    }, { passive:true });
+  })();
+
+  function confeti(){
+    if(sinMovimiento) return;
+    var viejo = document.getElementById('confeti');
+    if(viejo) viejo.remove();
+
+    var cv = document.createElement('canvas');
+    cv.id = 'confeti';
+    var W = cv.width  = window.innerWidth;
+    var H = cv.height = window.innerHeight;
+    document.body.appendChild(cv);
+    var cx = cv.getContext('2d');
+
+    var COL = ['#C08552', '#895737', '#5E3023', '#F3E9DC', '#E9DAC5'];
+    var piezas = [];
+    for(var i = 0; i < 110; i++){
+      piezas.push({
+        x: W / 2 + (Math.random() - .5) * W * .5,
+        y: H + 20 + Math.random() * 60,
+        vx: (Math.random() - .5) * 7,
+        vy: -(11 + Math.random() * 9),
+        g: 0.24 + Math.random() * .12,
+        w: 6 + Math.random() * 7,
+        h: 9 + Math.random() * 9,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - .5) * .28,
+        col: COL[(Math.random() * COL.length) | 0]
+      });
+    }
+
+    var t0 = performance.now();
+    (function cuadro(t){
+      var vida = t - t0;
+      cx.clearRect(0, 0, W, H);
+      piezas.forEach(function(p){
+        p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        cx.save();
+        cx.translate(p.x, p.y);
+        cx.rotate(p.rot);
+        cx.globalAlpha = Math.max(0, 1 - vida / 2600);
+        cx.fillStyle = p.col;
+        cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        cx.restore();
+      });
+      if(vida < 2600) requestAnimationFrame(cuadro);
+      else cv.remove();
+    })(t0);
+  }
+
+  /* se dispara al mandar un pedido por WhatsApp */
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a.wa, a.btn.wa');
+    if(a && /wa\.me/.test(a.getAttribute('href') || '')) confeti();
+  });
+
+  /* el botón de administración aparece solo con #admin en la dirección,
+     o si ya hay una sesión abierta */
+  function chequearAdmin(){
+    var on = location.hash === '#admin' || !!admin.token;
+    document.body.classList.toggle('modoadmin', on);
+    return on;
+  }
+  window.addEventListener('hashchange', function(){
+    if(chequearAdmin() && !admin.token) openLogin();
+  });
+
+  /* ===========================================================
+     FOTOS YA RESUELTAS
+     Los nombres de archivo tal cual están subidos, con sus
+     mayúsculas y tildes exactas. Así la página se dibuja bien
+     desde el primer segundo, sin tener que salir a buscarlas.
+     Para agregar una foto: sumá el nombre del archivo acá.
+     =========================================================== */
+  var FOTOS = {
+    p1: ['Mini cake.jpeg', 'Mini cake (2).jpeg', 'Mini cake (3).jpeg',
+         'Mini cake (4).jpeg', 'Mini cake (5).jpeg', 'Mini cake (6).jpeg'],
+    dz9: ['Donitas.jpeg', 'Donitas (2).jpeg', 'Donitas (3).jpeg', 'Donitas (4).jpeg'],
+    dz6: ['Cakepops.jpeg', 'Cakepops (2).jpeg', 'Cakepops (3).jpeg', 'Cakepops (4).jpeg'],
+    dz7: ['Oreos.jpeg', 'Oreos (2).jpeg', 'Oreos (3).jpeg', 'Oreos (4).jpeg', 'Oreos (5).jpeg'],
+    dz1: ['Cupcakes.jpeg', 'Cupcakes (2).jpeg', 'Cupcakes (3).jpeg', 'Cupcakes (4).jpeg',
+          'Cupcakes (5).jpeg', 'Cupcakes (6).jpeg'],
+    dz2: ['Galletas.jpeg', 'Galletas (2).jpeg', 'Galletas (3).jpeg', 'Galletas (4).jpeg',
+          'Galletas (5).jpeg'],
+    dz10:['Galletas 3D.jpeg', 'Galletas 3D (2).jpeg', 'Galletas 3D (3).jpeg', 'Galletas 3D (4).jpeg',
+          'Galletas 3D (5).jpeg', 'Galletas 3D (6).jpeg', 'Galletas 3D (7).jpeg'],
+    dz3: ['Paletas.jpeg', 'Paletas (2).jpeg', 'Paletas (3).jpeg',
+          'paletas (4).jpeg', 'paletas (5).jpeg'],
+    dz4: ['Alfajores personalizados.jpeg', 'Alfajores personalizados (2).jpeg',
+          'Alfajores personalizados (3).jpeg'],
+    dz5: ['Icepops.jpeg', 'Icepops (2).jpeg', 'Icepops (3).jpeg', 'Icepops (4).jpeg',
+          'Icepops (5).jpeg', 'Icepops (6).jpeg', 'Icepops (7).jpeg'],
+    p2: ['Torta chica crema.jpeg', 'Torta chica crema (2).jpeg'],
+    p3: ['torta mediana crema.jpeg', 'Torta mediana crema 2.jpeg'],
+    p4: ['Torta grande crema.jpeg', 'torta grande crema (2).jpeg'],
+    p5: ['Torta chica personalizada.jpeg'],
+    p6: ['torta mediana personalizada.jpeg', 'torta mediana personalizada (2).jpeg'],
+    p7: ['torta grande personalizada.jpeg'],
+    ps1:['Torta de dos pisos.jpeg', 'Torta de dos pisos (2).jpeg',
+         'torta de dos pisos (3).jpeg', 'Torta de dos pisos (4).jpeg'],
+    c1: ['Chocotorta.jpeg', 'chocotorta 2.jpeg'],
+    d1: ['Cheesecake NY.jpeg'],
+    d10:['Cheesecake New York de pistacho.jpeg'],
+    d2: ['Lemon pie.jpeg', 'Lemon pie (2).jpeg'],
+    d3: ['Rogel.jpeg', 'Rogel 2.jpeg'],
+    d6: ['Havannet.jpeg'],
+    d7: ['Coco y dulce de leche.jpeg', 'Coco y dulce de leche 2.jpeg'],
+    d8: ['Brownie.jpeg'],
+    d9: ['Frutales.jpeg', 'Frutales (2).jpeg', 'Frutales (3).jpeg', 'Frutales 4.jpeg'],
+    tp1:['red velvet.jpeg', 'red velvet 2.jpeg'],
+    tp2:['matilda.jpeg'],
+    tp3:['chajá.jpeg'],
+    tp4:['Mousse de chocolate.jpeg'],
+    tp5:['milojas.jpeg'],
+    md1:['Mesa dulce chica.jpeg', 'Mesa dulce chica (2).jpeg'],
+    md2:['Mesa dulce mediana.jpeg'],
+    md3:['Mesa dulce grande.jpeg'],
+    bb1:['Bombonería.jpeg', 'Bombonería (2).jpeg', 'Bombonería (3).jpeg',
+         'Bombonería (4).jpeg', 'Bombonería (5).jpeg', 'Bombonería (7).jpeg'],
+    m2: ['desayunos empresariales.jpeg', 'Desayunos empresariales (2).jpeg'],
+    m3: ['Presentes empresariales.jpeg', 'Presentes empresariales (2).jpeg',
+         'Presentes empresariales (3).jpeg', 'Presentes empresariales (4).jpeg'],
+    m4: ['Box empresariales dulces.jpeg', 'Box empresariales dulces (2).jpeg',
+         'Box empresariales dulces (3).jpeg', 'Box empresariales dulces (4).jpeg',
+         'Box empresariales dulces (5).jpeg', 'Box empresariales dulces (6).jpeg'],
+    m5: ['Box empresariales salados.jpeg', 'Box empresariales salados (2).jpeg',
+         'Box empresariales salados (3).jpeg'],
+    k1: ['combo 15 años.jpeg'],
+    k2: ['combo comunion.jpeg', 'combo comunion (2).jpeg', 'combo comunion (3).jpeg',
+         'combo comunion (4).jpeg', 'combo comunion (5).jpeg', 'combo comunion (6).jpeg',
+         'combo comunion (7).jpeg'],
+    k3: ['combo chico.jpeg'],
+    k4: ['combo mediano.jpeg'],
+    k5: ['Combo grande.jpeg'],
+    k6: ['Combo premium · 50 unidades.jpeg', 'Combo premium · 50 unidades (2).jpeg',
+         'Combo premium · 50 unidades (3).jpeg', 'Combo premium · 50 unidades (4).jpeg',
+         'Combo premium · 50 unidades (6).jpeg', 'Combo premium · 50 unidades (7).jpeg',
+         'Combo premium · 50 unidades (8).jpeg', 'Combo premium · 50 unidades (9).jpeg',
+         'Combo premium · 50 unidades (10).jpeg'],
+    k7: ['Combo casamiento.jpeg', 'Combo casamiento (2).jpeg']
+  };
+  (state.products || []).forEach(function(p){
+    if(FOTOS[p.id]){
+      p.fotos = FOTOS[p.id].map(function(f){ return 'fotos/' + encodeURIComponent(f); });
+      delete p.photo;
+    }
+  });
+
+  /* Las dos galerías, también con los nombres exactos.
+     Para sumar una foto nueva, agregá el nombre del archivo acá. */
+  var GALERIAS = {
+    inspiracion: ['inspiracion 2.jpeg', 'inspiracion 3.jpeg',
+                  'inspiracion (2).jpeg', 'inspiracion (3).jpeg', 'inspiracion (4).jpeg',
+                  'inspiracion (5).jpeg', 'inspiracion (6).jpeg'],
+    rarezas:     ['fuera de molde.jpeg', 'fuera de molde (2).jpeg', 'fuera de molde (3).jpeg']
+  };
+  state.inspiracion = GALERIAS.inspiracion.map(function(f, i){
+    return { id:'i' + (i+1), foto:'fotos/' + encodeURIComponent(f), titulo:'', activo:true }; });
+  state.rarezas = GALERIAS.rarezas.map(function(f, i){
+    return { id:'r' + (i+1), foto:'fotos/' + encodeURIComponent(f), titulo:'', activo:true }; });
+
+  render();
+  autoFotos(function(){ render(); });
+  /* la búsqueda automática de galerías solo corre si alguna quedó vacía */
+  if(!state.inspiracion.length || !state.rarezas.length){
+    cargarGalerias(function(){ render(); });
+  }
+  if(chequearAdmin() && !admin.token) openLogin();
+
+  if(USAR_BASE){
+    fetch(DB_BASE + DB_NODE, { cache:'no-store' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if(d && d.products && d.products.length && !admin.dirty){
+          state = normalize(d); render();
+        }
+      })
+      .catch(function(){ /* sin conexión: queda el catálogo embebido */ });
+  }
+})();
+</script>
+</body>
+</html>
