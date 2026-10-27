@@ -50,14 +50,23 @@ header .estado.cerrado i{background:#B4432F;}
 
 /* las dos puertas */
 .puertas{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
-@media (max-width:720px){ .puertas{grid-template-columns:1fr; gap:14px;} }
+/* en el celular las dos puertas siguen una al lado de la otra, más compactas */
+@media (max-width:720px){ .puertas{grid-template-columns:1fr 1fr; gap:12px;} }
 .puerta{position:relative; display:block; text-decoration:none; color:var(--tostado); border-radius:28px; overflow:hidden; min-height:min(52vh, 440px);
   background:var(--vidrio); border:1px solid var(--vidrio-b); backdrop-filter:blur(16px) saturate(1.2); -webkit-backdrop-filter:blur(16px) saturate(1.2);
   box-shadow:0 30px 60px -30px rgba(58,46,36,.55); opacity:0; transform:translateY(24px);
   animation:sube .9s cubic-bezier(.2,.8,.2,1) forwards; transition:transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s;}
 @supports not (backdrop-filter:blur(1px)){ .puerta{background:rgba(246,240,228,.94);} }
 .puerta.cafe{animation-delay:.45s;} .puerta.torta{animation-delay:.6s;}
-@media (max-width:720px){ .puerta{min-height:min(38vh, 320px);} }
+@media (max-width:720px){
+  .puerta{min-height:min(40vh, 340px); border-radius:22px;}
+  .puerta .foto{width:min(64%, 150px); margin-top:18px; box-shadow:0 14px 24px -12px rgba(58,46,36,.7), 0 0 0 6px rgba(255,255,255,.45);}
+  .puerta .tx{padding:14px 10px 20px;}
+  .puerta .k{font-size:9.5px; letter-spacing:.22em;}
+  .puerta h2{font-size:clamp(22px, 7vw, 34px); margin:6px 0 4px;}
+  .puerta p{font-size:12.5px; line-height:1.35;}
+  .puerta .btn{padding:10px 14px; font-size:13px; margin-top:12px;}
+}
 .puerta .ph{position:absolute; inset:0; background-size:cover; background-position:center; opacity:.0; transition:opacity .5s; transform:scale(1.04);}
 .puerta .ph::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(246,240,228,.15), rgba(58,46,36,.72));}
 .puerta .foto{width:min(46%, 190px); aspect-ratio:1; border-radius:50%; overflow:hidden; margin:26px auto 0; position:relative;
@@ -2656,7 +2665,7 @@ section.cat{margin-bottom:26px; scroll-margin-top:170px;}
 @media (min-width:620px){ .card .ph{width:190px; height:190px; margin-top:-192px;} .card{padding:104px 16px 16px;} .grid{gap:128px 16px; padding-top:124px;} }
 @media (max-width:360px){ .card .ph{width:136px; height:136px; margin-top:-138px;} .grid{gap:84px 8px; padding-top:76px;} }
 .card .ph.clic{cursor:zoom-in;}
-.card .ph img{width:100%; height:100%; object-fit:cover; position:relative; z-index:1; display:block;
+.card .ph img{width:100%; height:100%; object-fit:cover; object-position:center; position:relative; z-index:1; display:block;
   animation:phIdle 5s ease-in-out infinite alternate;}
 @keyframes phIdle{ from{transform:translateY(-2px) scale(1.02);} to{transform:translateY(2px) scale(1.05);} }
 /* el corazón de favoritos, arriba a la derecha de la tarjeta */
@@ -3648,7 +3657,11 @@ dialog.lb.lb-plano{position:fixed; z-index:120; left:50%; top:50%; transform:tra
     /* --- hero: título grande y la foto redonda de una torta o postre al azar ---
        Se elige una vez por carga de página (no cambia al filtrar o al sumar al carrito). */
     var CATS_HERO = ['crema', 'ganache', 'pisos', 'tortaspostres', 'postres'];
-    var estrella = heroId ? findById(heroId) : null;
+    /* Foto fija del hero (pedido 27/10/2026): la mini cake de moños, centrada. Si ese producto se
+       desactiva, vuelve a elegir una al azar como antes. */
+    var HERO_FIJO = { id:'p1', foto:'fotos/Mini%20cake.jpeg', pos:'50% 60%' };
+    var estrella = findById(HERO_FIJO.id);
+    if(estrella && estrella.activo) heroId = estrella.id; else estrella = heroId ? findById(heroId) : null;
     if(!estrella || !estrella.activo || !photosOf(estrella).length){
       var candidatos = state.products.filter(function(p){
         return CATS_HERO.indexOf(p.cat) !== -1 && p.activo && photosOf(p).length; });
@@ -3662,7 +3675,8 @@ dialog.lb.lb-plano{position:fixed; z-index:120; left:50%; top:50%; transform:tra
       }
       heroId = estrella ? estrella.id : null;
     }
-    var fotoEstrella = estrella ? photosOf(estrella)[0] : 'fotos/Torta%20grande%20crema.jpeg';
+    var esFijo = estrella && estrella.id === HERO_FIJO.id;
+    var fotoEstrella = esFijo ? HERO_FIJO.foto : (estrella ? photosOf(estrella)[0] : 'fotos/Torta%20grande%20crema.jpeg');
     var catEstrella = estrella ? (state.categories.filter(function(c){ return c.id === estrella.cat; })[0] || {}) : {};
     h += '<section class="hero">'
       + '<div><div class="eyebrow">' + esc(b.address) + '</div>'
@@ -3675,7 +3689,8 @@ dialog.lb.lb-plano{position:fixed; z-index:120; left:50%; top:50%; transform:tra
       + '</div>'
       + '<div class="taza"><div class="ring"></div>'
       + '<div class="ph' + (estrella && photosOf(estrella).length ? ' clic" data-gal="' + esc(estrella.id) : '') + '">'
-      + '<img src="' + esc(fotoEstrella) + '" alt="' + esc(estrella ? estrella.name : 'Torta') + '" onerror="this.remove()"></div>'
+      + '<img src="' + esc(fotoEstrella) + '" alt="' + esc(estrella ? estrella.name : 'Torta') + '"'
+      + (esFijo ? ' style="object-position:' + HERO_FIJO.pos + '"' : '') + ' onerror="this.remove()"></div>'
       + (estrella ? '<div class="tag"><small>' + esc(porcTxt(estrella) || catEstrella.short || catEstrella.name || 'Por encargo') + '</small>'
           + esc(estrella.name) + ' · ' + (estrella.price ? money(withOff(estrella.price, promoFor(estrella))) : 'A consultar') + '</div>' : '')
       + '</div></section>';
@@ -4032,7 +4047,8 @@ dialog.lb.lb-plano{position:fixed; z-index:120; left:50%; top:50%; transform:tra
       + PEOPLE.map(function(o){ return '<button class="chip" data-people="' + o.v + '" aria-pressed="'
           + (filt.people===o.v) + '">Para ' + esc(o.l) + '</button>'; }).join('')
       + '</div></div>';
-    return buscador + personas;
+    /* el filtro de porciones ("¿Cuántos son?") se sacó (pedido 27/10/2026): queda solo el buscador */
+    return buscador;
   }
 
   /* los grupos y eventos: pestañas de texto en el flujo, arriba de la grilla (sin íconos) */
